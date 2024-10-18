@@ -19,6 +19,13 @@ import java.util.regex.Pattern
 
 apply plugin: 'com.android.application'
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+
 android {
 
     compileSdkVersion 34
@@ -105,10 +112,6 @@ android {
         }
     }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
-    }
 
     packagingOptions {
         pickFirst '**/*.so'
