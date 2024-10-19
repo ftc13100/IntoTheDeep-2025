@@ -12,10 +12,11 @@
 // Custom definitions may go here
 
 // Include common definitions from above.
+
 apply from: '../build.common.gradle'
 apply from: '../build.dependencies.gradle'
+
 apply plugin: 'kotlin-android'
-apply plugin: 'org.jetbrains.kotlin.android'
 
 android {
     namespace = 'org.firstinspires.ftc.teamcode'

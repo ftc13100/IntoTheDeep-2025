@@ -25,7 +25,6 @@ java {
     }
 }
 
-
 android {
 
     compileSdkVersion 34
