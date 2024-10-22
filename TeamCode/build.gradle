@@ -23,13 +23,14 @@ kotlin {
 }
 
 android {
-    namespace = 'org.firstinspires.ftc.teamcode'
 
     packagingOptions {
         jniLibs {
-            pickFirsts += ['**/*.so']
+            pickFirsts += ['**/*.so', '**/*.so']
         }
     }
+    namespace = 'org.firstinspires.ftc.teamcode'
+
 }
 
 dependencies {
