@@ -1,0 +1,20 @@
+plugins {
+    id 'java-library'
+    id 'org.jetbrains.kotlin.jvm'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    maven { url = 'https://jitpack.io' }
+    maven { url = 'https://maven.brott.dev/' }
+}
+
+dependencies {
+    implementation 'com.github.NoahBres:MeepMeep:2.0.3'
+    implementation 'com.acmerobotics.roadrunner:core:0.5.6'
+}
