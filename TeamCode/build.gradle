@@ -19,7 +19,7 @@ apply from: '../build.dependencies.gradle'
 apply plugin: 'kotlin-android'
 
 kotlin {
-   jvmToolchain(21)
+   jvmToolchain(17)
 }
 
 android {
