@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.opModes.teleOp
 
 import com.arcrobotics.ftclib.command.CommandOpMode
+import com.arcrobotics.ftclib.command.InstantCommand
+import com.arcrobotics.ftclib.command.RunCommand
 import com.arcrobotics.ftclib.gamepad.GamepadEx
 import com.arcrobotics.ftclib.gamepad.GamepadKeys
 import com.arcrobotics.ftclib.hardware.motors.Motor
@@ -42,8 +44,8 @@ class MainTeleOp: CommandOpMode() {
 
         elevatorRight = Motor(hardwareMap, ControlBoard.SLIDES_RIGHT.deviceName)
         elevatorLeft = Motor(hardwareMap, ControlBoard.SLIDES_LEFT.deviceName)
-        armRight = Motor(hardwareMap, ControlBoard.ARM_RIGHT.deviceName)
-        armLeft = Motor(hardwareMap, ControlBoard.ARM_LEFT.deviceName)
+        armRight = Motor(hardwareMap, ControlBoard.ARM_RIGHT.deviceName, Motor.GoBILDA.RPM_435)
+        armLeft = Motor(hardwareMap, ControlBoard.ARM_LEFT.deviceName, Motor.GoBILDA.RPM_435)
 
         slidesSubsystem = SlidesSubsystem(elevatorRight, elevatorLeft)
         armSubsystem = ArmSubsystem(armRight, armLeft)
@@ -53,7 +55,7 @@ class MainTeleOp: CommandOpMode() {
         spinDownCommand = SpinDownCommand(slidesSubsystem)
         armUpCommand = ArmCommand(armSubsystem, true)
         armDownCommand = ArmCommand(armSubsystem, false)
-        driveCommand = DriveCommand(driveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX, 0.1)
+        driveCommand = DriveCommand(driveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX, 0.0)
 
         //operator.getGamepadButton(GamepadKeys.Button.DPAD_UP).whileHeld(spinUpCommand)
        // operator.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whileHeld(spinDownCommand)
@@ -61,5 +63,10 @@ class MainTeleOp: CommandOpMode() {
         operator.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(armDownCommand)
 
         driveSubsystem.defaultCommand = driveCommand
+
+        RunCommand({
+            telemetry.addData("Arm Position: ", armSubsystem.armAngle)
+            telemetry.update()
+        }).perpetually().schedule()
     }
 }

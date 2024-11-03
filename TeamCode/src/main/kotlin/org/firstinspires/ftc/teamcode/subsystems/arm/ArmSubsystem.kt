@@ -1,9 +1,13 @@
 package org.firstinspires.ftc.teamcode.subsystems.arm
 
+import com.acmerobotics.dashboard.config.Config
 import com.arcrobotics.ftclib.command.SubsystemBase
 import com.arcrobotics.ftclib.hardware.motors.Motor
+import com.arcrobotics.ftclib.hardware.motors.Motor.GoBILDA
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup
+import kotlin.math.PI
 
+@Config
 class ArmSubsystem(
 // Here I am just declaring the motors and what they are called on our driver hub.
         private val armRight : Motor,
@@ -14,6 +18,8 @@ class ArmSubsystem(
 //Here I am making a motor group, as the arm motors are going to work together to to turn the slides.
 
     private val turnMotors = MotorGroup(armRight, armLeft)
+    val armAngle: Double
+        get() = turnMotors.positions[0] / GoBILDA.RPM_435.cpr * 2 * PI
 
     init {
         armLeft.inverted = true
@@ -32,8 +38,11 @@ class ArmSubsystem(
     }
 
     fun stop() {
-        turnMotors.set(0.0)
+        turnMotors.set(kCos * Math.cos(armAngle))
     }
 
-
+    companion object {
+        @JvmField
+        var kCos = 0.3
+    }
 }
