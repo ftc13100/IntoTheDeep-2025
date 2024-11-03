@@ -9,16 +9,16 @@ enum class ControlBoard(val deviceName: String) {
     DRIVE_RIGHT_REAR("rightRear"),
 
     // Odometry
-    ODO_LEFT_ENCODER(""),
-    ODO_RIGHT_ENCODER(""),
-    ODO_STRAFE_ENCODER(""),
+    ODO_LEFT_ENCODER("leftFront"),
+    ODO_RIGHT_ENCODER("rightFront"),
+    ODO_STRAFE_ENCODER("leftSlideString"),
 
     // Arm
-    ARM_LEFT(""),
-    ARM_RIGHT(""),
-    SLIDES_LEFT(""),
-    SLIDES_RIGHT(""),
+    ARM_LEFT("leftSlideAxel"),
+    ARM_RIGHT("rightSlideAxel"),
+    SLIDES_LEFT("leftSlideString"),
+    SLIDES_RIGHT("rightSlideString"),
 
     // Camera
-    CAMERA("lifecam")
+    CAMERA("lifeCam")
 }
