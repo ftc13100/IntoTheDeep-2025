@@ -14,11 +14,11 @@ enum class ControlBoard(val deviceName: String) {
     ODO_STRAFE_ENCODER("leftSlideString"),
 
     // Arm
-    ARM_LEFT(""),
-    ARM_RIGHT(""),
-    SLIDES_LEFT(""),
-    SLIDES_RIGHT(""),
+    ARM_LEFT("leftSlideAxel"),
+    ARM_RIGHT("rightSlideAxel"),
+    SLIDES_LEFT("leftSlideString"),
+    SLIDES_RIGHT("rightSlideString"),
 
     // Camera
-    CAMERA("lifecam")
+    CAMERA("lifeCam")
 }

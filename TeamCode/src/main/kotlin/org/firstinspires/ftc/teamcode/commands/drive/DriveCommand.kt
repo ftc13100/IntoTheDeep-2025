@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.commands.drive
 import com.arcrobotics.ftclib.command.CommandBase
 import org.firstinspires.ftc.teamcode.subsystems.drive.DriveSubsystem
 import java.util.function.DoubleSupplier
+import kotlin.math.pow
 
 class DriveCommand(
     private val subsystem: DriveSubsystem,
@@ -17,9 +18,9 @@ class DriveCommand(
 
     override fun execute() {
         subsystem.drive(
-            leftY = zonedDrive(-leftY.asDouble, zoneVal),
-            leftX = zonedDrive(leftX.asDouble, zoneVal),
-            rightX = zonedDrive(rightX.asDouble, zoneVal),
+            leftY = zonedDrive(-leftY.asDouble, zoneVal).pow(3),
+            leftX = zonedDrive(leftX.asDouble, zoneVal).pow(3),
+            rightX = zonedDrive(rightX.asDouble, zoneVal).pow(3),
         )
     }
 
