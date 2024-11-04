@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.subsystems.drive.DriveSubsystem
 /*
  * This is an example of a more complex path to really test the tuning.
  */
-@Disabled
+//@Disabled
 @Autonomous(group = "drive")
 class SplineTest : LinearOpMode() {
     @Throws(InterruptedException::class)

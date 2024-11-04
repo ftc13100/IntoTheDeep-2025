@@ -23,7 +23,7 @@ import org.firstinspires.ftc.teamcode.utils.roadrunner.drive.DriveConstants.getM
  *
  * Further fine tuning of kF may be desired.
  */
-@Disabled //@Config
+//@Disabled //@Config
 @Autonomous(group = "drive")
 class MaxVelocityTuner : LinearOpMode() {
     private lateinit var timer: ElapsedTime

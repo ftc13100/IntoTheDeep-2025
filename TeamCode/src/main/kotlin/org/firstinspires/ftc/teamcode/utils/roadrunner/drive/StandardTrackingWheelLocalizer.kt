@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.utils.roadrunner.util.Encoder
 
 /*
  * Sample tracking wheel localizer implementation assuming the standard configuration:
+
  *
  *    /--------------\
  *    |     ____     |
@@ -38,7 +39,9 @@ class StandardTrackingWheelLocalizer(hardwareMap: HardwareMap) : ThreeTrackingWh
             hardwareMap.get(
                 DcMotorEx::class.java, ControlBoard.ODO_LEFT_ENCODER.deviceName
             )
-        )
+        )   
+
+
         rightEncoder = Encoder(
             hardwareMap.get(
                 DcMotorEx::class.java, ControlBoard.ODO_RIGHT_ENCODER.deviceName
@@ -49,6 +52,7 @@ class StandardTrackingWheelLocalizer(hardwareMap: HardwareMap) : ThreeTrackingWh
                 DcMotorEx::class.java, ControlBoard.ODO_STRAFE_ENCODER.deviceName
             )
         )
+//        strafeEncoder.direction = Encoder.Direction.REVERSE
     }
 
     override fun getWheelPositions() = listOf(
@@ -64,18 +68,18 @@ class StandardTrackingWheelLocalizer(hardwareMap: HardwareMap) : ThreeTrackingWh
     )
 
     companion object {
-        val TICKS_PER_REV = 8192.0
-        val WHEEL_RADIUS = 0.6889764 // in
+        val TICKS_PER_REV = 2000.0
+        val WHEEL_RADIUS = 0.944882 // in
         val GEAR_RATIO = 1.0 // output (wheel) speed / input (encoder) speed
 
         @JvmField
-        var LATERAL_DISTANCE = 12.3206682876705018 // in; distance between the left and right wheels
+        var LATERAL_DISTANCE = 15.5 // in; distance between the left and right wheels
 
         @JvmField
-        var FORWARD_OFFSET = 1.28125 // in; offset of the lateral wheel
+        var FORWARD_OFFSET = -2.1 // in; offset of the lateral wheel
 
-        var X_MULTIPLIER = 1.10506990189 // Multiplier in the X direction
-        var Y_MULTIPLIER = 1.09955932763 // Multiplier in the Y direction
+        var X_MULTIPLIER = 0.9944039016245 // Multiplier in the X direction
+        var Y_MULTIPLIER = 0.99960646480333// Multiplier in the Y direction
         fun encoderTicksToInches(ticks: Double): Double {
             return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV
         }

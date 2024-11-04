@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.subsystems.drive.DriveSubsystem
  * If you are using SampleTankDrive, you should be tuning AXIAL_PID, CROSS_TRACK_PID, and HEADING_PID.
  * These coefficients can be tuned live in dashboard.
  */
-@Disabled
+//@Disabled
 @Config
 @Autonomous(group = "drive")
 class FollowerPIDTuner : LinearOpMode() {
