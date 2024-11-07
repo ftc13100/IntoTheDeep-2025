@@ -16,12 +16,12 @@ import org.firstinspires.ftc.teamcode.subsystems.drive.DriveSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.slides.SlidesSubsystem
 
 @TeleOp
-class MainTeleOp: CommandOpMode() {
+class MainTeleOp : CommandOpMode() {
 
-    private lateinit var elevatorLeft : Motor
-    private lateinit var elevatorRight : Motor
-    private lateinit var armLeft : Motor
-    private lateinit var armRight : Motor
+    private lateinit var elevatorLeft: Motor
+    private lateinit var elevatorRight: Motor
+    private lateinit var armLeft: Motor
+    private lateinit var armRight: Motor
 
 
     private lateinit var slidesSubsystem: SlidesSubsystem
@@ -34,8 +34,8 @@ class MainTeleOp: CommandOpMode() {
     private lateinit var armDownCommand: ArmCommand
     private lateinit var driveCommand: DriveCommand
 
-    private lateinit var driver : GamepadEx
-    private lateinit var operator : GamepadEx
+    private lateinit var driver: GamepadEx
+    private lateinit var operator: GamepadEx
 
     override fun initialize() {
         driver = GamepadEx(gamepad1)
@@ -54,8 +54,11 @@ class MainTeleOp: CommandOpMode() {
         spinDownCommand = SpinDownCommand(slidesSubsystem)
         armUpCommand = ArmCommand(armSubsystem, true)
         armDownCommand = ArmCommand(armSubsystem, false)
-        driveCommand = DriveCommand(driveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX, 0.0)
+        driveCommand =
+            DriveCommand(driveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX, 0.0)
 
+        //operator.getGamepadButton(GamepadKeys.Button.DPAD_UP).whileHeld(spinUpCommand)
+        // operator.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whileHeld(spinDownCommand)
         operator.getGamepadButton(GamepadKeys.Button.DPAD_UP).whileHeld(spinUpCommand)
         operator.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whileHeld(spinDownCommand)
         operator.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whileHeld(armUpCommand)

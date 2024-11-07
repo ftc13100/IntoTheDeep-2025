@@ -4,8 +4,8 @@ import com.arcrobotics.ftclib.command.CommandBase
 import org.firstinspires.ftc.teamcode.subsystems.arm.ArmSubsystem
 
 class ArmCommand(
-        private val subsystem: ArmSubsystem,
-        private val turn : Boolean,
+    private val subsystem: ArmSubsystem,
+    private val turn: Boolean,
 ) : CommandBase() {
 
     override fun execute() {
