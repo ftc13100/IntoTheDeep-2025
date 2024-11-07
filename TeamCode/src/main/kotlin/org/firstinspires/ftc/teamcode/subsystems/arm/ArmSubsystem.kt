@@ -6,14 +6,15 @@ import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.hardware.motors.Motor.GoBILDA
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup
 import kotlin.math.PI
+import kotlin.math.cos
 
 @Config
 class ArmSubsystem(
 // Here I am just declaring the motors and what they are called on our driver hub.
-        private val armRight : Motor,
-        private val armLeft : Motor,
+    private val armRight: Motor,
+    private val armLeft: Motor,
 
-) : SubsystemBase() {
+    ) : SubsystemBase() {
 
 //Here I am making a motor group, as the arm motors are going to work together to to turn the slides.
 
@@ -28,7 +29,7 @@ class ArmSubsystem(
     }
 
 
-// Here are functions that work the motor, and the double is the speed of the motor, 1 being 100%.
+    // Here are functions that work the motor, and the double is the speed of the motor, 1 being 100%.
     fun clockwise() {
         turnMotors.set(0.35)
     }
@@ -38,7 +39,7 @@ class ArmSubsystem(
     }
 
     fun stop() {
-        turnMotors.set(kCos * Math.cos(armAngle))
+        turnMotors.set(kCos * cos(armAngle))
     }
 
     companion object {
