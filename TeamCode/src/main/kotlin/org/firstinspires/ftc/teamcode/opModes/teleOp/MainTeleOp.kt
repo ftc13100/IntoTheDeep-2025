@@ -41,13 +41,14 @@ class MainTeleOp : CommandOpMode() {
         driver = GamepadEx(gamepad1)
         operator = GamepadEx(gamepad2)
 
-        elevatorRight = Motor(hardwareMap, ControlBoard.SLIDES_RIGHT.deviceName)
-        elevatorLeft = Motor(hardwareMap, ControlBoard.SLIDES_LEFT.deviceName)
+        elevatorRight = Motor(hardwareMap, ControlBoard.SLIDES_RIGHT.deviceName, Motor.GoBILDA.RPM_435)
+        elevatorLeft = Motor(hardwareMap, ControlBoard.SLIDES_LEFT.deviceName, Motor.GoBILDA.RPM_435)
+
         armRight = Motor(hardwareMap, ControlBoard.ARM_RIGHT.deviceName, Motor.GoBILDA.RPM_435)
         armLeft = Motor(hardwareMap, ControlBoard.ARM_LEFT.deviceName, Motor.GoBILDA.RPM_435)
 
         slidesSubsystem = SlidesSubsystem(elevatorRight, elevatorLeft)
-        armSubsystem = ArmSubsystem(armRight, armLeft)
+        armSubsystem = ArmSubsystem(armRight, armLeft, true)
         driveSubsystem = DriveSubsystem(hardwareMap)
 
         spinUpCommand = SpinUpCommand(slidesSubsystem)
