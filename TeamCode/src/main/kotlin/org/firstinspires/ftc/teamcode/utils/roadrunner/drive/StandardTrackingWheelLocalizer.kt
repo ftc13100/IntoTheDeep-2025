@@ -73,7 +73,7 @@ class StandardTrackingWheelLocalizer(hardwareMap: HardwareMap) : ThreeTrackingWh
         val GEAR_RATIO = 1.0 // output (wheel) speed / input (encoder) speed
 
         @JvmField
-        var LATERAL_DISTANCE = 15.5 // in; distance between the left and right wheels
+        var LATERAL_DISTANCE = 15.153260857569071    // in; distance between the left and right wheels
 
         @JvmField
         var FORWARD_OFFSET = -2.1 // in; offset of the lateral wheel

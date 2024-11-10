@@ -275,7 +275,7 @@ class DriveSubsystem @JvmOverloads constructor(
     companion object {
         var TRANSLATIONAL_PID = PIDCoefficients(8.0, 0.0, 0.0)
         var HEADING_PID = PIDCoefficients(8.0, 0.0, 0.0)
-        var LATERAL_MULTIPLIER = 1.0
+        var LATERAL_MULTIPLIER = 1.0126582278481012658227848101266
         var VX_WEIGHT = 1.0
         var VY_WEIGHT = 1.0
         var OMEGA_WEIGHT = 1.0

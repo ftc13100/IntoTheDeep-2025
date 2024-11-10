@@ -46,6 +46,7 @@ object DriveConstants {
      */
     var WHEEL_RADIUS = 1.88976 // in`
     var GEAR_RATIO = 1.0 // output (wheel) speed / input (motor) speed
+    @JvmField
     var TRACK_WIDTH = 15.5 // in
 
     /*
@@ -54,9 +55,12 @@ object DriveConstants {
      * motor encoders or have elected not to use them for velocity control, these values should be
      * empirically tuned.
      */
-    var kV = 1.0 / rpmToVelocity(MAX_RPM)
-    var kA = 0.0
-    var kStatic = 0.0
+    @JvmField
+    var kV = 0.0123
+    @JvmField
+    var kA = 0.003
+    @JvmField
+    var kStatic = 0.01
 
     /*
      * These values are used to generate the trajectories for you robot. To ensure proper operation,
@@ -71,7 +75,7 @@ object DriveConstants {
      * ((MAX_RPM / 60) * GEAR_RATIO * WHEEL_RADIUS * 2 * Math.PI) * 0.85
      * Resulting in 73.17330064499293 in/s.
      * This is only 85% of the theoretical maximum velocity of the bot, following the recommendation above.
-     * This is capped at 85% because there are a number of variables that will prevent your bot from actually
+     * This is capped at 85% because there are a number of variables that will preve    nt your bot from actually
      * reaching this maximum velocity: voltage dropping over the game, bot weight, general mechanical inefficiencies, etc.
      * However, you can push this higher yourself if you'd like. Perhaps raise it to 90-95% of the theoretically
      * max velocity. The theoretically maximum velocity is 86.08623605293286 in/s.
@@ -86,10 +90,10 @@ object DriveConstants {
      * You are free to raise this on your own if you would like. It is best determined through experimentation.
 
      */
-    var MAX_VEL = 73.17330064499293
-    var MAX_ACCEL = 73.17330064499293
-    var MAX_ANG_VEL = Math.toRadians(270.4852451612903)
-    var MAX_ANG_ACCEL = Math.toRadians(270.4852451612903)
+    var MAX_VEL = 30.0
+    var MAX_ACCEL = 30.0
+    var MAX_ANG_VEL = Math.toRadians(180.0)
+    var MAX_ANG_ACCEL = Math.toRadians(170.0)
     fun encoderTicksToInches(ticks: Double): Double {
         return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV
     }
