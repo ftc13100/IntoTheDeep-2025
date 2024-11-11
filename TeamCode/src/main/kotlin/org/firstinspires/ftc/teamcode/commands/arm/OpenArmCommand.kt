@@ -1,10 +1,10 @@
-package org.firstinspires.ftc.teamcode.commands.drive
+package org.firstinspires.ftc.teamcode.commands.arm
 
 import com.arcrobotics.ftclib.command.CommandBase
-import org.firstinspires.ftc.teamcode.subsystems.arm.ArmSubsystem
+import org.firstinspires.ftc.teamcode.subsystems.arm.OpenArmSubsystem
 
-class ArmCommand(
-    private val subsystem: ArmSubsystem,
+class OpenArmCommand(
+    private val subsystem: OpenArmSubsystem,
     private val turn: Boolean,
 ) : CommandBase() {
 

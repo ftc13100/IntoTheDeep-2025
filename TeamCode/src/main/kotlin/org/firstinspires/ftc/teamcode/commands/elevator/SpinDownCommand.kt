@@ -1,19 +1,18 @@
-package org.firstinspires.ftc.teamcode.commands.drive
+package org.firstinspires.ftc.teamcode.commands.elevator
 
 import com.arcrobotics.ftclib.command.CommandBase
 import org.firstinspires.ftc.teamcode.subsystems.slides.SlidesSubsystem
 
-class SpinUpCommand(
+class SpinDownCommand(
     private val subsystem: SlidesSubsystem
 ) : CommandBase() {
 
+
     override fun execute() {
-        subsystem.up()
+        subsystem.down()
     }
 
     override fun end(interrupted: Boolean) {
         subsystem.stop()
     }
-
-
 }
