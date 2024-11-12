@@ -36,7 +36,6 @@ class ArmSubsystem(
 
     override fun useOutput(output: Double, setpoint: Double) {
         // For tuning only
-        super.setpoint = target
         controller.setPIDF(kP, kI, kD, 0.0)
 
         turnMotors.set(output + feedforward.calculate(armAngle, armVelocity))
