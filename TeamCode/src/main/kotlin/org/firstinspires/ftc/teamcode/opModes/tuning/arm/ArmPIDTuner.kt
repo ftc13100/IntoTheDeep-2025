@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.config.Config
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.arcrobotics.ftclib.command.CommandOpMode
 import com.arcrobotics.ftclib.command.InstantCommand
+import com.arcrobotics.ftclib.command.RunCommand
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.constants.ControlBoard
@@ -29,6 +30,11 @@ class ArmPIDTuner : CommandOpMode() {
         InstantCommand({
             armSubsystem.setpoint = Math.toRadians(target)
         }).perpetually().schedule()
+
+        RunCommand({
+            telemetry.addData("Arm Angle: ", armSubsystem.armAngle)
+            telemetry.addData("Setpoint: ", target)
+        })
     }
 
     companion object {
