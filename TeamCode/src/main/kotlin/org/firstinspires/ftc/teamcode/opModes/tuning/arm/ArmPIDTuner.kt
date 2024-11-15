@@ -25,16 +25,19 @@ class ArmPIDTuner : CommandOpMode() {
         armLeft = Motor(hardwareMap, ControlBoard.ARM_LEFT.deviceName, Motor.GoBILDA.RPM_435)
         armRight = Motor(hardwareMap, ControlBoard.ARM_RIGHT.deviceName, Motor.GoBILDA.RPM_435)
 
-        armSubsystem = ArmSubsystem(armLeft, armRight)
+        armSubsystem = ArmSubsystem(armRight, armLeft)
 
         InstantCommand({
             armSubsystem.setpoint = Math.toRadians(target)
         }).perpetually().schedule()
 
         RunCommand({
-            telemetry.addData("Arm Angle: ", armSubsystem.armAngle)
+            telemetry.addData("Arm Angle: ", Math.toDegrees(armSubsystem.armAngle))
             telemetry.addData("Setpoint: ", target)
-        })
+            telemetry.update()
+        }).perpetually().schedule()
+
+        register(armSubsystem)
     }
 
     companion object {
