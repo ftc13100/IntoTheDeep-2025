@@ -31,7 +31,7 @@ class ArmSubsystem(
     private val feedforward = ArmFeedforward(0.0, kCos, 0.0);
 
     init {
-        armRight.inverted = true
+        armLeft.inverted = true
         turnMotors.resetEncoder()
         turnMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
     }
