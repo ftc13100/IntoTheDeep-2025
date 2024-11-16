@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.opModes.teleOp
 
 import com.arcrobotics.ftclib.command.CommandOpMode
-import com.arcrobotics.ftclib.command.InstantCommand
 import com.arcrobotics.ftclib.command.RunCommand
 import com.arcrobotics.ftclib.gamepad.GamepadEx
 import com.arcrobotics.ftclib.gamepad.GamepadKeys
@@ -57,8 +56,8 @@ class MainTeleOp: CommandOpMode() {
         armDownCommand = ArmCommand(armSubsystem, false)
         driveCommand = DriveCommand(driveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX, 0.0)
 
-        //operator.getGamepadButton(GamepadKeys.Button.DPAD_UP).whileHeld(spinUpCommand)
-       // operator.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whileHeld(spinDownCommand)
+        operator.getGamepadButton(GamepadKeys.Button.DPAD_UP).whileHeld(spinUpCommand)
+        operator.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whileHeld(spinDownCommand)
         operator.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whileHeld(armUpCommand)
         operator.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(armDownCommand)
 
