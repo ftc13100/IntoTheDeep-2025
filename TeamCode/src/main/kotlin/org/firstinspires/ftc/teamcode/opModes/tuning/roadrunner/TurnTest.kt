@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.subsystems.drive.DriveSubsystem
 /*
  * This is a simple routine to test turning capabilities.
  */
-@Disabled
+//@Disabled
 @Config
 @Autonomous(group = "drive")
 class TurnTest : LinearOpMode() {

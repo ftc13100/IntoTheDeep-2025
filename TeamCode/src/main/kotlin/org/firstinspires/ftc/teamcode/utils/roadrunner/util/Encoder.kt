@@ -19,7 +19,7 @@ class Encoder @JvmOverloads constructor(
      *
      * @param direction either reverse or forward depending on if encoder counts should be negated
      */
-    private var direction: Direction
+    var direction: Direction
     private var lastPosition = 0
     private var velocityEstimate = 0.0
     private var lastUpdateTime: Double

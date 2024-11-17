@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.subsystems.drive.DriveSubsystem
  *
  * Further fine tuning of MAX_ANG_VEL may be desired.
  */
-@Disabled
+//@Disabled
 @Config
 @Autonomous(group = "drive")
 class MaxAngularVeloTuner : LinearOpMode() {
