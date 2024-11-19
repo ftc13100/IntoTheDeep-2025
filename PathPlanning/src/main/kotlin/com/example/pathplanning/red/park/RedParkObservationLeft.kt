@@ -9,16 +9,16 @@ import java.io.File
 import java.io.IOException
 import javax.imageio.ImageIO
 
-object RedParkObservation2 {
+object RedParkObservationLeft {
     @JvmStatic
     fun main(args: Array<String>) {
         val meepMeep = MeepMeep(800)
 
         val myBot = DefaultBotBuilder(meepMeep) // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-            .setConstraints(30.0, 30.0, Math.toRadians(180.0), Math.toRadians(170.0), 14.0)
+            .setConstraints(30.0, 30.0, Math.toRadians(170.0), Math.toRadians(170.0), 13.94)
             .followTrajectorySequence { drive ->
-                drive.trajectorySequenceBuilder(Pose2d(12.0, -62.0, (90.0).toRadians()))
-                    .strafeRight(48.0)
+                drive.trajectorySequenceBuilder(Pose2d(-12.0, -62.0, (90.0).toRadians()))
+                    .strafeRight(72.0)
                     .build()
             }
         var img: Image? = null
