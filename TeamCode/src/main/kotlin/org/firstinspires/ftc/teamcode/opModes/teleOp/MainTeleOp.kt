@@ -6,32 +6,30 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx
 import com.arcrobotics.ftclib.gamepad.GamepadKeys
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
-import org.firstinspires.ftc.teamcode.commands.arm.ArmCommand
+import org.firstinspires.ftc.teamcode.commands.arm.OpenArmCommand
 import org.firstinspires.ftc.teamcode.commands.drive.DriveCommand
-import org.firstinspires.ftc.teamcode.commands.slides.SpinDownCommand
-import org.firstinspires.ftc.teamcode.commands.slides.SpinUpCommand
+import org.firstinspires.ftc.teamcode.commands.elevator.SpinDownCommand
+import org.firstinspires.ftc.teamcode.commands.elevator.SpinUpCommand
 import org.firstinspires.ftc.teamcode.constants.ControlBoard
-import org.firstinspires.ftc.teamcode.subsystems.arm.ArmSubsystem
+import org.firstinspires.ftc.teamcode.subsystems.arm.OpenArmSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.drive.DriveSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.slides.SlidesSubsystem
 
 @TeleOp
 class MainTeleOp : CommandOpMode() {
-
     private lateinit var elevatorLeft: Motor
     private lateinit var elevatorRight: Motor
     private lateinit var armLeft: Motor
     private lateinit var armRight: Motor
 
-
     private lateinit var slidesSubsystem: SlidesSubsystem
-    private lateinit var armSubsystem: ArmSubsystem
+    private lateinit var armSubsystem: OpenArmSubsystem
     private lateinit var driveSubsystem: DriveSubsystem
 
     private lateinit var spinUpCommand: SpinUpCommand
     private lateinit var spinDownCommand: SpinDownCommand
-    private lateinit var armUpCommand: ArmCommand
-    private lateinit var armDownCommand: ArmCommand
+    private lateinit var armUpCommand: OpenArmCommand
+    private lateinit var armDownCommand: OpenArmCommand
     private lateinit var driveCommand: DriveCommand
 
     private lateinit var driver: GamepadEx
@@ -48,20 +46,18 @@ class MainTeleOp : CommandOpMode() {
         armLeft = Motor(hardwareMap, ControlBoard.ARM_LEFT.deviceName, Motor.GoBILDA.RPM_435)
 
         slidesSubsystem = SlidesSubsystem(elevatorRight, elevatorLeft)
-        armSubsystem = ArmSubsystem(armRight, armLeft, true)
+        armSubsystem = OpenArmSubsystem(armRight, armLeft)
         driveSubsystem = DriveSubsystem(hardwareMap)
 
         spinUpCommand = SpinUpCommand(slidesSubsystem)
         spinDownCommand = SpinDownCommand(slidesSubsystem)
-        armUpCommand = ArmCommand(armSubsystem, true)
-        armDownCommand = ArmCommand(armSubsystem, false)
+        armUpCommand = OpenArmCommand(armSubsystem, true)
+        armDownCommand = OpenArmCommand(armSubsystem, false)
         driveCommand =
             DriveCommand(driveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX, 0.0)
 
         //operator.getGamepadButton(GamepadKeys.Button.DPAD_UP).whileHeld(spinUpCommand)
         // operator.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whileHeld(spinDownCommand)
-        operator.getGamepadButton(GamepadKeys.Button.DPAD_UP).whileHeld(spinUpCommand)
-        operator.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whileHeld(spinDownCommand)
         operator.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whileHeld(armUpCommand)
         operator.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(armDownCommand)
 

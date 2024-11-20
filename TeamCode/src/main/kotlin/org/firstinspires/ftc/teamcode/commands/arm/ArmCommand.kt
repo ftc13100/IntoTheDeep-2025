@@ -4,21 +4,10 @@ import com.arcrobotics.ftclib.command.CommandBase
 import org.firstinspires.ftc.teamcode.subsystems.arm.ArmSubsystem
 
 class ArmCommand(
-    private val subsystem: ArmSubsystem,
-    private val turn: Boolean,
+    private val setpoint: Double,
+    private val subsystem: ArmSubsystem
 ) : CommandBase() {
-
-    override fun execute() {
-        if (turn) {
-            subsystem.clockwise()
-        } else {
-            subsystem.anticlockwise()
-        }
+    override fun initialize() {
+        subsystem.setpoint = setpoint
     }
-
-    override fun end(interrupted: Boolean) {
-        subsystem.stop()
-    }
-
-
 }
