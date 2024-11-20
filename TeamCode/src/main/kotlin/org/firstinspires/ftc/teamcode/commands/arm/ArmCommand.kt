@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.commands.drive
+package org.firstinspires.ftc.teamcode.commands.arm
 
 import com.arcrobotics.ftclib.command.CommandBase
 import org.firstinspires.ftc.teamcode.subsystems.arm.ArmSubsystem

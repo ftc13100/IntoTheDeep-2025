@@ -6,10 +6,10 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx
 import com.arcrobotics.ftclib.gamepad.GamepadKeys
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
-import org.firstinspires.ftc.teamcode.commands.drive.ArmCommand
+import org.firstinspires.ftc.teamcode.commands.arm.ArmCommand
 import org.firstinspires.ftc.teamcode.commands.drive.DriveCommand
-import org.firstinspires.ftc.teamcode.commands.drive.SpinDownCommand
-import org.firstinspires.ftc.teamcode.commands.drive.SpinUpCommand
+import org.firstinspires.ftc.teamcode.commands.slides.SpinDownCommand
+import org.firstinspires.ftc.teamcode.commands.slides.SpinUpCommand
 import org.firstinspires.ftc.teamcode.constants.ControlBoard
 import org.firstinspires.ftc.teamcode.subsystems.arm.ArmSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.drive.DriveSubsystem
