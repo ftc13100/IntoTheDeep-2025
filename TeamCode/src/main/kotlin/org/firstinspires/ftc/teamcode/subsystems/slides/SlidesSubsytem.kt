@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.utils.PIDSubsystem
 import kotlin.math.PI
 
 @Config
-class SlidesSubsytemPID(
+class SlidesSubsytem(
     elevatorLeft : Motor,
     elevatorRight : Motor
 ) : PIDSubsystem(

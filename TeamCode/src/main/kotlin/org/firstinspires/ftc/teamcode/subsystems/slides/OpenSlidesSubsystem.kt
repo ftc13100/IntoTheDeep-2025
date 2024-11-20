@@ -4,7 +4,7 @@ import com.arcrobotics.ftclib.command.SubsystemBase
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup
 
-class SlidesSubsystem(
+class OpenSlidesSubsystem(
     //sets them as a private variable thats a motor (same name as in driver hub)
     private val elevatorLeft: Motor,
     private val elevatorRight: Motor,

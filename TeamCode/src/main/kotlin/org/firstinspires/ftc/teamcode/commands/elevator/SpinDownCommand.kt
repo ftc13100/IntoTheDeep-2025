@@ -5,10 +5,10 @@ package org.firstinspires.ftc.teamcode.commands.elevator
 >>>>>>>> 509c48b (Arm PID infra:):TeamCode/src/main/kotlin/org/firstinspires/ftc/teamcode/commands/elevator/SpinDownCommand.kt
 
 import com.arcrobotics.ftclib.command.CommandBase
-import org.firstinspires.ftc.teamcode.subsystems.slides.SlidesSubsystem
+import org.firstinspires.ftc.teamcode.subsystems.slides.OpenSlidesSubsystem
 
 class SpinDownCommand(
-    private val subsystem: SlidesSubsystem
+    private val subsystem: OpenSlidesSubsystem
 ) : CommandBase() {
 
 

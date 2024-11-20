@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.commands.elevator.SpinUpCommand
 import org.firstinspires.ftc.teamcode.constants.ControlBoard
 import org.firstinspires.ftc.teamcode.subsystems.arm.OpenArmSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.drive.DriveSubsystem
-import org.firstinspires.ftc.teamcode.subsystems.slides.SlidesSubsystem
+import org.firstinspires.ftc.teamcode.subsystems.slides.OpenSlidesSubsystem
 
 @TeleOp
 class MainTeleOp : CommandOpMode() {
@@ -22,7 +22,7 @@ class MainTeleOp : CommandOpMode() {
     private lateinit var armLeft: Motor
     private lateinit var armRight: Motor
 
-    private lateinit var slidesSubsystem: SlidesSubsystem
+    private lateinit var slidesSubsystem: OpenSlidesSubsystem
     private lateinit var armSubsystem: OpenArmSubsystem
     private lateinit var driveSubsystem: DriveSubsystem
 
@@ -45,7 +45,7 @@ class MainTeleOp : CommandOpMode() {
         armRight = Motor(hardwareMap, ControlBoard.ARM_RIGHT.deviceName, Motor.GoBILDA.RPM_435)
         armLeft = Motor(hardwareMap, ControlBoard.ARM_LEFT.deviceName, Motor.GoBILDA.RPM_435)
 
-        slidesSubsystem = SlidesSubsystem(elevatorRight, elevatorLeft)
+        slidesSubsystem = OpenSlidesSubsystem(elevatorRight, elevatorLeft)
         armSubsystem = OpenArmSubsystem(armRight, armLeft)
         driveSubsystem = DriveSubsystem(hardwareMap)
 

@@ -4,10 +4,6 @@ import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.noahbres.meepmeep.MeepMeep
 import com.noahbres.meepmeep.core.toRadians
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder
-import java.awt.Image
-import java.io.File
-import java.io.IOException
-import javax.imageio.ImageIO
 
 object BlueHighBasket2 {
     @JvmStatic
@@ -23,19 +19,10 @@ object BlueHighBasket2 {
                     .waitSeconds(2.0)
                     .build()
             }
-        var img: Image? = null
-        try {
-            img = ImageIO.read(File("/Users/ishaanghaskadbi/Downloads/field.png"))
-        } catch (_ : IOException)  {
-
-        }
-
-        if (img != null) {
-            meepMeep.setBackground(img)
-                .setDarkMode(true)
-                .setBackgroundAlpha(0.95f)
-                .addEntity(myBot)
-                .start()
-        }
+        meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_JUICE_DARK)
+            .setDarkMode(true)
+            .setBackgroundAlpha(0.95f)
+            .addEntity(myBot)
+            .start()
     }
 }
