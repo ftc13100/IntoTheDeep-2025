@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opModes.auto.blue.basket
+package org.firstinspires.ftc.teamcode.opModes.auto.blue.basket.left
 
 import com.arcrobotics.ftclib.hardware.motors.CRServo
 import com.arcrobotics.ftclib.hardware.motors.Motor
@@ -11,8 +11,8 @@ import org.firstinspires.ftc.teamcode.subsystems.drive.DriveSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.slides.SlidesSubsytem
 
-@Autonomous
-class BlueHighBasetLeft() : OpMode() {
+@Autonomous(name = "Blue High Basket Left", group = "Basket", preselectTeleOp = "MainTeleOp")
+class BlueHighBasketLeft() : OpMode() {
     private lateinit var armLeft: Motor
     private lateinit var armRight: Motor
     private lateinit var elevatorLeft: Motor
@@ -26,7 +26,7 @@ class BlueHighBasetLeft() : OpMode() {
     private lateinit var elevatorSubsystem: SlidesSubsytem
 
     override fun init() {
-        intake = CRServo(hardwareMap, "intake")
+        intake = CRServo(hardwareMap, ControlBoard.INTAKE.deviceName)
 
         armLeft = Motor(hardwareMap, ControlBoard.ARM_LEFT.deviceName)
         armRight = Motor(hardwareMap, ControlBoard.ARM_RIGHT.deviceName)
