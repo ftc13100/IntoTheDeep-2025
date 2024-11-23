@@ -5,6 +5,7 @@ import com.arcrobotics.ftclib.controller.PIDController
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.hardware.motors.Motor.GoBILDA
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup
+import org.firstinspires.ftc.teamcode.constants.SlidesConstants
 import org.firstinspires.ftc.teamcode.utils.PIDSubsystem
 import kotlin.math.PI
 
@@ -14,9 +15,9 @@ class SlidesSubsytem(
     elevatorRight : Motor
 ) : PIDSubsystem(
     PIDController(
-        0.0,
-        0.0,
-        0.0,
+        SlidesConstants.kP.value,
+        SlidesConstants.kI.value,
+        SlidesConstants.kD.value,
     )
 ) {
     private val extendMotors = MotorGroup(elevatorLeft, elevatorRight)
