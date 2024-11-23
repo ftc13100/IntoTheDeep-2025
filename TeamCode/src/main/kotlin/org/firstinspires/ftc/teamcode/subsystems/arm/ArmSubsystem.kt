@@ -24,10 +24,10 @@ class ArmSubsystem(
     private val turnMotors = MotorGroup(armLeft, armRight)
 
     val armAngle: Double
-        get() = turnMotors.positions[0] / GoBILDA.RPM_435.cpr * 2 * PI
+        get() = turnMotors.positions[0] / GoBILDA.RPM_312.cpr * PI
 
     val armVelocity: Double
-        get() = turnMotors.velocities[0] / GoBILDA.RPM_435.cpr * 2 * PI
+        get() = turnMotors.velocities[0] / GoBILDA.RPM_312.cpr * PI
 
     private var feedforward = ArmFeedforward(0.0, ArmConstants.kCos.value, 0.0);
 
@@ -53,7 +53,7 @@ class ArmSubsystem(
 
     companion object {
         @JvmField
-        var kCos = 0.3
+        var kCos = 0.4
 
         @JvmField
         var kP = 0.0
