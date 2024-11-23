@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.controller.wpilibcontroller.ArmFeedforward
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.hardware.motors.Motor.GoBILDA
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup
+import org.firstinspires.ftc.teamcode.subsystems.arm.OpenArmSubsystem.Companion.kCos
 import org.firstinspires.ftc.teamcode.utils.PIDSubsystem
 import kotlin.math.PI
 
@@ -48,9 +49,6 @@ class ArmSubsystem(
     override fun getMeasurement() = armAngle
 
     companion object {
-        @JvmField
-        var kCos = 0.3
-
         @JvmField
         var kP = 0.0
 

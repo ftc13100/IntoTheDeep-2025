@@ -21,8 +21,8 @@ class SlidesSubsytem(
 ) {
     private val extendMotors = MotorGroup(elevatorLeft, elevatorRight)
 
-    val slideAngle: Double
-        get() = extendMotors.positions[0] / GoBILDA.RPM_435.cpr * 2 * PI
+    val slidePos: Double
+        get() = extendMotors.positions[0]
 
     val slideVelocity: Double
         get() = extendMotors.velocities[0] / GoBILDA.RPM_435.cpr * 2 * PI
@@ -42,7 +42,7 @@ class SlidesSubsytem(
         extendMotors.set(output)
     }
 
-    override fun getMeasurement() = slideAngle
+    override fun getMeasurement() = slidePos
 
     companion object {
 
