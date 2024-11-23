@@ -35,6 +35,8 @@ class ArmSubsystem(
         armLeft.inverted = true
         armLeft.encoder.setDirection(Motor.Direction.REVERSE)
 
+        turnMotors.inverted = true
+
         turnMotors.resetEncoder()
         turnMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
     }
