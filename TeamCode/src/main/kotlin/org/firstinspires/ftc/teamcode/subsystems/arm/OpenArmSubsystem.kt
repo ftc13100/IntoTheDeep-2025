@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.hardware.motors.Motor.GoBILDA
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup
 import kotlin.math.PI
+import kotlin.math.cos
 
 @Config
 class OpenArmSubsystem(
@@ -38,7 +39,7 @@ class OpenArmSubsystem(
     }
 
     fun stop() {
-        turnMotors.set(kCos * Math.cos(armAngle))
+        turnMotors.set(kCos * cos(armAngle))
     }
 
     companion object {
