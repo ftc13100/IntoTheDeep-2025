@@ -58,6 +58,7 @@ class ArmSubsystem(
     override fun getMeasurement() = armAngle
 
     companion object {
+
         @JvmField
         var kCos = 0.4
 
