@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.controller.wpilibcontroller.ArmFeedforward
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.hardware.motors.Motor.GoBILDA
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup
+import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.teamcode.constants.ArmConstants
 import org.firstinspires.ftc.teamcode.utils.PIDSubsystem
 import kotlin.math.PI
@@ -13,7 +14,8 @@ import kotlin.math.PI
 @Config
 class ArmSubsystem(
     armLeft: Motor,
-    armRight: Motor
+    armRight: Motor,
+    private val telemetry: Telemetry
 ) : PIDSubsystem(
     PIDController(
         ArmConstants.kP.value,
@@ -45,6 +47,10 @@ class ArmSubsystem(
         // For tuning only
         controller.setPIDF(kP, kI, kD, 0.0)
         feedforward = ArmFeedforward(0.0, kCos, 0.0)
+
+        telemetry.addData("Output: ", output)
+        telemetry.addData("FF output: ", feedforward.calculate(armAngle, armVelocity))
+        telemetry.update()
 
         turnMotors.set(output + feedforward.calculate(armAngle, armVelocity))
     }
