@@ -9,7 +9,7 @@ import java.io.File
 import java.io.IOException
 import javax.imageio.ImageIO
 
-object BlueHighChamber1 {
+object BlueHighChamberLeft {
     @JvmStatic
     fun main(args: Array<String>) {
         val meepMeep = MeepMeep(800)

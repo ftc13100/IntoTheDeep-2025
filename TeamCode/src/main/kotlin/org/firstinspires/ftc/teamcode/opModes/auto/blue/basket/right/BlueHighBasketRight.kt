@@ -64,6 +64,8 @@ class BlueHighBasketRight() : OpMode() {
                 armSubsystem.setpoint = Math.toRadians(0.0)
             }
             .build()
+        driveSubsystem.poseEstimate = AutoStartPose.BLUE_RIGHT.startPose
+
 
         driveSubsystem.followTrajectorySequenceAsync(trajectory)
     }

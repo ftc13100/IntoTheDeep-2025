@@ -1,4 +1,4 @@
-package com.example.pathplanning.blue.park
+package com.example.pathplanning.blue.main
 
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.noahbres.meepmeep.MeepMeep
@@ -9,18 +9,23 @@ import java.io.File
 import java.io.IOException
 import javax.imageio.ImageIO
 
-object BlueParkObservation2 {
+object BlueAutoLeft {
     @JvmStatic
+
     fun main(args: Array<String>) {
         val meepMeep = MeepMeep(800)
 
-        val myBot = DefaultBotBuilder(meepMeep) // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-            .setConstraints(30.0, 30.0, Math.toRadians(180.0), Math.toRadians(170.0), 14.0)
-            .followTrajectorySequence { drive ->
-                drive.trajectorySequenceBuilder(Pose2d(12.0, 62.0, (270.0).toRadians()))
-                    .strafeRight(72.0)
-                    .build()
-            }
+        val myBot =
+            DefaultBotBuilder(meepMeep) // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
+                .setConstraints(30.0, 30.0, Math.toRadians(170.0), Math.toRadians(170.0), 13.94)
+                .followTrajectorySequence { drive ->
+                    drive.trajectorySequenceBuilder(Pose2d(-12.0, 62.0, (270.0).toRadians()))
+                        .turn((90.0).toRadians())
+                        .forward(60.0)
+                        .waitSeconds(4.0)
+
+                        .build()
+                }
         var img: Image? = null
         try {
             img = ImageIO.read(File("/Users/ishaanghaskadbi/Downloads/field.png"))

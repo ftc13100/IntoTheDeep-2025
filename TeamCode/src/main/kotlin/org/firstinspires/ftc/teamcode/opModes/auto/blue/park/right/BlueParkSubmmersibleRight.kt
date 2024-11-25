@@ -19,6 +19,8 @@ class BlueParkSubmmersibleRight: OpMode() {
             .forward(24.0)
             .strafeRight(12.0)
             .build()
+        driveSubsystem.poseEstimate = AutoStartPose.BLUE_RIGHT.startPose
+
 
         driveSubsystem.followTrajectorySequenceAsync(trajectory)
 

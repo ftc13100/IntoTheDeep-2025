@@ -15,6 +15,7 @@ class BlueParkObservationRight: OpMode() {
         val trajectory = driveSubsystem.trajectorySequenceBuilder(AutoStartPose.BLUE_RIGHT.startPose)
             .strafeRight(72.0)
             .build()
+        driveSubsystem.poseEstimate = AutoStartPose.BLUE_RIGHT.startPose
 
         driveSubsystem.followTrajectorySequenceAsync(trajectory)
     }

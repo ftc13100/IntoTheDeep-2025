@@ -16,6 +16,8 @@ class RedParkObservationLeft: OpMode() {
         val trajectory = driveSubsystem.trajectorySequenceBuilder(AutoStartPose.RED_LEFT.startPose)
             .strafeRight(72.0)
             .build()
+        driveSubsystem.poseEstimate = AutoStartPose.RED_LEFT.startPose
+
 
         driveSubsystem.followTrajectorySequenceAsync(trajectory)
     }

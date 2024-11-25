@@ -78,8 +78,7 @@ class DriveSubsystem @JvmOverloads constructor(
         leftFront = hardwareMap.get(DcMotorEx::class.java, ControlBoard.DRIVE_LEFT_FRONT.deviceName)
         leftRear = hardwareMap.get(DcMotorEx::class.java, ControlBoard.DRIVE_LEFT_REAR.deviceName)
         rightRear = hardwareMap.get(DcMotorEx::class.java, ControlBoard.DRIVE_RIGHT_REAR.deviceName)
-        rightFront =
-            hardwareMap.get(DcMotorEx::class.java, ControlBoard.DRIVE_RIGHT_FRONT.deviceName)
+        rightFront = hardwareMap.get(DcMotorEx::class.java, ControlBoard.DRIVE_RIGHT_FRONT.deviceName)
         motors = listOf(leftFront, leftRear, rightRear, rightFront)
         for (motor in motors) {
             val motorConfigurationType = motor.motorType.clone()
@@ -97,7 +96,7 @@ class DriveSubsystem @JvmOverloads constructor(
             setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, DriveConstants.MOTOR_VELO_PID)
         }
 
-        // leftFront.direction = DcMotorSimple.Direction.REVERSE
+        //leftFront.direction = DcMotorSimple.Direction.REVERSE
         leftRear.direction = DcMotorSimple.Direction.REVERSE
 
         localizer = StandardTrackingWheelLocalizer(hardwareMap)

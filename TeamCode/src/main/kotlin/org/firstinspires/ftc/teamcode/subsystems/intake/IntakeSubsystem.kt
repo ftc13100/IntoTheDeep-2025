@@ -8,7 +8,7 @@ class IntakeSubsystem(
 ) : SubsystemBase() {
     fun intake() = intake.set(1.0)
 
-    fun outtake() = intake.set(-1.0)
+    fun outtake() = intake.set(-0.5)
 
     fun stop() = intake.stop()
 }

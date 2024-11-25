@@ -64,6 +64,9 @@ class BlueHighChamberLeft() : OpMode() {
             }
             .build()
 
+        driveSubsystem.poseEstimate = AutoStartPose.BLUE_LEFT.startPose
+
+
         driveSubsystem.followTrajectorySequenceAsync(trajectory)
     }
 

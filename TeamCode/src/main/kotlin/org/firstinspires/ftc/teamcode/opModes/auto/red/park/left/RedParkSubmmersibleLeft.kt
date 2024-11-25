@@ -19,6 +19,7 @@ class RedParkSubmmersibleLeft: OpMode() {
             .forward(24.0)
             .strafeRight(12.0)
             .build()
+        driveSubsystem.poseEstimate = AutoStartPose.RED_LEFT.startPose
 
         driveSubsystem.followTrajectorySequenceAsync(trajectory)
     }

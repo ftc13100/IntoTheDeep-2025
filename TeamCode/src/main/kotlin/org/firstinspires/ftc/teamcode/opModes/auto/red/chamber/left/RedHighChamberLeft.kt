@@ -63,6 +63,8 @@ class RedHighChamberLeft() : OpMode() {
                 armSubsystem.setpoint = Math.toRadians(0.0)
             }
             .build()
+        driveSubsystem.poseEstimate = AutoStartPose.RED_LEFT.startPose
+
 
         driveSubsystem.followTrajectorySequenceAsync(trajectory)
     }

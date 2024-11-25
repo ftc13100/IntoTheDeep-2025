@@ -14,11 +14,13 @@ class BlueParkSubmmersibleLeft: OpMode() {
         driveSubsystem = DriveSubsystem(hardwareMap)
 
         val trajectory = driveSubsystem.trajectorySequenceBuilder(AutoStartPose.BLUE_LEFT.startPose)
-            .forward(27.0)
+            .forward(25.0)
             .strafeLeft(48.0)
-            .forward(24.0)
+            .forward(25.0)
             .strafeRight(12.0)
             .build()
+        driveSubsystem.poseEstimate = AutoStartPose.BLUE_LEFT.startPose
+
 
         driveSubsystem.followTrajectorySequenceAsync(trajectory)
     }

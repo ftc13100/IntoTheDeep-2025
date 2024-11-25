@@ -19,9 +19,9 @@ object BlueParkTouchSubmmersibleLeft {
             .setConstraints(30.0, 30.0, Math.toRadians(170.0), Math.toRadians(170.0), 13.94)
             .followTrajectorySequence { drive ->
                 drive.trajectorySequenceBuilder(Pose2d(-12.0, 62.0, (270.0).toRadians()))
-                    .forward(27.0)
+                    .forward(25.0)
                     .strafeLeft(48.0)
-                    .forward(24.0)
+                    .forward(25.0)
                     .strafeRight(12.0)
                     .build()
             }
