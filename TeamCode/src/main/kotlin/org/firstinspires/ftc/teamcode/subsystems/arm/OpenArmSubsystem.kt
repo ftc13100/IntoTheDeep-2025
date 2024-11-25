@@ -20,7 +20,7 @@ class OpenArmSubsystem(
 
     private val turnMotors = MotorGroup(armRight, armLeft)
     val armAngle: Double
-        get() = turnMotors.positions[0] / GoBILDA.RPM_312.cpr * PI
+        get() = turnMotors.positions[0] / GoBILDA.RPM_60.cpr * PI
 
     init {
         armLeft.inverted = true
@@ -44,6 +44,6 @@ class OpenArmSubsystem(
 
     companion object {
         @JvmField
-        var kCos = 0.3
+        var kCos = 0.004
     }
 }

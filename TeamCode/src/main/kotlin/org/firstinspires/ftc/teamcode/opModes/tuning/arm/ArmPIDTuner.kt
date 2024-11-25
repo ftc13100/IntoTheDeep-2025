@@ -32,7 +32,7 @@ class ArmPIDTuner : CommandOpMode() {
 
         RunCommand({
             telemetry.addData("Arm Angle: ", Math.toDegrees(armSubsystem.armAngle))
-            telemetry.addData("Setpoint: ", armSubsystem.setpoint)
+            telemetry.addData("Setpoint: ", Math.toDegrees(armSubsystem.setpoint))
             telemetry.update()
         }).perpetually().schedule()
 
