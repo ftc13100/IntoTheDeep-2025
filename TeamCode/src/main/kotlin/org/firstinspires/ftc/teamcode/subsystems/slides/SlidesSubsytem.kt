@@ -23,14 +23,13 @@ class SlidesSubsytem(
     private val extendMotors = MotorGroup(elevatorLeft, elevatorRight)
 
     val slidePos: Double
-        get() = extendMotors.positions[0]
+        get() = extendMotors.positions[0] / GoBILDA.RPM_1150.cpr * PI
 
     val slideVelocity: Double
-        get() = extendMotors.velocities[0] / GoBILDA.RPM_435.cpr * 2 * PI
+        get() = extendMotors.velocities[0] / GoBILDA.RPM_1150.cpr * PI
 
     init {
         elevatorLeft.inverted = true
-        elevatorLeft.encoder.setDirection(Motor.Direction.REVERSE)
 
         extendMotors.resetEncoder()
         extendMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
