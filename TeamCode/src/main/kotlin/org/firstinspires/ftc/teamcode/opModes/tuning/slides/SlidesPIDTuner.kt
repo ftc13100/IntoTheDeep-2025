@@ -4,7 +4,6 @@ import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.config.Config
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.arcrobotics.ftclib.command.CommandOpMode
-import com.arcrobotics.ftclib.command.InstantCommand
 import com.arcrobotics.ftclib.command.RunCommand
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
@@ -27,7 +26,7 @@ class SlidesPIDTuner : CommandOpMode() {
 
         slidesSubsystem = SlidesSubsytem(armRight, armLeft)
 
-        InstantCommand({
+        RunCommand({
             slidesSubsystem.setpoint = target
         }).perpetually().schedule()
 
