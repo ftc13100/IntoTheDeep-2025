@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.opModes.teleOp
 
 import com.arcrobotics.ftclib.command.CommandOpMode
-import com.arcrobotics.ftclib.command.RunCommand
 import com.arcrobotics.ftclib.gamepad.GamepadEx
 import com.arcrobotics.ftclib.gamepad.GamepadKeys
 import com.arcrobotics.ftclib.hardware.motors.Motor
@@ -64,10 +63,5 @@ class MainTeleOp : CommandOpMode() {
         operator.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(armDownCommand)
 
         driveSubsystem.defaultCommand = driveCommand
-
-        RunCommand({
-            telemetry.addData("Arm Position: ", armSubsystem.armAngle)
-            telemetry.update()
-        }).perpetually().schedule()
     }
 }

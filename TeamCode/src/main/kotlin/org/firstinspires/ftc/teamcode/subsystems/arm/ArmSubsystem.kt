@@ -43,32 +43,9 @@ class ArmSubsystem(
         turnMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
     }
 
-    override fun useOutput(output: Double, setpoint: Double) {
-        // For tuning only
-        controller.setPIDF(kP, kI, kD, 0.0)
-        feedforward = ArmFeedforward(0.0, kCos, 0.0)
-
-        telemetry.addData("Output: ", output)
-        telemetry.addData("FF output: ", feedforward.calculate(armAngle, armVelocity))
-        telemetry.update()
-
+    override fun useOutput(output: Double, setpoint: Double) =
         turnMotors.set(output + feedforward.calculate(armAngle, armVelocity))
-    }
+
 
     override fun getMeasurement() = armAngle
-
-    companion object {
-
-        @JvmField
-        var kCos = 0.004
-
-        @JvmField
-        var kP = 1.0
-
-        @JvmField
-        var kI = 0.0001
-
-        @JvmField
-        var kD = 0.08
-    }
 }

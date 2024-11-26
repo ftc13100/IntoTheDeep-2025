@@ -3,11 +3,9 @@ package org.firstinspires.ftc.teamcode.subsystems.slides
 import com.acmerobotics.dashboard.config.Config
 import com.arcrobotics.ftclib.controller.PIDController
 import com.arcrobotics.ftclib.hardware.motors.Motor
-import com.arcrobotics.ftclib.hardware.motors.Motor.GoBILDA
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup
 import org.firstinspires.ftc.teamcode.constants.SlidesConstants
 import org.firstinspires.ftc.teamcode.utils.PIDSubsystem
-import kotlin.math.PI
 
 @Config
 class SlidesSubsytem(
@@ -23,10 +21,10 @@ class SlidesSubsytem(
     private val extendMotors = MotorGroup(elevatorLeft, elevatorRight)
 
     val slidePos: Double
-        get() = extendMotors.positions[0] / GoBILDA.RPM_1150.cpr * PI
+        get() = extendMotors.positions[0]
 
     val slideVelocity: Double
-        get() = extendMotors.velocities[0] / GoBILDA.RPM_1150.cpr * PI
+        get() = extendMotors.velocities[0]
 
     init {
         elevatorLeft.inverted = true
