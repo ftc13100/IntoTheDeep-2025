@@ -10,6 +10,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.teamcode.constants.ArmConstants
 import org.firstinspires.ftc.teamcode.utils.PIDSubsystem
 import kotlin.math.PI
+import kotlin.math.cos
 
 @Config
 class ArmSubsystem(
