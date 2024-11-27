@@ -45,12 +45,12 @@ class SlidesSubsytem(
     companion object {
 
         @JvmField
-        var kP = 0.0
+        var kP = 0.03
 
         @JvmField
         var kI = 0.0
 
         @JvmField
-        var kD = 0.0
+        var kD = 0.0004
     }
 }
