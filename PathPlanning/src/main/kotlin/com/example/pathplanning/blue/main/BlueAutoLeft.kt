@@ -20,88 +20,26 @@ object BlueAutoLeft {
                 .setConstraints(30.0, 30.0, Math.toRadians(170.0), Math.toRadians(170.0), 13.94)
                 .followTrajectorySequence { drive ->
                     drive.trajectorySequenceBuilder(Pose2d(-12.0, 62.0, (270.0).toRadians()))
-                        .addTemporalMarker(0.1,) {
-                            //add the command for the arm to go up
-                            //add command for belt servo to go backwards
-                            //add the command to add the slides go up
-                        }
-                        .splineToLinearHeading(Pose2d(55.0, 55.0, Math.toRadians(225.0)), Math.toRadians(0.0))
-                        .addDisplacementMarker {
-                            //add command for rollers servo to outtake
-                        }
-                        .turn(Math.toRadians(30.0)) //
-                        .addTemporalMarker(6.0) {
-                            //add command for arm to go down
-                            //add command for slides to go out
-                            //add command to belt servo to go at [x] angle
-                        }
-                        .addDisplacementMarker {
-                            //add command to intake
-                        }
-                        .turn(Math.toRadians(-30.0)) //
-                        .addTemporalMarker() {
-                            //add command to bring slides in
-                            //add command to bring arm up
-                            //add command to put slides out
-                            //add command to turn belt servo
-                        }
-                        .addDisplacementMarker {
-                            //add command to outtake
-                        }
-                        .turn(Math.toRadians(55.0)) //
-                        .addTemporalMarker() {
-                            //add command to bring slides in
-                            //add command to bring arm down
-                            //add command to put slides out
-                            //add command to turn belt servo
-                        }
-                        .addDisplacementMarker {
-                            //add command to intake
-                        }
-                        .turn(Math.toRadians(-55.0)) //
-                        .addTemporalMarker() {
-                            //add command to bring slides in
-                            //add command to bring arm up
-                            //add command to put slides out
-                            //add command to turn belt servo
-                        }
-                        .addDisplacementMarker {
-                            //add command to outtake
-                        }
-                        .turn(Math.toRadians(80.0)) //
-                        .addTemporalMarker() {
-                            //add command to bring slides in
-                            //add command to bring arm down
-                            //add command to put slides out
-                            //add command to turn belt servo
-                        }
-                        .addDisplacementMarker {
-                            //add command to intake
-                        }
-                        .turn(Math.toRadians(-80.0)) //
-                        .addTemporalMarker() {
-                            //add command to bring slides in
-                            //add command to bring arm up
-                            //add command to put slides out
-                            //add command to turn belt servo
-                        }
-                        .addDisplacementMarker {
-                            //add command to outtake
-                        }
-                        .splineToSplineHeading(Pose2d(36.0, 12.0, Math.toRadians(-180.0)), Math.toRadians(-90.0))
-                        .addDisplacementMarker {
-                            //add command to bring arm up
-                            //add command to bring slides out
-                        }
-
-
-
-
+                        .turn((90.0).toRadians())
+                        .forward(60.0)
+                        .waitSeconds(4.0)
+                        .turn((-90.0).toRadians())
+                        .waitSeconds(6.0)
+                        .turn((90.0).toRadians())
+                        .waitSeconds(4.0)
+                        .turn((-90.0).toRadians())
+                        .waitSeconds(6.0)
+                        .turn((90.0).toRadians())
+                        .waitSeconds(4.0)
+                        .turn((-90.0).toRadians())
+                        .waitSeconds(6.0)
+                        .turn((90.0).toRadians())
+                        .waitSeconds(4.0)
                         .build()
                 }
         var img: Image? = null
         try {
-            img = ImageIO.read(File("C://Users//arava//Downloads//field.png/"))
+            img = ImageIO.read(File("/Users/ishaanghaskadbi/Downloads/field.png"))
         } catch (_ : IOException)  {
 
         }
