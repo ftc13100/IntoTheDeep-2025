@@ -69,7 +69,7 @@ class MaxVelocityTuner : LinearOpMode() {
         telemetry.addData("Max Velocity", maxVelocity)
         telemetry.addData(
             "Voltage Compensated kF",
-            effectiveKf * batteryVoltageSensor.getVoltage() / 12
+            effectiveKf * batteryVoltageSensor.voltage / 12
         )
 
         telemetry.update()

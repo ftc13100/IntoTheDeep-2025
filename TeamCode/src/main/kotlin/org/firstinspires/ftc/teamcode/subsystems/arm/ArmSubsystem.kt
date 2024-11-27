@@ -1,49 +1,52 @@
 package org.firstinspires.ftc.teamcode.subsystems.arm
 
 import com.acmerobotics.dashboard.config.Config
-import com.arcrobotics.ftclib.command.SubsystemBase
+import com.arcrobotics.ftclib.controller.PIDController
+import com.arcrobotics.ftclib.controller.wpilibcontroller.ArmFeedforward
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.hardware.motors.Motor.GoBILDA
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup
+import org.firstinspires.ftc.robotcore.external.Telemetry
+import org.firstinspires.ftc.teamcode.constants.ArmConstants
+import org.firstinspires.ftc.teamcode.utils.PIDSubsystem
 import kotlin.math.PI
 import kotlin.math.cos
 
 @Config
 class ArmSubsystem(
-// Here I am just declaring the motors and what they are called on our driver hub.
-    private val armRight: Motor,
-    private val armLeft: Motor,
+    armLeft: Motor,
+    armRight: Motor,
+    private val telemetry: Telemetry
+) : PIDSubsystem(
+    PIDController(
+        ArmConstants.kP.value,
+        ArmConstants.kI.value,
+        ArmConstants.kD.value,
+    )
+) {
+    private val turnMotors = MotorGroup(armLeft, armRight)
 
-    ) : SubsystemBase() {
-
-//Here I am making a motor group, as the arm motors are going to work together to to turn the slides.
-
-    private val turnMotors = MotorGroup(armRight, armLeft)
     val armAngle: Double
-        get() = turnMotors.positions[0] / GoBILDA.RPM_435.cpr * 2 * PI
+        get() = turnMotors.positions[0] / GoBILDA.RPM_60.cpr * PI
+
+    val armVelocity: Double
+        get() = turnMotors.velocities[0] / GoBILDA.RPM_60.cpr * PI
+
+    private var feedforward = ArmFeedforward(0.0, ArmConstants.kCos.value, 0.0);
 
     init {
         armLeft.inverted = true
+        armLeft.encoder.setDirection(Motor.Direction.REVERSE)
+
+        turnMotors.inverted = true
+
         turnMotors.resetEncoder()
         turnMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
     }
 
+    override fun useOutput(output: Double, setpoint: Double) =
+        turnMotors.set(output + feedforward.calculate(armAngle, armVelocity))
 
-    // Here are functions that work the motor, and the double is the speed of the motor, 1 being 100%.
-    fun clockwise() {
-        turnMotors.set(0.35)
-    }
 
-    fun anticlockwise() {
-        turnMotors.set(-0.35)
-    }
-
-    fun stop() {
-        turnMotors.set(kCos * cos(armAngle))
-    }
-
-    companion object {
-        @JvmField
-        var kCos = 0.3
-    }
+    override fun getMeasurement() = armAngle
 }

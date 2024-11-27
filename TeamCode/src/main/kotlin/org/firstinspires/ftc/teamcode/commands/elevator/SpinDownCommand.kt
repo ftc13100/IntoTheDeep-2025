@@ -1,10 +1,10 @@
-package org.firstinspires.ftc.teamcode.commands.drive
+package org.firstinspires.ftc.teamcode.commands.elevator
 
 import com.arcrobotics.ftclib.command.CommandBase
-import org.firstinspires.ftc.teamcode.subsystems.slides.SlidesSubsystem
+import org.firstinspires.ftc.teamcode.subsystems.slides.OpenSlidesSubsystem
 
 class SpinDownCommand(
-    private val subsystem: SlidesSubsystem
+    private val subsystem: OpenSlidesSubsystem
 ) : CommandBase() {
 
 
