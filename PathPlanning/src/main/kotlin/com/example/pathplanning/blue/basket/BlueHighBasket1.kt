@@ -25,7 +25,7 @@ object BlueHighBasket1 {
             }
         var img: Image? = null
         try {
-            img = ImageIO.read(File("/Users/ishaanghaskadbi/Downloads/field.png"))
+            img = ImageIO.read(File("C://Users//arava//Downloads//field.png/"))
         } catch (_ : IOException)  {
 
         }

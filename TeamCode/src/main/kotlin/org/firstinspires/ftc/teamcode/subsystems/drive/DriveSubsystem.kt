@@ -272,9 +272,11 @@ class DriveSubsystem @JvmOverloads constructor(
     override fun getExternalHeadingVelocity() = 0.0
 
     companion object {
-        var TRANSLATIONAL_PID = PIDCoefficients(8.0, 0.0, 0.0)
-        var HEADING_PID = PIDCoefficients(8.0, 0.0, 0.0)
-        var LATERAL_MULTIPLIER = 1.0126582278481012658227848101266
+        @JvmField
+        var TRANSLATIONAL_PID = PIDCoefficients(10.0, 0.0, 0.01)
+        @JvmField
+        var HEADING_PID = PIDCoefficients(10.0, 0.0, 0.01)
+        var LATERAL_MULTIPLIER = 1.0179744056670780318264660644901
         var VX_WEIGHT = 1.0
         var VY_WEIGHT = 1.0
         var OMEGA_WEIGHT = 1.0

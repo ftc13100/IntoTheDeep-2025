@@ -9,7 +9,7 @@ import java.io.File
 import java.io.IOException
 import javax.imageio.ImageIO
 
-object BlueAutoLeft {
+object BlueAuto {
     @JvmStatic
 
     fun main(args: Array<String>) {

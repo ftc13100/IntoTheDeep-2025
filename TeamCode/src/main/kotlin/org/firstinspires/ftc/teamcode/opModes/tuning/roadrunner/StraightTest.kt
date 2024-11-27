@@ -35,6 +35,7 @@ class StraightTest : LinearOpMode() {
     }
 
     companion object {
+        @JvmField
         var DISTANCE = 60.0 // in
     }
 }
