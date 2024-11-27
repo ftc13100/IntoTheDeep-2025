@@ -43,11 +43,11 @@ class BlueHighBasketLeft() : OpMode() {
             .turn(Math.toRadians(90.0))
             .forward(60.0)
             .addTemporalMarker(3.0) {
-                armSubsystem.setpoint = Math.toRadians(105.0)
+                armSubsystem.setpoint = Math.toRadians(95.0)
             }
             .waitSeconds(1.0)
             .addTemporalMarker(6.0) {
-                elevatorSubsystem.setpoint = 30.0
+                elevatorSubsystem.setpoint = 250.0
             }
             .waitSeconds(2.0)
             //.addTemporalMarker(5.0){

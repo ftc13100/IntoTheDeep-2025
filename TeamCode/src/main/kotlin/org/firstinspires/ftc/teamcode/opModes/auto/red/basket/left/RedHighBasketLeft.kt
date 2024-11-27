@@ -37,7 +37,7 @@ class RedHighBasketLeft() : OpMode() {
 
         driveSubsystem = DriveSubsystem(hardwareMap)
         intakeSubsystem = IntakeSubsystem(intake)
-        armSubsystem = ArmSubsystem(armLeft, armRight, telemetry)
+        armSubsystem = ArmSubsystem(armLeft, armRight)
         elevatorSubsystem = SlidesSubsytem(elevatorLeft, elevatorRight)
 
         val trajectory = driveSubsystem.trajectorySequenceBuilder(AutoStartPose.RED_LEFT.startPose)

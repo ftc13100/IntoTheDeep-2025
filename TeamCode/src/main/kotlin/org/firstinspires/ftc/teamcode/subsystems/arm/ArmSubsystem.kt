@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.controller.wpilibcontroller.ArmFeedforward
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.hardware.motors.Motor.GoBILDA
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup
+import org.firstinspires.ftc.teamcode.constants.ArmConstants
 import org.firstinspires.ftc.teamcode.utils.PIDSubsystem
 import kotlin.math.PI
 
@@ -15,9 +16,9 @@ class ArmSubsystem(
     armRight: Motor
 ) : PIDSubsystem(
     PIDController(
-        0.0,
-        0.0,
-        0.0,
+        ArmConstants.kP.value,
+        ArmConstants.kI.value,
+        ArmConstants.kD.value
     )
 ) {
     private val turnMotors = MotorGroup(armLeft, armRight)
@@ -28,7 +29,7 @@ class ArmSubsystem(
     val armVelocity: Double
         get() = turnMotors.velocities[0] / GoBILDA.RPM_60.cpr * PI
 
-    private val feedforward = ArmFeedforward(0.0, kCos, 0.0);
+    private val feedforward = ArmFeedforward(0.0, ArmConstants.kCos.value, 0.0);
 
     init {
         armLeft.inverted = true
@@ -39,25 +40,8 @@ class ArmSubsystem(
     }
 
     override fun useOutput(output: Double, setpoint: Double) {
-        // For tuning only
-        controller.setPIDF(kP, kI, kD, 0.0)
-
         turnMotors.set(output + feedforward.calculate(armAngle, armVelocity))
     }
 
     override fun getMeasurement() = armAngle
-
-    companion object {
-        @JvmField
-        var kCos = 0.004
-
-        @JvmField
-        var kP = 1.0
-
-        @JvmField
-        var kI = 0.0001
-
-        @JvmField
-        var kD = 0.08
-    }
 }

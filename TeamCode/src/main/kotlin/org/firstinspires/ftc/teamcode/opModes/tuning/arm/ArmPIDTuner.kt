@@ -24,7 +24,7 @@ class ArmPIDTuner : CommandOpMode() {
         armLeft = Motor(hardwareMap, ControlBoard.ARM_LEFT.deviceName, Motor.GoBILDA.RPM_312)
         armRight = Motor(hardwareMap, ControlBoard.ARM_RIGHT.deviceName, Motor.GoBILDA.RPM_312)
 
-        armSubsystem = ArmSubsystem(armRight, armLeft, telemetry)
+        armSubsystem = ArmSubsystem(armRight, armLeft)
 
         RunCommand({
             armSubsystem.setpoint = Math.toRadians(target)
