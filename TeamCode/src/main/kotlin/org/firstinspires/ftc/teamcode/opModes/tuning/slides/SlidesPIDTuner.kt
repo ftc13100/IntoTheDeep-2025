@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opModes.tuning.arm
+package org.firstinspires.ftc.teamcode.opModes.tuning.slides
 
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.config.Config
@@ -8,35 +8,35 @@ import com.arcrobotics.ftclib.command.RunCommand
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.constants.ControlBoard
-import org.firstinspires.ftc.teamcode.subsystems.arm.ArmSubsystem
+import org.firstinspires.ftc.teamcode.subsystems.slides.SlidesSubsytem
 
 @TeleOp
 @Config
-class ArmPIDTuner : CommandOpMode() {
+class SlidesPIDTuner : CommandOpMode() {
     private lateinit var armLeft: Motor
     private lateinit var armRight: Motor
 
-    private lateinit var armSubsystem: ArmSubsystem
+    private lateinit var slidesSubsystem: SlidesSubsytem
 
     override fun initialize() {
         telemetry = MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry)
 
-        armLeft = Motor(hardwareMap, ControlBoard.ARM_LEFT.deviceName, Motor.GoBILDA.RPM_312)
-        armRight = Motor(hardwareMap, ControlBoard.ARM_RIGHT.deviceName, Motor.GoBILDA.RPM_312)
+        armLeft = Motor(hardwareMap, ControlBoard.SLIDES_LEFT.deviceName, Motor.GoBILDA.RPM_1150)
+        armRight = Motor(hardwareMap, ControlBoard.SLIDES_RIGHT.deviceName, Motor.GoBILDA.RPM_1150)
 
-        armSubsystem = ArmSubsystem(armRight, armLeft, telemetry)
+        slidesSubsystem = SlidesSubsytem(armRight, armLeft)
 
         RunCommand({
-            armSubsystem.setpoint = Math.toRadians(target)
+            slidesSubsystem.setpoint = target
         }).perpetually().schedule()
 
         RunCommand({
-            telemetry.addData("Arm Angle: ", Math.toDegrees(armSubsystem.armAngle))
-            telemetry.addData("Setpoint: ", Math.toDegrees(armSubsystem.setpoint))
+            telemetry.addData("Slides Position: ", slidesSubsystem.slidePos)
+            telemetry.addData("Setpoint: ", target)
             telemetry.update()
         }).perpetually().schedule()
 
-        register(armSubsystem)
+        register(slidesSubsystem)
     }
 
     companion object {

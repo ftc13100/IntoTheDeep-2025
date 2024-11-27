@@ -6,10 +6,9 @@ import com.arcrobotics.ftclib.hardware.motors.MotorGroup
 
 class OpenSlidesSubsystem(
     //sets them as a private variable thats a motor (same name as in driver hub)
-    private val elevatorLeft: Motor,
-    private val elevatorRight: Motor,
-
-    ) : SubsystemBase() {
+    elevatorLeft: Motor,
+    elevatorRight: Motor,
+) : SubsystemBase() {
     //makes a motor group bc you have to move them at the same time
     private val elevatorMotors = MotorGroup(elevatorLeft, elevatorRight)
 
