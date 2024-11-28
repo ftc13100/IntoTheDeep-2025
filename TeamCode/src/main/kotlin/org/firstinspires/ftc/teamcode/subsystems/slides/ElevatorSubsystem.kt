@@ -1,24 +1,34 @@
 package org.firstinspires.ftc.teamcode.subsystems.slides
 
 import com.acmerobotics.dashboard.config.Config
-import com.arcrobotics.ftclib.controller.PIDController
+import com.arcrobotics.ftclib.command.SubsystemBase
+import com.arcrobotics.ftclib.controller.wpilibcontroller.ProfiledPIDController
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup
+import com.arcrobotics.ftclib.trajectory.TrapezoidProfile
 import org.firstinspires.ftc.teamcode.constants.SlidesConstants
-import org.firstinspires.ftc.teamcode.utils.PIDSubsystem
 
 @Config
 class ElevatorSubsystem(
     elevatorRight : Motor,
     elevatorLeft : Motor
-) : PIDSubsystem(
-    PIDController(
+) : SubsystemBase() {
+    private val extendMotors = MotorGroup(elevatorRight, elevatorLeft)
+    private val controller = ProfiledPIDController(
         SlidesConstants.kP.value,
         SlidesConstants.kI.value,
         SlidesConstants.kD.value,
+        TrapezoidProfile.Constraints(
+            0.0,
+            0.0
+        )
     )
-) {
-    private val extendMotors = MotorGroup(elevatorRight, elevatorLeft)
+
+    var setpoint = 0.0
+        set(value) {
+            controller.goal = TrapezoidProfile.State(value, 0.0)
+            field = value
+        }
 
     val slidePos: Double
         get() = extendMotors.positions[0]
@@ -34,12 +44,12 @@ class ElevatorSubsystem(
         extendMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
     }
 
-    override fun useOutput(output: Double, setpoint: Double) {
-        controller.setPIDF(kP, kI, kD, 0.0)
+    override fun periodic() {
+        controller.setPID(kP, kI, kD)
+        val output = controller.calculate(slidePos)
+
         extendMotors.set(output)
     }
-
-    override fun getMeasurement() = slidePos
 
     companion object {
         @JvmField
