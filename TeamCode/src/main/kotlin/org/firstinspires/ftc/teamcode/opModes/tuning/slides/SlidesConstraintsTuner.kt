@@ -1,29 +1,18 @@
-import com.acmerobotics.dashboard.FtcDashboard
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
+package org.firstinspires.ftc.teamcode.opModes.tuning.slides
+
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
-import com.qualcomm.robotcore.hardware.Servo
-import com.qualcomm.robotcore.hardware.TouchSensor
 import com.qualcomm.robotcore.util.ElapsedTime
-import org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap
-import org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry
 import org.firstinspires.ftc.teamcode.constants.ControlBoard
-import org.firstinspires.ftc.teamcode.constants.SlidesConstants
-import org.firstinspires.ftc.teamcode.subsystems.slides.OpenElevatorSubsystem
+import org.firstinspires.ftc.teamcode.subsystems.slides.ElevatorSubsystem
 
 @Autonomous
 class SlidesConstraintsTuner : LinearOpMode() {
-    private lateinit var flipperServo: Servo
     private lateinit var leftMotor: Motor
     private lateinit var rightMotor: Motor
 
-    private lateinit var limit: TouchSensor
-
-    private lateinit var elevator: OpenElevatorSubsystem
-
-    private var lastPos = 0.0
-    private var lastVel = 0.0
+    private lateinit var elevator: ElevatorSubsystem
 
     private var maxVel = 0.0
     private var maxAccel = 0.0
@@ -33,7 +22,7 @@ class SlidesConstraintsTuner : LinearOpMode() {
         leftMotor = Motor(hardwareMap, ControlBoard.SLIDES_LEFT.deviceName)
         rightMotor = Motor(hardwareMap, ControlBoard.SLIDES_RIGHT.deviceName)
 
-        elevator = OpenElevatorSubsystem(leftMotor, rightMotor)
+        elevator = ElevatorSubsystem(rightMotor, leftMotor)
         waitForStart()
 
         var dt = 0L
@@ -42,12 +31,12 @@ class SlidesConstraintsTuner : LinearOpMode() {
         timer.reset()
         while (opModeIsActive()) {
             while (timer.seconds() < TIME_TO_RUN) {
-                elevator.up()
+                elevator.spinUp()
 
                 dt = timer.nanoseconds() - dt
-                dv = elevator.currentVel - dv / dt
+                dv = elevator.slideVelocity - dv / dt
 
-                maxVel = elevator.currentVel.coerceAtLeast(maxVel)
+                maxVel = elevator.slideVelocity.coerceAtLeast(maxVel)
                 maxAccel = dv.coerceAtLeast(maxAccel)
 
                 telemetry.addData("Max Velocity", maxVel)

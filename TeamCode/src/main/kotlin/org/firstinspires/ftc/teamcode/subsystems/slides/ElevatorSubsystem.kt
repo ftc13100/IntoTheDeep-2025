@@ -36,6 +36,8 @@ class ElevatorSubsystem(
     val slideVelocity: Double
         get() = extendMotors.velocities[0]
 
+    var enabled = false;
+
     init {
         elevatorRight.inverted = true
         elevatorRight.encoder.setDirection(Motor.Direction.REVERSE)
@@ -48,7 +50,20 @@ class ElevatorSubsystem(
         controller.setPID(kP, kI, kD)
         val output = controller.calculate(slidePos)
 
-        extendMotors.set(output)
+        if (enabled)
+            extendMotors.set(output)
+    }
+
+    fun toggle() {
+        enabled != enabled
+    }
+
+    fun spinUp() {
+        extendMotors.set(1.0);
+    }
+
+    fun stop() {
+        extendMotors.set(0.0)
     }
 
     companion object {
