@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.constants.SlidesConstants
 import org.firstinspires.ftc.teamcode.utils.PIDSubsystem
 
 @Config
-class SlidesSubsytem(
+class ElevatorSubsystem(
     elevatorRight : Motor,
     elevatorLeft : Motor
 ) : PIDSubsystem(
@@ -28,14 +28,27 @@ class SlidesSubsytem(
 
     init {
         elevatorRight.inverted = true
+        elevatorRight.encoder.setDirection(Motor.Direction.REVERSE)
 
         extendMotors.resetEncoder()
         extendMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
     }
 
     override fun useOutput(output: Double, setpoint: Double) {
+        controller.setPIDF(kP, kI, kD, 0.0)
         extendMotors.set(output)
     }
 
     override fun getMeasurement() = slidePos
+
+    companion object {
+        @JvmField
+        var kP = 0.0
+
+        @JvmField
+        var kI = 0.0
+
+        @JvmField
+        var kD = 0.0
+    }
 }

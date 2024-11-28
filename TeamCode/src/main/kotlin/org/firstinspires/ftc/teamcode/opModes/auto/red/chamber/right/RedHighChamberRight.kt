@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.constants.ControlBoard
 import org.firstinspires.ftc.teamcode.subsystems.arm.ArmSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.drive.DriveSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem
-import org.firstinspires.ftc.teamcode.subsystems.slides.SlidesSubsytem
+import org.firstinspires.ftc.teamcode.subsystems.slides.ElevatorSubsystem
 
 @Autonomous(name = "Red High Chamber Right", group = "Chamber", preselectTeleOp = "MainTeleOp")
 class RedHighChamberRight() : OpMode() {
@@ -23,7 +23,7 @@ class RedHighChamberRight() : OpMode() {
     private lateinit var driveSubsystem: DriveSubsystem
     private lateinit var intakeSubsystem: IntakeSubsystem
     private lateinit var armSubsystem: ArmSubsystem
-    private lateinit var elevatorSubsystem: SlidesSubsytem
+    private lateinit var elevatorSubsystem: ElevatorSubsystem
 
     override fun init() {
         intake = CRServo(hardwareMap, ControlBoard.INTAKE.deviceName)
@@ -37,7 +37,7 @@ class RedHighChamberRight() : OpMode() {
         driveSubsystem = DriveSubsystem(hardwareMap)
         intakeSubsystem = IntakeSubsystem(intake)
         armSubsystem = ArmSubsystem(armRight, armLeft)
-        elevatorSubsystem = SlidesSubsytem(elevatorRight, elevatorLeft)
+        elevatorSubsystem = ElevatorSubsystem(elevatorRight, elevatorLeft)
 
         val trajectory = driveSubsystem.trajectorySequenceBuilder(AutoStartPose.RED_RIGHT.startPose)
 

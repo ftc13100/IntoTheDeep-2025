@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.constants.ControlBoard
 import org.firstinspires.ftc.teamcode.subsystems.arm.ArmSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.drive.DriveSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem
-import org.firstinspires.ftc.teamcode.subsystems.slides.SlidesSubsytem
+import org.firstinspires.ftc.teamcode.subsystems.slides.ElevatorSubsystem
 
 @Autonomous(name = "Blue High Basket Left", group = "Basket", preselectTeleOp = "MainTeleOp")
 class BlueHighBasketLeft: OpMode() {
@@ -23,7 +23,7 @@ class BlueHighBasketLeft: OpMode() {
     private lateinit var driveSubsystem: DriveSubsystem
     private lateinit var intakeSubsystem: IntakeSubsystem
     private lateinit var armSubsystem: ArmSubsystem
-    private lateinit var elevatorSubsystem: SlidesSubsytem
+    private lateinit var elevatorSubsystem: ElevatorSubsystem
 
     override fun init() {
 //        intake = CRServo(hardwareMap, ControlBoard.INTAKE.deviceName)
@@ -37,17 +37,17 @@ class BlueHighBasketLeft: OpMode() {
         driveSubsystem = DriveSubsystem(hardwareMap)
 //        intakeSubsystem = IntakeSubsystem(intake)
         armSubsystem = ArmSubsystem(armRight, armLeft)
-        elevatorSubsystem = SlidesSubsytem(elevatorRight, elevatorLeft)
+        elevatorSubsystem = ElevatorSubsystem(elevatorRight, elevatorLeft)
 
         val trajectory = driveSubsystem.trajectorySequenceBuilder(AutoStartPose.BLUE_LEFT.startPose)
-            .turn(Math.toRadians(90.0))
-            .forward(60.0)
+            .turn(Math.toRadians(-90.0))
+            .back(60.0)
             .addTemporalMarker(3.0) {
                 armSubsystem.setpoint = Math.toRadians(95.0)
             }
             .waitSeconds(1.0)
             .addTemporalMarker(6.0) {
-                elevatorSubsystem.setpoint = 250.0
+                elevatorSubsystem.setpoint = 1000.0
             }
             .waitSeconds(2.0)
 //            .addTemporalMarker(5.0){
@@ -55,11 +55,11 @@ class BlueHighBasketLeft: OpMode() {
 //            }
             .waitSeconds(1.0)
             .addTemporalMarker(10.0) {
-                elevatorSubsystem.setpoint = 0.0
+                elevatorSubsystem.setpoint = 50.0
             }
             .waitSeconds(2.0)
             .addTemporalMarker(13.0) {
-                armSubsystem.setpoint = Math.toRadians(0.0)
+                armSubsystem.setpoint = Math.toRadians(5.0)
             }
             .build()
 

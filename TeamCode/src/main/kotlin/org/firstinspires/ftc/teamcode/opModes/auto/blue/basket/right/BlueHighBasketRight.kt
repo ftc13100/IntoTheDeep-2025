@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.constants.ControlBoard
 import org.firstinspires.ftc.teamcode.subsystems.arm.ArmSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.drive.DriveSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem
-import org.firstinspires.ftc.teamcode.subsystems.slides.SlidesSubsytem
+import org.firstinspires.ftc.teamcode.subsystems.slides.ElevatorSubsystem
 
 
 @Autonomous(name = "Blue High Basket Right", group = "Basket", preselectTeleOp = "MainTeleOp")
@@ -25,7 +25,7 @@ class BlueHighBasketRight() : OpMode() {
     private lateinit var driveSubsystem: DriveSubsystem
     private lateinit var intakeSubsystem: IntakeSubsystem
     private lateinit var armSubsystem: ArmSubsystem
-    private lateinit var elevatorSubsystem: SlidesSubsytem
+    private lateinit var elevatorSubsystem: ElevatorSubsystem
 
     override fun init() {
         intake = CRServo(hardwareMap, ControlBoard.INTAKE.deviceName)
@@ -39,17 +39,17 @@ class BlueHighBasketRight() : OpMode() {
         driveSubsystem = DriveSubsystem(hardwareMap)
         intakeSubsystem = IntakeSubsystem(intake)
         armSubsystem = ArmSubsystem(armRight, armLeft)
-        elevatorSubsystem = SlidesSubsytem(elevatorRight, elevatorLeft)
+        elevatorSubsystem = ElevatorSubsystem(elevatorRight, elevatorLeft)
 
         val trajectory = driveSubsystem.trajectorySequenceBuilder(AutoStartPose.BLUE_RIGHT.startPose)
             .turn(Math.toRadians(90.0))
             .forward(35.0)
             .addTemporalMarker(2.0) {
-                armSubsystem.setpoint = Math.toRadians(150.0)
+                armSubsystem.setpoint = Math.toRadians(90.0)
             }
             .waitSeconds(1.0)
             .addTemporalMarker(3.0) {
-                elevatorSubsystem.setpoint = 2.0
+                elevatorSubsystem.setpoint = 200.0
             }
             .waitSeconds(2.0)
             .addTemporalMarker(5.0){

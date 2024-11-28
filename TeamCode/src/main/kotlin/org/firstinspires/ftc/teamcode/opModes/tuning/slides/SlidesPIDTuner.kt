@@ -8,7 +8,7 @@ import com.arcrobotics.ftclib.command.RunCommand
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.constants.ControlBoard
-import org.firstinspires.ftc.teamcode.subsystems.slides.SlidesSubsytem
+import org.firstinspires.ftc.teamcode.subsystems.slides.ElevatorSubsystem
 
 @TeleOp
 @Config
@@ -16,7 +16,7 @@ class SlidesPIDTuner : CommandOpMode() {
     private lateinit var armLeft: Motor
     private lateinit var armRight: Motor
 
-    private lateinit var slidesSubsystem: SlidesSubsytem
+    private lateinit var slidesSubsystem: ElevatorSubsystem
 
     override fun initialize() {
         telemetry = MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry)
@@ -24,7 +24,7 @@ class SlidesPIDTuner : CommandOpMode() {
         armLeft = Motor(hardwareMap, ControlBoard.SLIDES_LEFT.deviceName, Motor.GoBILDA.RPM_1150)
         armRight = Motor(hardwareMap, ControlBoard.SLIDES_RIGHT.deviceName, Motor.GoBILDA.RPM_1150)
 
-        slidesSubsystem = SlidesSubsytem(armRight, armLeft)
+        slidesSubsystem = ElevatorSubsystem(armRight, armLeft)
 
         RunCommand({
             slidesSubsystem.setpoint = target

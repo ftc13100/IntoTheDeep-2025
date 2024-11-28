@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.constants.ControlBoard
 import org.firstinspires.ftc.teamcode.subsystems.arm.OpenArmSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.drive.DriveSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem
-import org.firstinspires.ftc.teamcode.subsystems.slides.OpenSlidesSubsystem
+import org.firstinspires.ftc.teamcode.subsystems.slides.OpenElevatorSubsystem
 
 @TeleOp
 class MainTeleOp : CommandOpMode() {
@@ -25,7 +25,7 @@ class MainTeleOp : CommandOpMode() {
     private lateinit var armRight: Motor
     //private lateinit var intake: CRServo
 
-    private lateinit var slidesSubsystem: OpenSlidesSubsystem
+    private lateinit var slidesSubsystem: OpenElevatorSubsystem
     private lateinit var armSubsystem: OpenArmSubsystem
     private lateinit var driveSubsystem: DriveSubsystem
     private lateinit var intakeSubsystem: IntakeSubsystem
@@ -54,7 +54,7 @@ class MainTeleOp : CommandOpMode() {
 
         //intake = CRServo(hardwareMap, ControlBoard.INTAKE.deviceName)
 
-        slidesSubsystem = OpenSlidesSubsystem(elevatorRight, elevatorLeft)
+        slidesSubsystem = OpenElevatorSubsystem(elevatorRight, elevatorLeft)
         armSubsystem = OpenArmSubsystem(armRight, armLeft)
         driveSubsystem = DriveSubsystem(hardwareMap)
         //intakeSubsystem = IntakeSubsystem(intake)
