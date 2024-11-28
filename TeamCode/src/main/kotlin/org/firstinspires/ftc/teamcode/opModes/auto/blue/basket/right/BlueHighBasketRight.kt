@@ -38,8 +38,8 @@ class BlueHighBasketRight() : OpMode() {
 
         driveSubsystem = DriveSubsystem(hardwareMap)
         intakeSubsystem = IntakeSubsystem(intake)
-        armSubsystem = ArmSubsystem(armLeft, armRight)
-        elevatorSubsystem = SlidesSubsytem(elevatorLeft, elevatorRight)
+        armSubsystem = ArmSubsystem(armRight, armLeft)
+        elevatorSubsystem = SlidesSubsytem(elevatorRight, elevatorLeft)
 
         val trajectory = driveSubsystem.trajectorySequenceBuilder(AutoStartPose.BLUE_RIGHT.startPose)
             .turn(Math.toRadians(90.0))

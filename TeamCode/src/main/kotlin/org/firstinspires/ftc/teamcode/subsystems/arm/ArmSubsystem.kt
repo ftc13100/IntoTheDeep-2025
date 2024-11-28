@@ -12,8 +12,8 @@ import kotlin.math.PI
 
 @Config
 class ArmSubsystem(
-    armLeft: Motor,
-    armRight: Motor
+    armRight: Motor,
+    armLeft: Motor
 ) : PIDSubsystem(
     PIDController(
         ArmConstants.kP.value,
@@ -21,7 +21,7 @@ class ArmSubsystem(
         ArmConstants.kD.value
     )
 ) {
-    private val turnMotors = MotorGroup(armLeft, armRight)
+    private val turnMotors = MotorGroup(armRight, armLeft)
 
     val armAngle: Double
         get() = turnMotors.positions[0] / GoBILDA.RPM_60.cpr * PI
@@ -32,8 +32,8 @@ class ArmSubsystem(
     private val feedforward = ArmFeedforward(0.0, ArmConstants.kCos.value, 0.0);
 
     init {
-        armLeft.inverted = true
-        armLeft.encoder.setDirection(Motor.Direction.REVERSE)
+        armRight.inverted = true
+        armRight.encoder.setDirection(Motor.Direction.REVERSE)
 
         turnMotors.resetEncoder()
         turnMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)

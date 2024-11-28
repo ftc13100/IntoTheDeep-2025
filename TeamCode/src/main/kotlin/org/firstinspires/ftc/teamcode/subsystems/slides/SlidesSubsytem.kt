@@ -9,8 +9,8 @@ import org.firstinspires.ftc.teamcode.utils.PIDSubsystem
 
 @Config
 class SlidesSubsytem(
-    elevatorLeft : Motor,
-    elevatorRight : Motor
+    elevatorRight : Motor,
+    elevatorLeft : Motor
 ) : PIDSubsystem(
     PIDController(
         SlidesConstants.kP.value,
@@ -18,7 +18,7 @@ class SlidesSubsytem(
         SlidesConstants.kD.value,
     )
 ) {
-    private val extendMotors = MotorGroup(elevatorLeft, elevatorRight)
+    private val extendMotors = MotorGroup(elevatorRight, elevatorLeft)
 
     val slidePos: Double
         get() = extendMotors.positions[0]
@@ -27,30 +27,15 @@ class SlidesSubsytem(
         get() = extendMotors.velocities[0]
 
     init {
-        elevatorLeft.inverted = true
+        elevatorRight.inverted = true
 
         extendMotors.resetEncoder()
         extendMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
     }
 
     override fun useOutput(output: Double, setpoint: Double) {
-        // For tuning only
-        controller.setPIDF(kP, kI, kD, 0.0)
-
         extendMotors.set(output)
     }
 
     override fun getMeasurement() = slidePos
-
-    companion object {
-
-        @JvmField
-        var kP = 0.03
-
-        @JvmField
-        var kI = 0.0
-
-        @JvmField
-        var kD = 0.0004
-    }
 }

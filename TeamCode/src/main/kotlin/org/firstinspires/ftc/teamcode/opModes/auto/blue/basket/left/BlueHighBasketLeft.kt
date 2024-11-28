@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.slides.SlidesSubsytem
 
 @Autonomous(name = "Blue High Basket Left", group = "Basket", preselectTeleOp = "MainTeleOp")
-class BlueHighBasketLeft() : OpMode() {
+class BlueHighBasketLeft: OpMode() {
     private lateinit var armLeft: Motor
     private lateinit var armRight: Motor
     private lateinit var elevatorLeft: Motor
@@ -26,7 +26,7 @@ class BlueHighBasketLeft() : OpMode() {
     private lateinit var elevatorSubsystem: SlidesSubsytem
 
     override fun init() {
-        //intake = CRServo(hardwareMap, ControlBoard.INTAKE.deviceName)
+//        intake = CRServo(hardwareMap, ControlBoard.INTAKE.deviceName)
 
         armLeft = Motor(hardwareMap, ControlBoard.ARM_LEFT.deviceName)
         armRight = Motor(hardwareMap, ControlBoard.ARM_RIGHT.deviceName)
@@ -35,9 +35,9 @@ class BlueHighBasketLeft() : OpMode() {
         elevatorRight = Motor(hardwareMap, ControlBoard.SLIDES_RIGHT.deviceName)
 
         driveSubsystem = DriveSubsystem(hardwareMap)
-        //intakeSubsystem = IntakeSubsystem(intake)
-        armSubsystem = ArmSubsystem(armLeft, armRight)
-        elevatorSubsystem = SlidesSubsytem(elevatorLeft, elevatorRight)
+//        intakeSubsystem = IntakeSubsystem(intake)
+        armSubsystem = ArmSubsystem(armRight, armLeft)
+        elevatorSubsystem = SlidesSubsytem(elevatorRight, elevatorLeft)
 
         val trajectory = driveSubsystem.trajectorySequenceBuilder(AutoStartPose.BLUE_LEFT.startPose)
             .turn(Math.toRadians(90.0))
@@ -50,9 +50,9 @@ class BlueHighBasketLeft() : OpMode() {
                 elevatorSubsystem.setpoint = 250.0
             }
             .waitSeconds(2.0)
-            //.addTemporalMarker(5.0){
-                //intakeSubsystem.outtake()
-            //}
+//            .addTemporalMarker(5.0){
+//                intakeSubsystem.outtake()
+//            }
             .waitSeconds(1.0)
             .addTemporalMarker(10.0) {
                 elevatorSubsystem.setpoint = 0.0
@@ -62,14 +62,14 @@ class BlueHighBasketLeft() : OpMode() {
                 armSubsystem.setpoint = Math.toRadians(0.0)
             }
             .build()
+
         driveSubsystem.poseEstimate = AutoStartPose.BLUE_LEFT.startPose
-
-
         driveSubsystem.followTrajectorySequenceAsync(trajectory)
     }
 
     override fun loop() {
         driveSubsystem.update()
+
         elevatorSubsystem.periodic()
         armSubsystem.periodic()
     }
