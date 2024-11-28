@@ -21,8 +21,8 @@ class ElevatorSubsystem(
         SlidesConstants.kI.value,
         SlidesConstants.kD.value,
         TrapezoidProfile.Constraints(
-            1800.0,
-            1800.0
+            2000.0,
+            1000.0
         )
     )
 
@@ -50,10 +50,11 @@ class ElevatorSubsystem(
 
     override fun periodic() {
         controller.setPID(kP, kI, kD)
+
         val output = controller.calculate(slidePos)
 
         if (enabled)
-            extendMotors.set(output + SlidesConstants.kG.value * sin(slideAngle.invoke()))
+            extendMotors.set(output + kG * sin(slideAngle.invoke()))
     }
 
     fun toggle() {
@@ -79,6 +80,6 @@ class ElevatorSubsystem(
         var kD = 0.0
 
         @JvmField
-        var kG = 0.2
+        var kG = 0.115
     }
 }

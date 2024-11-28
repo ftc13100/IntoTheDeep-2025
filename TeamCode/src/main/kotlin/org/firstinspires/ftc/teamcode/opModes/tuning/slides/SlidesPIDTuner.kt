@@ -42,6 +42,7 @@ class SlidesPIDTuner : CommandOpMode() {
         RunCommand({
             telemetry.addData("Slides Position", slidesSubsystem.slidePos)
             telemetry.addData("Setpoint", target)
+            telemetry.addData("arm angle", armSubsystem.armAngle)
             telemetry.update()
         }).perpetually().schedule()
 
