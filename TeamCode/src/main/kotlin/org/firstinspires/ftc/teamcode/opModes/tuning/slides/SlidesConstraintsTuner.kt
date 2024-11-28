@@ -26,7 +26,7 @@ class SlidesConstraintsTuner : LinearOpMode() {
         leftMotor = Motor(hardwareMap, ControlBoard.SLIDES_LEFT.deviceName)
         rightMotor = Motor(hardwareMap, ControlBoard.SLIDES_RIGHT.deviceName)
 
-        elevator = ElevatorSubsystem(rightMotor, leftMotor)
+        elevator = ElevatorSubsystem(rightMotor, leftMotor) { 0.0 }
         waitForStart()
 
         var dt = 0L

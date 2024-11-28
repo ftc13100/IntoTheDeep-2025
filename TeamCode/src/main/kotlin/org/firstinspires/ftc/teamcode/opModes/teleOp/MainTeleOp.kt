@@ -54,8 +54,8 @@ class MainTeleOp : CommandOpMode() {
 
         //intake = CRServo(hardwareMap, ControlBoard.INTAKE.deviceName)
 
-        slidesSubsystem = OpenElevatorSubsystem(elevatorRight, elevatorLeft)
         armSubsystem = OpenArmSubsystem(armRight, armLeft)
+        slidesSubsystem = OpenElevatorSubsystem(elevatorRight, elevatorLeft, armSubsystem::armAngle)
         driveSubsystem = DriveSubsystem(hardwareMap)
         //intakeSubsystem = IntakeSubsystem(intake)
 
@@ -80,7 +80,7 @@ class MainTeleOp : CommandOpMode() {
         driveSubsystem.defaultCommand = driveCommand
 
         RunCommand({
-            telemetry.addData("Arm Position: ", armSubsystem.armAngle)
+            telemetry.addData("Arm Position: ", Math.toDegrees(armSubsystem.armAngle))
             telemetry.update()
         }).perpetually().schedule()
     }

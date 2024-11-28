@@ -37,7 +37,7 @@ class BlueHighChamberRight() : OpMode() {
         driveSubsystem = DriveSubsystem(hardwareMap)
         intakeSubsystem = IntakeSubsystem(intake)
         armSubsystem = ArmSubsystem(armRight, armLeft)
-        elevatorSubsystem = ElevatorSubsystem(elevatorRight, elevatorLeft)
+        elevatorSubsystem = ElevatorSubsystem(elevatorRight, elevatorLeft, armSubsystem::armAngle)
 
         val trajectory = driveSubsystem.trajectorySequenceBuilder(AutoStartPose.BLUE_RIGHT.startPose)
 

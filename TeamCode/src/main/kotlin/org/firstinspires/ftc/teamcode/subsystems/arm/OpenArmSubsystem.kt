@@ -5,21 +5,22 @@ import com.arcrobotics.ftclib.command.SubsystemBase
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.hardware.motors.Motor.GoBILDA
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup
+import org.firstinspires.ftc.teamcode.constants.ArmConstants
 import kotlin.math.PI
+import kotlin.math.cos
 
 @Config
 class OpenArmSubsystem(
 // Here I am just declaring the motors and what they are called on our driver hub.
         armRight : Motor,
         armLeft : Motor,
-
 ) : SubsystemBase() {
 
 //Here I am making a motor group, as the arm motors are going to work together to to turn the slides.
 
     private val turnMotors = MotorGroup(armRight, armLeft)
     val armAngle: Double
-        get() = turnMotors.positions[0] / GoBILDA.RPM_312.cpr * 2 * PI
+        get() = turnMotors.positions[0] / GoBILDA.RPM_60.cpr * PI
 
     init {
         armLeft.inverted = true
@@ -38,7 +39,7 @@ class OpenArmSubsystem(
     }
 
     fun stop() {
-        turnMotors.set(kCos * Math.cos(armAngle))
+        turnMotors.set(ArmConstants.kCos.value * cos(armAngle))
     }
 
     companion object {

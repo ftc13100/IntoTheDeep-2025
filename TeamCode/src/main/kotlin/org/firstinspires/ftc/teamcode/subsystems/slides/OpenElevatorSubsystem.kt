@@ -4,11 +4,13 @@ import com.arcrobotics.ftclib.command.SubsystemBase
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup
 import org.firstinspires.ftc.teamcode.constants.SlidesConstants
+import kotlin.math.sin
 
 class OpenElevatorSubsystem(
     //sets them as a private variable thats a motor (same name as in driver hub)
     elevatorRight : Motor,
-    elevatorLeft : Motor
+    elevatorLeft : Motor,
+    private val slideAngle: () -> Double
 ) : SubsystemBase() {
     //makes a motor group bc you have to move them at the same time
     private val elevatorMotors = MotorGroup(elevatorRight, elevatorLeft)
@@ -27,7 +29,7 @@ class OpenElevatorSubsystem(
     }
 
     fun stop() {
-        elevatorMotors.set(SlidesConstants.kG.value)
+        elevatorMotors.set(SlidesConstants.kG.value * sin(slideAngle.invoke()))
     }
 
 }

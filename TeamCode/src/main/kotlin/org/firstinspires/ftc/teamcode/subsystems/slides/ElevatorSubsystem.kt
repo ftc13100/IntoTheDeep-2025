@@ -7,11 +7,13 @@ import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup
 import com.arcrobotics.ftclib.trajectory.TrapezoidProfile
 import org.firstinspires.ftc.teamcode.constants.SlidesConstants
+import kotlin.math.sin
 
 @Config
 class ElevatorSubsystem(
     elevatorRight : Motor,
-    elevatorLeft : Motor
+    elevatorLeft : Motor,
+    private val slideAngle: () -> Double
 ) : SubsystemBase() {
     private val extendMotors = MotorGroup(elevatorRight, elevatorLeft)
     private val controller = ProfiledPIDController(
@@ -50,7 +52,7 @@ class ElevatorSubsystem(
         val output = controller.calculate(slidePos)
 
         if (enabled)
-            extendMotors.set(output + SlidesConstants.kG.value)
+            extendMotors.set(output + SlidesConstants.kG.value * sin(slideAngle.invoke()))
     }
 
     fun toggle() {
