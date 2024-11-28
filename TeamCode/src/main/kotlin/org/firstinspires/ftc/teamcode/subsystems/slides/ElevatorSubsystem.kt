@@ -19,8 +19,8 @@ class ElevatorSubsystem(
         SlidesConstants.kI.value,
         SlidesConstants.kD.value,
         TrapezoidProfile.Constraints(
-            0.0,
-            0.0
+            1800.0,
+            1800.0
         )
     )
 
@@ -34,9 +34,9 @@ class ElevatorSubsystem(
         get() = extendMotors.positions[0]
 
     val slideVelocity: Double
-        get() = extendMotors.velocities[0]
+        get() = -extendMotors.velocities[0]
 
-    var enabled = false;
+    var enabled = true
 
     init {
         elevatorRight.inverted = true
@@ -47,11 +47,10 @@ class ElevatorSubsystem(
     }
 
     override fun periodic() {
-        controller.setPID(kP, kI, kD)
         val output = controller.calculate(slidePos)
 
         if (enabled)
-            extendMotors.set(output)
+            extendMotors.set(output + SlidesConstants.kG.value)
     }
 
     fun toggle() {
@@ -63,7 +62,7 @@ class ElevatorSubsystem(
     }
 
     fun stop() {
-        extendMotors.set(0.0)
+        extendMotors.set(kG)
     }
 
     companion object {
@@ -75,5 +74,8 @@ class ElevatorSubsystem(
 
         @JvmField
         var kD = 0.0
+
+        @JvmField
+        var kG = 0.1
     }
 }

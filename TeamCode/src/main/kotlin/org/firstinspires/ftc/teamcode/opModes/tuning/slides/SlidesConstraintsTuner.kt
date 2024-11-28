@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opModes.tuning.slides
 
+import com.acmerobotics.dashboard.FtcDashboard
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
@@ -19,6 +21,8 @@ class SlidesConstraintsTuner : LinearOpMode() {
 
     private val timer = ElapsedTime(ElapsedTime.Resolution.SECONDS)
     override fun runOpMode() {
+        telemetry = MultipleTelemetry(FtcDashboard.getInstance().telemetry, telemetry)
+
         leftMotor = Motor(hardwareMap, ControlBoard.SLIDES_LEFT.deviceName)
         rightMotor = Motor(hardwareMap, ControlBoard.SLIDES_RIGHT.deviceName)
 
@@ -39,6 +43,9 @@ class SlidesConstraintsTuner : LinearOpMode() {
                 maxVel = elevator.slideVelocity.coerceAtLeast(maxVel)
                 maxAccel = dv.coerceAtLeast(maxAccel)
 
+                telemetry.addData("Velocity", elevator.slideVelocity)
+                telemetry.addData("Position", elevator.slidePos)
+
                 telemetry.addData("Max Velocity", maxVel)
                 telemetry.addData("Max Acceleration", maxAccel)
                 telemetry.update()
@@ -55,6 +62,6 @@ class SlidesConstraintsTuner : LinearOpMode() {
 
     companion object {
         @JvmField
-        var TIME_TO_RUN = 2.0
+        var TIME_TO_RUN = 1.5
     }
 }
