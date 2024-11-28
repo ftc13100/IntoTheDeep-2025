@@ -50,7 +50,6 @@ class SlidesPIDTuner : CommandOpMode() {
 
     companion object {
         @JvmField
-        // NOTE THAT THIS VALUE SHOULD BE DEGREES
         var target = 0.0
     }
 }

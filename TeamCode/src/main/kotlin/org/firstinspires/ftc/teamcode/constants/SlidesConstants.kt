@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.constants
 
 enum class SlidesConstants(val value: Double) {
-    kP(0.02),
+    kP(0.014),
     kI(0.0),
-    kD(0.00045),
-    kG(0.1)
+    kD(0.0),
+    kG(0.2)
 }

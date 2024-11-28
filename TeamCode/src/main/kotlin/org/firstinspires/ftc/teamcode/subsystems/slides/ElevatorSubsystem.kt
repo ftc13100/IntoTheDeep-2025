@@ -49,6 +49,7 @@ class ElevatorSubsystem(
     }
 
     override fun periodic() {
+        controller.setPID(kP, kI, kD)
         val output = controller.calculate(slidePos)
 
         if (enabled)
@@ -69,7 +70,7 @@ class ElevatorSubsystem(
 
     companion object {
         @JvmField
-        var kP = 0.0
+        var kP = 0.014
 
         @JvmField
         var kI = 0.0
@@ -78,6 +79,6 @@ class ElevatorSubsystem(
         var kD = 0.0
 
         @JvmField
-        var kG = 0.1
+        var kG = 0.2
     }
 }
