@@ -26,7 +26,7 @@ class BlueHighBasketLeft: OpMode() {
     private lateinit var elevatorSubsystem: ElevatorSubsystem
 
     override fun init() {
-//        intake = CRServo(hardwareMap, ControlBoard.INTAKE.deviceName)
+        intake = CRServo(hardwareMap, ControlBoard.INTAKE.deviceName)
 
         armLeft = Motor(hardwareMap, ControlBoard.ARM_LEFT.deviceName)
         armRight = Motor(hardwareMap, ControlBoard.ARM_RIGHT.deviceName)
@@ -35,29 +35,31 @@ class BlueHighBasketLeft: OpMode() {
         elevatorRight = Motor(hardwareMap, ControlBoard.SLIDES_RIGHT.deviceName)
 
         driveSubsystem = DriveSubsystem(hardwareMap)
-//        intakeSubsystem = IntakeSubsystem(intake)
+        intakeSubsystem = IntakeSubsystem(intake)
         armSubsystem = ArmSubsystem(armRight, armLeft)
         elevatorSubsystem = ElevatorSubsystem(elevatorRight, elevatorLeft, armSubsystem::armAngle)
 
         val trajectory = driveSubsystem.trajectorySequenceBuilder(AutoStartPose.BLUE_LEFT.startPose)
             .turn(Math.toRadians(-90.0))
             .back(60.0)
+            .turn(Math.toRadians(20.0))
+            .back(5.0)
             .addTemporalMarker(3.0) {
                 armSubsystem.setpoint = Math.toRadians(95.0)
             }
             .waitSeconds(1.0)
-            .addTemporalMarker(6.0) {
-                elevatorSubsystem.setpoint = 1000.0
+            .addTemporalMarker(5.0) {
+                elevatorSubsystem.setpoint = 1900.0
             }
             .waitSeconds(2.0)
-//            .addTemporalMarker(5.0){
-//                intakeSubsystem.outtake()
-//            }
+            .addTemporalMarker(6.0){
+                intakeSubsystem.outtake()
+            }
             .waitSeconds(1.0)
-            .addTemporalMarker(10.0) {
-                elevatorSubsystem.setpoint = 50.0
+            .addTemporalMarker(9.0) {
+                elevatorSubsystem.setpoint = 0.0
             }
-            .waitSeconds(2.0)
+            .waitSeconds(5.0)
             .addTemporalMarker(13.0) {
                 armSubsystem.setpoint = Math.toRadians(5.0)
             }

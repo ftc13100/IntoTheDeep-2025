@@ -4,5 +4,5 @@ enum class ArmConstants(val value: Double) {
     kP(1.0),
     kI(0.0),
     kD(0.08),
-    kCos(0.0045)
+    kCos(0.01)
 }

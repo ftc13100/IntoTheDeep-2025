@@ -21,8 +21,8 @@ class ElevatorSubsystem(
         SlidesConstants.kI.value,
         SlidesConstants.kD.value,
         TrapezoidProfile.Constraints(
-            2000.0,
-            1000.0
+            1600.0,
+            700.0
         )
     )
 
@@ -45,7 +45,7 @@ class ElevatorSubsystem(
         elevatorRight.encoder.setDirection(Motor.Direction.REVERSE)
 
         extendMotors.resetEncoder()
-        extendMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
+        extendMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.FLOAT)
     }
 
     override fun periodic() {
@@ -71,7 +71,8 @@ class ElevatorSubsystem(
 
     companion object {
         @JvmField
-        var kP = 0.014
+        var kP = 0.01
+        // kP = 0.01
 
         @JvmField
         var kI = 0.0
@@ -81,5 +82,8 @@ class ElevatorSubsystem(
 
         @JvmField
         var kG = 0.115
+        // kG = 0.115
+
     }
 }
+

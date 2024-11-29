@@ -20,8 +20,8 @@ enum class ControlBoard(val deviceName: String) {
     SLIDES_RIGHT("rightSlideString"),
 
     //Intake
-    INTAKE(""),
+    INTAKE("rollerIntake"),
+    INTAKE_BELT("intakeBelt")
 
-    // Camera
-    CAMERA("lifeCam")
+
 }

@@ -44,7 +44,7 @@ class BlueHighChamberLeft() : OpMode() {
             .forward(28.0)
             .strafeLeft(11.0)
             .addTemporalMarker(2.0) {
-                armSubsystem.setpoint = Math.toRadians(150.0)
+                armSubsystem.setpoint = Math.toRadians(.0)
             }
             .waitSeconds(1.0)
             .addTemporalMarker(3.0) {
