@@ -45,7 +45,7 @@ class ElevatorSubsystem(
         elevatorRight.encoder.setDirection(Motor.Direction.REVERSE)
 
         extendMotors.resetEncoder()
-        extendMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.FLOAT)
+        extendMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
     }
 
     override fun periodic() {

@@ -5,14 +5,16 @@ import com.arcrobotics.ftclib.hardware.motors.CRServo
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
+import com.qualcomm.robotcore.hardware.Servo
 import org.firstinspires.ftc.teamcode.constants.AutoStartPose
 import org.firstinspires.ftc.teamcode.constants.ControlBoard
 import org.firstinspires.ftc.teamcode.subsystems.arm.ArmSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.drive.DriveSubsystem
+import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeBeltSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.slides.ElevatorSubsystem
 
-@Autonomous(name = "Blue 1 + 3 High Basket", group = "Basket", preselectTeleOp = "MainTeleOp")
+@Autonomous(name = "Blue 1 + 1 High Basket", group = "Basket", preselectTeleOp = "MainTeleOp")
 class Blue1Plus1: OpMode() {
     private lateinit var armLeft: Motor
     private lateinit var armRight: Motor
@@ -20,14 +22,17 @@ class Blue1Plus1: OpMode() {
     private lateinit var elevatorRight: Motor
 
     private lateinit var intake: CRServo
+    private lateinit var intakeBelt: Servo
 
     private lateinit var driveSubsystem: DriveSubsystem
     private lateinit var intakeSubsystem: IntakeSubsystem
+    private lateinit var intakeBeltSubsystem: IntakeBeltSubsystem
     private lateinit var armSubsystem: ArmSubsystem
     private lateinit var elevatorSubsystem: ElevatorSubsystem
 
     override fun init() {
-//        intake = CRServo(hardwareMap, ControlBoard.INTAKE.deviceName)
+        intake = CRServo(hardwareMap, ControlBoard.INTAKE.deviceName)
+        intakeBelt = hardwareMap.get(Servo::class.java, ControlBoard.INTAKE_BELT.deviceName)
 
         armLeft = Motor(hardwareMap, ControlBoard.ARM_LEFT.deviceName)
         armRight = Motor(hardwareMap, ControlBoard.ARM_RIGHT.deviceName)
@@ -36,48 +41,82 @@ class Blue1Plus1: OpMode() {
         elevatorRight = Motor(hardwareMap, ControlBoard.SLIDES_RIGHT.deviceName)
 
         driveSubsystem = DriveSubsystem(hardwareMap)
-//        intakeSubsystem = IntakeSubsystem(intake)
+        intakeSubsystem = IntakeSubsystem(intake)
+        intakeBeltSubsystem = IntakeBeltSubsystem(intakeBelt)
         armSubsystem = ArmSubsystem(armRight, armLeft)
         elevatorSubsystem = ElevatorSubsystem(elevatorRight, elevatorLeft, armSubsystem::armAngle)
 
         val trajectory = driveSubsystem.trajectorySequenceBuilder(AutoStartPose.BLUE_LEFT.startPose)
-            .addTemporalMarker(0.1) {
-                armSubsystem.setpoint = Math.toRadians(95.0)
-            }
-            .waitSeconds(0.25)
             .splineToLinearHeading(Pose2d(55.0, 55.0, Math.toRadians(225.0)), Math.toRadians(0.0))
-            .waitSeconds(0.25)
+            .back(4.3)
             .addTemporalMarker(3.0) {
-                elevatorSubsystem.setpoint = 1700.0
-                //turn belt servo
+                armSubsystem.setpoint = Math.toRadians(97.5)
             }
-            //outtake
             .waitSeconds(1.0)
-            .turn(Math.toRadians(30.0))
-            .addTemporalMarker(7.0) {
-                elevatorSubsystem.setpoint = 0.0
-                //belt servo turn
+            .addTemporalMarker(4.0) {
+                elevatorSubsystem.setpoint = 2000.0
             }
-//            .addTemporalMarker(8.0) {
-//                armSubsystem.setpoint = Math.toRadians(0.0)
+            .waitSeconds(2.0)
+            .addTemporalMarker(7.0) {
+                intakeBeltSubsystem.intakePos()
+            }
+            .waitSeconds(1.0)
+            .addTemporalMarker(8.0) {
+                intakeSubsystem.outtake()
+            }
+            .waitSeconds(0.5)
+            .addTemporalMarker(8.5) {
+                intakeSubsystem.stop()
+            }
+            .waitSeconds(1.0)
+            .forward(4.0)
+            .addTemporalMarker(9.5) {
+                elevatorSubsystem.setpoint = 0.0
+            }
+//            .waitSeconds(2.0)
+//            .addTemporalMarker(13.0) {
+//                armSubsystem.setpoint = 0.0
 //            }
-//            .addTemporalMarker(9.0) {
-//                elevatorSubsystem.setpoint = 1700.0
-//                //intake
-//            }
-//            .addTemporalMarker(12.0) {
-//                elevatorSubsystem.setpoint = 0.0
-//            }
-//            .addTemporalMarker(15.0) {
-//                armSubsystem.setpoint = 95.0
-//                //turn belt servo
-//            }
-//            .addTemporalMarker(18.0) {
-//                //outtake
+//            .waitSeconds(1.0)
+//            .turn(Math.toRadians(25.0))
+//            .addTemporalMarker(14.0) {
+//                elevatorSubsystem.setpoint = 1500.0
 //            }
 //            .waitSeconds(2.0)
-//            .splineToSplineHeading(Pose2d(36.0, 12.0, Math.toRadians(-180.0)), Math.toRadians(-90.0))
-//            .turn(Math.toRadians(-30.0))
+//            .addTemporalMarker(16.0) {
+//                intakeBeltSubsystem.intakePos()
+//            }
+//            .waitSeconds(1.0)
+//            .addTemporalMarker(17.0) {
+//                intakeSubsystem.intake()
+//            }
+//            .waitSeconds(2.0)
+//            .addTemporalMarker(20.0) {
+//                elevatorSubsystem.setpoint = 100.0
+//            }
+//            .waitSeconds(2.0)
+//            .turn(Math.toRadians(-25.0))
+//            .addTemporalMarker(24.0) {
+//                armSubsystem.setpoint = 95.0
+//                intakeBeltSubsystem.outtakePos()
+//
+//            }
+//            .addTemporalMarker(25.0) {
+//                elevatorSubsystem.setpoint = 2000.0
+//            }
+//            .waitSeconds(2.0)
+//            .addTemporalMarker(28.0) {
+//                intakeSubsystem.outtake()
+//            }
+//            .waitSeconds(2.0)
+            .lineToSplineHeading(Pose2d(36.0, 8.0, Math.toRadians(180.0)))
+            .addTemporalMarker(12.0) {
+                armSubsystem.setpoint = 50.0
+            }
+            .waitSeconds(1.0)
+            .addTemporalMarker(13.0) {
+                elevatorSubsystem.setpoint = 1000.0
+            }
             .build()
 
         driveSubsystem.poseEstimate = AutoStartPose.BLUE_LEFT.startPose
