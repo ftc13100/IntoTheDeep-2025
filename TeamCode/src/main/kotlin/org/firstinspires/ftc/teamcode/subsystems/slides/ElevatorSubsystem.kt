@@ -11,7 +11,7 @@ import kotlin.math.sin
 
 @Config
 class ElevatorSubsystem(
-    elevatorRight : Motor,
+    private val elevatorRight : Motor,
     elevatorLeft : Motor,
     private val slideAngle: () -> Double
 ) : SubsystemBase() {

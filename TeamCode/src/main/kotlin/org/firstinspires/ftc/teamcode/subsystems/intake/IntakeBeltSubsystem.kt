@@ -6,12 +6,18 @@ import com.qualcomm.robotcore.hardware.Servo
 class IntakeBeltSubsystem(
     private val intakeBelt: Servo
 ) : SubsystemBase() {
-    fun intakePos() {
-     intakeBelt.position = 0.0
-    }
+    var intakePos = false
+
     fun outtakePos() {
-        intakeBelt.position = 0.6
+        intakeBelt.position = 0.0
+        intakePos = true
     }
+
+    fun intakePos() {
+        intakeBelt.position = 0.6
+        intakePos = false
+    }
+
 
     fun setPos(pos: Double) {
         intakeBelt.position = pos

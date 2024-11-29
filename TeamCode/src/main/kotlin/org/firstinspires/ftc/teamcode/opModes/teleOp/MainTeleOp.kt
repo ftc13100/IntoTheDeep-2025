@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.opModes.teleOp
 
 import com.arcrobotics.ftclib.command.CommandOpMode
+import com.arcrobotics.ftclib.command.ConditionalCommand
+import com.arcrobotics.ftclib.command.InstantCommand
 import com.arcrobotics.ftclib.command.RunCommand
+import com.arcrobotics.ftclib.command.button.Trigger
 import com.arcrobotics.ftclib.gamepad.GamepadEx
 import com.arcrobotics.ftclib.gamepad.GamepadKeys
 import com.arcrobotics.ftclib.hardware.motors.CRServo
@@ -12,7 +15,6 @@ import org.firstinspires.ftc.teamcode.commands.arm.OpenArmCommand
 import org.firstinspires.ftc.teamcode.commands.drive.DriveCommand
 import org.firstinspires.ftc.teamcode.commands.elevator.SpinDownCommand
 import org.firstinspires.ftc.teamcode.commands.elevator.SpinUpCommand
-import org.firstinspires.ftc.teamcode.commands.intake.IntakeBeltCommand
 import org.firstinspires.ftc.teamcode.commands.intake.IntakeCommand
 import org.firstinspires.ftc.teamcode.constants.ControlBoard
 import org.firstinspires.ftc.teamcode.subsystems.arm.OpenArmSubsystem
@@ -48,11 +50,14 @@ class MainTeleOp : CommandOpMode() {
 
     private lateinit var intakeCommand: IntakeCommand
     private lateinit var outtakeCommand: IntakeCommand
-    private lateinit var intakeBeltCommand: IntakeBeltCommand
-    private lateinit var outtakeBeltCommand: IntakeBeltCommand
+
+    private lateinit var intakeBeltCommand: ConditionalCommand
 
     private lateinit var driver: GamepadEx
     private lateinit var operator: GamepadEx
+
+    private lateinit var operatorLeft: Trigger
+    private lateinit var operatorRight: Trigger
 
     override fun initialize() {
         driver = GamepadEx(gamepad1)
@@ -73,33 +78,46 @@ class MainTeleOp : CommandOpMode() {
         intakeSubsystem = IntakeSubsystem(intake)
         intakeBeltSubsystem = IntakeBeltSubsystem(intakeBelt)
 
-
         spinUpCommand = SpinUpCommand(slidesSubsystem)
         spinDownCommand = SpinDownCommand(slidesSubsystem)
+
         armUpCommand = OpenArmCommand(armSubsystem, true)
         armDownCommand = OpenArmCommand(armSubsystem, false)
+
         intakeCommand = IntakeCommand(true, intakeSubsystem)
         outtakeCommand = IntakeCommand(false, intakeSubsystem)
-        intakeBeltCommand = IntakeBeltCommand(true, intakeBeltSubsystem)
-        outtakeBeltCommand = IntakeBeltCommand(false, intakeBeltSubsystem)
+
+        intakeBeltCommand = ConditionalCommand(
+            InstantCommand({ intakeBeltSubsystem.intakePos() }),
+            InstantCommand({ intakeBeltSubsystem.outtakePos() }),
+            intakeBeltSubsystem::intakePos
+        )
+
         driveCommand = DriveCommand(driveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX, 0.0)
 
         operator.getGamepadButton(GamepadKeys.Button.DPAD_UP).whileHeld(spinUpCommand)
         operator.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whileHeld(spinDownCommand)
-        operator.getGamepadButton(GamepadKeys.Button.DPAD_UP).whileHeld(spinUpCommand)
-        operator.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whileHeld(spinDownCommand)
         operator.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whileHeld(armUpCommand)
         operator.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(armDownCommand)
-        operator.getGamepadButton(GamepadKeys.Button.Y).whenHeld(intakeCommand)
-        operator.getGamepadButton(GamepadKeys.Button.A).whileHeld(outtakeCommand)
-        operator.getGamepadButton(GamepadKeys.Button.X).whileHeld(intakeBeltCommand)
-        operator.getGamepadButton(GamepadKeys.Button.B).whileHeld(outtakeBeltCommand)
 
+        operator.getGamepadButton(GamepadKeys.Button.B).whenPressed(intakeBeltCommand)
+
+        operatorLeft = Trigger {
+            operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) != 0.0
+        }
+
+        operatorRight = Trigger {
+            operator.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) != 0.0
+        }
+
+        operatorLeft.whileActiveContinuous(outtakeCommand)
+        operatorRight.whileActiveContinuous(intakeCommand)
 
         driveSubsystem.defaultCommand = driveCommand
 
         RunCommand({
             telemetry.addData("Arm Position: ", Math.toDegrees(armSubsystem.armAngle))
+            telemetry.addData("Intake Position", intakeBeltSubsystem.intakePos)
             telemetry.update()
         }).perpetually().schedule()
     }
