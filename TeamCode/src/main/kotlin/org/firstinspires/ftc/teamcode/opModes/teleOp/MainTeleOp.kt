@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.commands.arm.OpenArmCommand
 import org.firstinspires.ftc.teamcode.commands.drive.DriveCommand
 import org.firstinspires.ftc.teamcode.commands.elevator.SpinDownCommand
 import org.firstinspires.ftc.teamcode.commands.elevator.SpinUpCommand
-import org.firstinspires.ftc.teamcode.commands.intake.IntakeCommand
+import org.firstinspires.ftc.teamcode.commands.intake.IntakeBeltCommand
 import org.firstinspires.ftc.teamcode.constants.ControlBoard
 import org.firstinspires.ftc.teamcode.subsystems.arm.OpenArmSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.drive.DriveSubsystem
@@ -47,10 +47,10 @@ class MainTeleOp : CommandOpMode() {
 
     private lateinit var driveCommand: DriveCommand
 
-    private lateinit var intakeCommand: IntakeCommand
-    private lateinit var outtakeCommand: IntakeCommand
+    private lateinit var intakeCommand: IntakeBeltCommand
+    private lateinit var outtakeCommand: IntakeBeltCommand
 
-    private lateinit var intakeBeltCommand: ConditionalCommand
+    private lateinit var clawCommand: ConditionalCommand
 
     private lateinit var driver: GamepadEx
     private lateinit var operator: GamepadEx
@@ -83,13 +83,13 @@ class MainTeleOp : CommandOpMode() {
         armUpCommand = OpenArmCommand(armSubsystem, true)
         armDownCommand = OpenArmCommand(armSubsystem, false)
 
-        intakeCommand = IntakeCommand(true, intakeSubsystem)
-        outtakeCommand = IntakeCommand(false, intakeSubsystem)
+        intakeCommand = IntakeBeltCommand(true, intakeBeltSubsystem)
+        outtakeCommand = IntakeBeltCommand(false, intakeBeltSubsystem)
 
-        intakeBeltCommand = ConditionalCommand(
-            InstantCommand({ intakeBeltSubsystem.intakePos() }),
-            InstantCommand({ intakeBeltSubsystem.outtakePos() }),
-            intakeBeltSubsystem::intakePos
+        clawCommand = ConditionalCommand(
+            InstantCommand({ intakeSubsystem.intake() }),
+            InstantCommand({ intakeSubsystem.outtake() }),
+            intakeSubsystem::intakePos
         )
 
         driveCommand = DriveCommand(driveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX, 0.0)
@@ -99,7 +99,7 @@ class MainTeleOp : CommandOpMode() {
         operator.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whileHeld(armUpCommand)
         operator.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(armDownCommand)
 
-        operator.getGamepadButton(GamepadKeys.Button.B).whenPressed(intakeBeltCommand)
+        operator.getGamepadButton(GamepadKeys.Button.B).whenPressed(clawCommand)
 
         operatorLeft = Trigger {
             operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) != 0.0
@@ -116,7 +116,7 @@ class MainTeleOp : CommandOpMode() {
 
         RunCommand({
             telemetry.addData("Arm Position: ", Math.toDegrees(armSubsystem.armAngle))
-            telemetry.addData("Intake Position", intakeBeltSubsystem.intakePos)
+            telemetry.addData("Intake Position", intakeSubsystem.intakePos)
             telemetry.update()
         }).perpetually().schedule()
     }
