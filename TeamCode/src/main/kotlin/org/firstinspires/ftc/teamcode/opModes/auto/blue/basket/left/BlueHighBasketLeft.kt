@@ -1,9 +1,9 @@
 package org.firstinspires.ftc.teamcode.opModes.auto.blue.basket.left
 
-import com.arcrobotics.ftclib.hardware.motors.CRServo
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
+import com.qualcomm.robotcore.hardware.Servo
 import org.firstinspires.ftc.teamcode.constants.AutoStartPose
 import org.firstinspires.ftc.teamcode.constants.ControlBoard
 import org.firstinspires.ftc.teamcode.subsystems.arm.ArmSubsystem
@@ -18,7 +18,7 @@ class BlueHighBasketLeft: OpMode() {
     private lateinit var elevatorLeft: Motor
     private lateinit var elevatorRight: Motor
 
-    private lateinit var intake: CRServo
+    private lateinit var intake: Servo
 
     private lateinit var driveSubsystem: DriveSubsystem
     private lateinit var intakeSubsystem: IntakeSubsystem
@@ -26,7 +26,7 @@ class BlueHighBasketLeft: OpMode() {
     private lateinit var elevatorSubsystem: ElevatorSubsystem
 
     override fun init() {
-        intake = CRServo(hardwareMap, ControlBoard.INTAKE.deviceName)
+        intake = hardwareMap.get(Servo::class.java, ControlBoard.INTAKE.deviceName)
 
         armLeft = Motor(hardwareMap, ControlBoard.ARM_LEFT.deviceName)
         armRight = Motor(hardwareMap, ControlBoard.ARM_RIGHT.deviceName)

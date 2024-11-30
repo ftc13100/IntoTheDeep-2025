@@ -15,8 +15,4 @@ class IntakeBeltCommand(
             intakeBeltSubsystem.outtakePos()
         }
     }
-
-   /* override fun end(interrupted: Boolean) {
-        intakeBeltSubsystem.stop()
-    }
-*/}
+}

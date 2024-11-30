@@ -15,8 +15,4 @@ class IntakeCommand(
             subsystem.outtake()
         }
     }
-
-    override fun end(interrupted: Boolean) {
-        subsystem.stop()
-    }
 }

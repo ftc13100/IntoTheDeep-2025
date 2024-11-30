@@ -7,7 +7,6 @@ import com.arcrobotics.ftclib.command.RunCommand
 import com.arcrobotics.ftclib.command.button.Trigger
 import com.arcrobotics.ftclib.gamepad.GamepadEx
 import com.arcrobotics.ftclib.gamepad.GamepadKeys
-import com.arcrobotics.ftclib.hardware.motors.CRServo
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.Servo
@@ -30,7 +29,7 @@ class MainTeleOp : CommandOpMode() {
     private lateinit var armLeft: Motor
     private lateinit var armRight: Motor
 
-    private lateinit var intake: CRServo
+    private lateinit var intake: Servo
     private lateinit var intakeBelt: Servo
 
     private lateinit var slidesSubsystem: OpenElevatorSubsystem
@@ -69,7 +68,7 @@ class MainTeleOp : CommandOpMode() {
         armRight = Motor(hardwareMap, ControlBoard.ARM_RIGHT.deviceName, Motor.GoBILDA.RPM_60)
         armLeft = Motor(hardwareMap, ControlBoard.ARM_LEFT.deviceName, Motor.GoBILDA.RPM_60)
 
-        intake = CRServo(hardwareMap, ControlBoard.INTAKE.deviceName)
+        intake = hardwareMap.get(Servo::class.java, ControlBoard.INTAKE.deviceName)
         intakeBelt = hardwareMap.get(Servo::class.java, ControlBoard.INTAKE_BELT.deviceName)
 
         armSubsystem = OpenArmSubsystem(armRight, armLeft)

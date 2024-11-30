@@ -1,16 +1,18 @@
 package org.firstinspires.ftc.teamcode.subsystems.intake
 
 import com.arcrobotics.ftclib.command.SubsystemBase
-import com.arcrobotics.ftclib.hardware.motors.CRServo
+import com.qualcomm.robotcore.hardware.Servo
 
 class IntakeSubsystem(
-    private val intake: CRServo
+    private val intake: Servo
 ) : SubsystemBase() {
-    fun intake() = intake.set(1.0)
+    fun intake() {
+        intake.position = 1.0
+    }
 
-    fun outtake() = intake.set(-0.5)
+    fun outtake() {
+        intake.position = 0.0
+    }
 
-    fun setSpeed(speed: Double) = intake.set(speed)
-
-    fun stop() = intake.stop()
+    fun setSpeed(speed: Double) { intake.position = speed }
 }

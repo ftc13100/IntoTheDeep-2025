@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.opModes.auto.blue.basket.left
 
 import com.acmerobotics.roadrunner.geometry.Pose2d
-import com.arcrobotics.ftclib.hardware.motors.CRServo
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
@@ -21,7 +20,7 @@ class Blue1Plus1: OpMode() {
     private lateinit var elevatorLeft: Motor
     private lateinit var elevatorRight: Motor
 
-    private lateinit var intake: CRServo
+    private lateinit var intake: Servo
     private lateinit var intakeBelt: Servo
 
     private lateinit var driveSubsystem: DriveSubsystem
@@ -31,7 +30,7 @@ class Blue1Plus1: OpMode() {
     private lateinit var elevatorSubsystem: ElevatorSubsystem
 
     override fun init() {
-        intake = CRServo(hardwareMap, ControlBoard.INTAKE.deviceName)
+        intake = hardwareMap.get(Servo::class.java, ControlBoard.INTAKE.deviceName)
         intakeBelt = hardwareMap.get(Servo::class.java, ControlBoard.INTAKE_BELT.deviceName)
 
         armLeft = Motor(hardwareMap, ControlBoard.ARM_LEFT.deviceName)
@@ -64,11 +63,7 @@ class Blue1Plus1: OpMode() {
             .addTemporalMarker(8.0) {
                 intakeSubsystem.outtake()
             }
-            .waitSeconds(0.5)
-            .addTemporalMarker(8.5) {
-                intakeSubsystem.stop()
-            }
-            .waitSeconds(1.0)
+            .waitSeconds(1.5)
             .forward(4.0)
             .addTemporalMarker(9.5) {
                 elevatorSubsystem.setpoint = 0.0

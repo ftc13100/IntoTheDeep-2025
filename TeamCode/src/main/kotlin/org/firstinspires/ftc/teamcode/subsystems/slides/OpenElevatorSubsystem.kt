@@ -21,11 +21,11 @@ class OpenElevatorSubsystem(
 
     // Functions for moving slides up and down, number being speed, 1 being 100%
     fun up() {
-        elevatorMotors.set(1.0)
+        elevatorMotors.set(0.7)
     }
 
     fun down() {
-        elevatorMotors.set(-1.0)
+        elevatorMotors.set(-0.7)
     }
 
     fun stop() {
