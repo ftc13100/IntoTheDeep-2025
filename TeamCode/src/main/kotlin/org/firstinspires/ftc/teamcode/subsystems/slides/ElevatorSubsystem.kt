@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.controller.wpilibcontroller.ProfiledPIDController
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup
 import com.arcrobotics.ftclib.trajectory.TrapezoidProfile
+import com.arcrobotics.ftclib.util.MathUtils.clamp
 import org.firstinspires.ftc.teamcode.constants.SlidesConstants
 import kotlin.math.sin
 
@@ -28,8 +29,13 @@ class ElevatorSubsystem(
 
     var setpoint = 0.0
         set(value) {
-            controller.goal = TrapezoidProfile.State(value, 0.0)
-            field = value
+            val clamped = if (slideAngle.invoke() < Math.toRadians(75.0))
+                clamp(value, 0.0, 20.0)
+            else
+                value
+
+            controller.goal = TrapezoidProfile.State(clamped, 0.0)
+            field = clamped
         }
 
     val slidePos: Double

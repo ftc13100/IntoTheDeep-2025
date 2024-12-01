@@ -15,15 +15,13 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.Servo
 import org.firstinspires.ftc.teamcode.commands.arm.OpenArmCommand
 import org.firstinspires.ftc.teamcode.commands.drive.DriveCommand
-import org.firstinspires.ftc.teamcode.commands.elevator.SpinDownCommand
-import org.firstinspires.ftc.teamcode.commands.elevator.SpinUpCommand
 import org.firstinspires.ftc.teamcode.constants.ArmConstants
 import org.firstinspires.ftc.teamcode.constants.ControlBoard
 import org.firstinspires.ftc.teamcode.subsystems.arm.OpenArmSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.drive.DriveSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeBeltSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem
-import org.firstinspires.ftc.teamcode.subsystems.slides.OpenElevatorSubsystem
+import org.firstinspires.ftc.teamcode.subsystems.slides.ElevatorSubsystem
 import kotlin.math.cos
 
 @TeleOp
@@ -37,14 +35,14 @@ class MainTeleOp : CommandOpMode() {
     private lateinit var intake: Servo
     private lateinit var intakeBelt: Servo
 
-    private lateinit var slidesSubsystem: OpenElevatorSubsystem
+    private lateinit var slidesSubsystem: ElevatorSubsystem
     private lateinit var armSubsystem: OpenArmSubsystem
     private lateinit var driveSubsystem: DriveSubsystem
     private lateinit var intakeSubsystem: IntakeSubsystem
     private lateinit var intakeBeltSubsystem: IntakeBeltSubsystem
 
-    private lateinit var spinUpCommand: SpinUpCommand
-    private lateinit var spinDownCommand: SpinDownCommand
+    private lateinit var spinUpCommand: InstantCommand
+    private lateinit var spinDownCommand: InstantCommand
 
     private lateinit var armUpCommand: OpenArmCommand
     private lateinit var armDownCommand: OpenArmCommand
@@ -76,15 +74,20 @@ class MainTeleOp : CommandOpMode() {
         intakeBelt = hardwareMap.get(Servo::class.java, ControlBoard.INTAKE_BELT.deviceName)
 
         armSubsystem = OpenArmSubsystem(armRight, armLeft) { 0.0 }
-        slidesSubsystem = OpenElevatorSubsystem(elevatorRight, elevatorLeft, armSubsystem::armAngle)
+        slidesSubsystem = ElevatorSubsystem(elevatorRight, elevatorLeft, armSubsystem::armAngle)
         armSubsystem = OpenArmSubsystem(armRight, armLeft, slidesSubsystem::slidePos)
 
         driveSubsystem = DriveSubsystem(hardwareMap)
         intakeSubsystem = IntakeSubsystem(intake)
         intakeBeltSubsystem = IntakeBeltSubsystem(intakeBelt)
 
-        spinUpCommand = SpinUpCommand(slidesSubsystem)
-        spinDownCommand = SpinDownCommand(slidesSubsystem)
+        spinUpCommand = InstantCommand({
+            slidesSubsystem.setpoint = 30.0
+        })
+
+        spinDownCommand = InstantCommand({
+            slidesSubsystem.setpoint = 0.0
+        })
 
         armUpCommand = OpenArmCommand(armSubsystem, true)
         armDownCommand = OpenArmCommand(armSubsystem, false)
@@ -103,8 +106,8 @@ class MainTeleOp : CommandOpMode() {
 
         driveCommand = DriveCommand(driveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX, 0.0)
 
-        operator.getGamepadButton(GamepadKeys.Button.DPAD_UP).whileHeld(spinUpCommand)
-        operator.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whileHeld(spinDownCommand)
+        operator.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(spinUpCommand)
+        operator.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenPressed(spinDownCommand)
         operator.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(armUpCommand)
         operator.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whileHeld(armDownCommand)
 

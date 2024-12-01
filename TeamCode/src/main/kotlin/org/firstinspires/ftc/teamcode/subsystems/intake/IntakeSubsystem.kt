@@ -9,12 +9,12 @@ class IntakeSubsystem(
     var intakePos = false
 
     fun intake() {
-        intake.position = 0.6
+        intake.position = 1.0
         intakePos = !intakePos
     }
 
     fun outtake() {
-        intake.position = 1.0
+        intake.position = 0.6
         intakePos = !intakePos
     }
 

@@ -31,20 +31,20 @@ class IntakeTuner : CommandOpMode() {
         intakeBeltSubsystem = IntakeBeltSubsystem(intakeBelt)
 
         RunCommand({
-            intakeSubsystem.setSpeed(speed)
+            intakeSubsystem.setSpeed(claw)
         }).perpetually().schedule()
 
         RunCommand({
-            intakeBeltSubsystem.setPos(position)
+            intakeBeltSubsystem.setPos(belt)
         }).perpetually().schedule()
 
     }
 
     companion object {
         @JvmField
-        var speed = 0.0
+        var claw = 0.75
 
         @JvmField
-        var position = 0.0
+        var belt = 0.0
     }
 }

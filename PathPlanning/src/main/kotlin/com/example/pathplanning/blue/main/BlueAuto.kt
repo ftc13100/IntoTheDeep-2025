@@ -2,7 +2,6 @@ package com.example.pathplanning.blue.main
 
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.noahbres.meepmeep.MeepMeep
-import com.noahbres.meepmeep.core.toRadians
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder
 import java.awt.Image
 import java.io.File
@@ -19,13 +18,15 @@ object BlueAuto {
             DefaultBotBuilder(meepMeep) // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(30.0, 30.0, Math.toRadians(170.0), Math.toRadians(170.0), 13.94)
                 .followTrajectorySequence { drive ->
-                    drive.trajectorySequenceBuilder(Pose2d(-12.0, 62.0, (270.0).toRadians()))
+                    drive.trajectorySequenceBuilder(Pose2d(
+                        -12.0, 62.0, Math.toRadians(270.0)
+                    ))
                         .addTemporalMarker(0.1,) {
                             //add the command for the arm to go up
                             //add command for belt servo to go backwards
                             //add the command to add the slides go up
                         }
-                        .splineToLinearHeading(Pose2d(55.0, 55.0, Math.toRadians(225.0)), Math.toRadians(0.0))
+                        .splineToLinearHeading(Pose2d(53.0, 55.0, Math.toRadians(225.0)), Math.toRadians(0.0))
                         .addDisplacementMarker {
                             //add command for rollers servo to outtake
                         }
