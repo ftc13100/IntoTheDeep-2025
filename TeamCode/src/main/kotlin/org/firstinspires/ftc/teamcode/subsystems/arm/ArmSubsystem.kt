@@ -13,7 +13,7 @@ import kotlin.math.PI
 @Config
 class ArmSubsystem(
     armRight: Motor,
-    armLeft: Motor
+    armLeft: Motor,
 ) : PIDSubsystem(
     PIDController(
         ArmConstants.kP.value,

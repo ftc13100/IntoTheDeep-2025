@@ -21,8 +21,8 @@ class ElevatorSubsystem(
         SlidesConstants.kI.value,
         SlidesConstants.kD.value,
         TrapezoidProfile.Constraints(
-            1600.0,
-            700.0
+            30.0, // in/s
+            30.0 // in/s^2
         )
     )
 
@@ -33,10 +33,10 @@ class ElevatorSubsystem(
         }
 
     val slidePos: Double
-        get() = extendMotors.positions[0]
+        get() = extendMotors.positions[0] * SlidesConstants.MAX_HEIGHT_INCH.value / SlidesConstants.MAX_HEIGHT_TICKS.value
 
     val slideVelocity: Double
-        get() = -extendMotors.velocities[0]
+        get() = -extendMotors.velocities[0] * SlidesConstants.MAX_HEIGHT_INCH.value / SlidesConstants.MAX_HEIGHT_TICKS.value
 
     var enabled = true
 
@@ -71,7 +71,7 @@ class ElevatorSubsystem(
 
     companion object {
         @JvmField
-        var kP = 0.01
+        var kP = 0.7
         // kP = 0.01
 
         @JvmField
@@ -81,7 +81,7 @@ class ElevatorSubsystem(
         var kD = 0.0
 
         @JvmField
-        var kG = 0.115
+        var kG = 0.12
         // kG = 0.115
 
     }

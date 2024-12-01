@@ -12,8 +12,9 @@ import kotlin.math.cos
 @Config
 class OpenArmSubsystem(
 // Here I am just declaring the motors and what they are called on our driver hub.
-        armRight : Motor,
-        armLeft : Motor,
+    armRight : Motor,
+    armLeft : Motor,
+    private val slidePos: () -> Double
 ) : SubsystemBase() {
 
 //Here I am making a motor group, as the arm motors are going to work together to to turn the slides.
@@ -44,6 +45,6 @@ class OpenArmSubsystem(
 
     companion object {
         @JvmField
-        var kCos = 0.5
+        var kCos = 0.05
     }
 }

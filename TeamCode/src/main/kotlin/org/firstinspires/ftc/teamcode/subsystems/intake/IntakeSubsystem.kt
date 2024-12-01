@@ -10,12 +10,12 @@ class IntakeSubsystem(
 
     fun intake() {
         intake.position = 0.6
-        intakePos = true
+        intakePos = !intakePos
     }
 
     fun outtake() {
-        intake.position = 0.0
-        intakePos = false
+        intake.position = 1.0
+        intakePos = !intakePos
     }
 
     fun setSpeed(speed: Double) { intake.position = speed }

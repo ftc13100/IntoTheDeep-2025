@@ -14,18 +14,20 @@ class OpenElevatorSubsystem(
 ) : SubsystemBase() {
     //makes a motor group bc you have to move them at the same time
     private val elevatorMotors = MotorGroup(elevatorRight, elevatorLeft)
+    val slidePos: Double
+        get() = elevatorMotors.positions[0] * SlidesConstants.MAX_HEIGHT_INCH.value / SlidesConstants.MAX_HEIGHT_TICKS.value
 
     init {
-        elevatorRight.inverted = true
+        elevatorLeft.inverted = true
     }
 
     // Functions for moving slides up and down, number being speed, 1 being 100%
     fun up() {
-        elevatorMotors.set(0.7)
+        elevatorMotors.set(1.0)
     }
 
     fun down() {
-        elevatorMotors.set(-0.7)
+        elevatorMotors.set(-1.0)
     }
 
     fun stop() {

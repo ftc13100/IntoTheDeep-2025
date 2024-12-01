@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.opModes.teleOp
 
+import com.acmerobotics.dashboard.FtcDashboard
+import com.acmerobotics.dashboard.config.Config
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.arcrobotics.ftclib.command.CommandOpMode
 import com.arcrobotics.ftclib.command.ConditionalCommand
 import com.arcrobotics.ftclib.command.InstantCommand
@@ -14,15 +17,17 @@ import org.firstinspires.ftc.teamcode.commands.arm.OpenArmCommand
 import org.firstinspires.ftc.teamcode.commands.drive.DriveCommand
 import org.firstinspires.ftc.teamcode.commands.elevator.SpinDownCommand
 import org.firstinspires.ftc.teamcode.commands.elevator.SpinUpCommand
-import org.firstinspires.ftc.teamcode.commands.intake.IntakeBeltCommand
+import org.firstinspires.ftc.teamcode.constants.ArmConstants
 import org.firstinspires.ftc.teamcode.constants.ControlBoard
 import org.firstinspires.ftc.teamcode.subsystems.arm.OpenArmSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.drive.DriveSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeBeltSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.slides.OpenElevatorSubsystem
+import kotlin.math.cos
 
 @TeleOp
+@Config
 class MainTeleOp : CommandOpMode() {
     private lateinit var elevatorLeft: Motor
     private lateinit var elevatorRight: Motor
@@ -38,7 +43,6 @@ class MainTeleOp : CommandOpMode() {
     private lateinit var intakeSubsystem: IntakeSubsystem
     private lateinit var intakeBeltSubsystem: IntakeBeltSubsystem
 
-
     private lateinit var spinUpCommand: SpinUpCommand
     private lateinit var spinDownCommand: SpinDownCommand
 
@@ -47,9 +51,7 @@ class MainTeleOp : CommandOpMode() {
 
     private lateinit var driveCommand: DriveCommand
 
-    private lateinit var intakeCommand: IntakeBeltCommand
-    private lateinit var outtakeCommand: IntakeBeltCommand
-
+    private lateinit var beltCommand: ConditionalCommand
     private lateinit var clawCommand: ConditionalCommand
 
     private lateinit var driver: GamepadEx
@@ -59,6 +61,8 @@ class MainTeleOp : CommandOpMode() {
     private lateinit var operatorRight: Trigger
 
     override fun initialize() {
+        telemetry = MultipleTelemetry(FtcDashboard.getInstance().telemetry, telemetry)
+
         driver = GamepadEx(gamepad1)
         operator = GamepadEx(gamepad2)
 
@@ -71,8 +75,10 @@ class MainTeleOp : CommandOpMode() {
         intake = hardwareMap.get(Servo::class.java, ControlBoard.INTAKE.deviceName)
         intakeBelt = hardwareMap.get(Servo::class.java, ControlBoard.INTAKE_BELT.deviceName)
 
-        armSubsystem = OpenArmSubsystem(armRight, armLeft)
+        armSubsystem = OpenArmSubsystem(armRight, armLeft) { 0.0 }
         slidesSubsystem = OpenElevatorSubsystem(elevatorRight, elevatorLeft, armSubsystem::armAngle)
+        armSubsystem = OpenArmSubsystem(armRight, armLeft, slidesSubsystem::slidePos)
+
         driveSubsystem = DriveSubsystem(hardwareMap)
         intakeSubsystem = IntakeSubsystem(intake)
         intakeBeltSubsystem = IntakeBeltSubsystem(intakeBelt)
@@ -83,41 +89,61 @@ class MainTeleOp : CommandOpMode() {
         armUpCommand = OpenArmCommand(armSubsystem, true)
         armDownCommand = OpenArmCommand(armSubsystem, false)
 
-        intakeCommand = IntakeBeltCommand(true, intakeBeltSubsystem)
-        outtakeCommand = IntakeBeltCommand(false, intakeBeltSubsystem)
-
         clawCommand = ConditionalCommand(
             InstantCommand({ intakeSubsystem.intake() }),
             InstantCommand({ intakeSubsystem.outtake() }),
             intakeSubsystem::intakePos
         )
 
+        beltCommand = ConditionalCommand(
+            InstantCommand({ intakeBeltSubsystem.intakePos() }),
+            InstantCommand({ intakeBeltSubsystem.outtakePos() }),
+            intakeBeltSubsystem::beltPos
+        )
+
         driveCommand = DriveCommand(driveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX, 0.0)
 
         operator.getGamepadButton(GamepadKeys.Button.DPAD_UP).whileHeld(spinUpCommand)
         operator.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whileHeld(spinDownCommand)
-        operator.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whileHeld(armUpCommand)
-        operator.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(armDownCommand)
+        operator.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(armUpCommand)
+        operator.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whileHeld(armDownCommand)
 
         operator.getGamepadButton(GamepadKeys.Button.B).whenPressed(clawCommand)
+        operator.getGamepadButton(GamepadKeys.Button.A).whenPressed(beltCommand)
 
         operatorLeft = Trigger {
-            operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) != 0.0
+            operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) == 1.0
         }
 
         operatorRight = Trigger {
-            operator.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) != 0.0
+            operator.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) == 1.0
         }
 
-        operatorLeft.whileActiveContinuous(outtakeCommand)
-        operatorRight.whileActiveContinuous(intakeCommand)
+        operatorRight.whileActiveContinuous(
+            InstantCommand({ intakeBeltSubsystem.increasePos() })
+        )
+
+        operatorLeft.whileActiveContinuous(
+            InstantCommand({ intakeBeltSubsystem.decreasePos() })
+        )
 
         driveSubsystem.defaultCommand = driveCommand
 
         RunCommand({
             telemetry.addData("Arm Position: ", Math.toDegrees(armSubsystem.armAngle))
             telemetry.addData("Intake Position", intakeSubsystem.intakePos)
+
+            telemetry.addData("Slide Position", slidesSubsystem.slidePos)
+            telemetry.addData("Arm Correction",
+                ArmConstants.kCos.value * cos(armSubsystem.armAngle) +
+                        kT * slidesSubsystem.slidePos
+            )
             telemetry.update()
         }).perpetually().schedule()
+    }
+
+    companion object {
+        @JvmField
+        var kT = 0.05
     }
 }
