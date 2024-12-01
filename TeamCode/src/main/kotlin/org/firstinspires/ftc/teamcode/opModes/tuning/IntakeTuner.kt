@@ -45,6 +45,6 @@ class IntakeTuner : CommandOpMode() {
         var speed = 0.0
 
         @JvmField
-        var position = 1.0
+        var position = 0.0
     }
 }

@@ -144,6 +144,6 @@ class MainTeleOp : CommandOpMode() {
 
     companion object {
         @JvmField
-        var kT = 0.05
+        var kT = 0.005
     }
 }

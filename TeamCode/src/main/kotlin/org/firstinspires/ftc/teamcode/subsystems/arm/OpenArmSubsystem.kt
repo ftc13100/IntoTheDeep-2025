@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.hardware.motors.Motor.GoBILDA
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup
 import org.firstinspires.ftc.teamcode.constants.ArmConstants
+import org.firstinspires.ftc.teamcode.opModes.teleOp.MainTeleOp.Companion.kT
 import kotlin.math.PI
 import kotlin.math.cos
 
@@ -40,7 +41,8 @@ class OpenArmSubsystem(
     }
 
     fun stop() {
-        turnMotors.set(ArmConstants.kCos.value * cos(armAngle))
+        turnMotors.set(ArmConstants.kCos.value * cos(armAngle) +
+                kT * slidePos.invoke())
     }
 
     companion object {

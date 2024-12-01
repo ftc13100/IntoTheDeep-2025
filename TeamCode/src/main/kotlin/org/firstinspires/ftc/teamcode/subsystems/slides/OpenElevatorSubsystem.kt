@@ -18,7 +18,10 @@ class OpenElevatorSubsystem(
         get() = elevatorMotors.positions[0] * SlidesConstants.MAX_HEIGHT_INCH.value / SlidesConstants.MAX_HEIGHT_TICKS.value
 
     init {
-        elevatorLeft.inverted = true
+        elevatorRight.inverted = true
+        elevatorRight.encoder.setDirection(Motor.Direction.REVERSE)
+
+        elevatorMotors.resetEncoder()
     }
 
     // Functions for moving slides up and down, number being speed, 1 being 100%
