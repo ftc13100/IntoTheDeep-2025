@@ -32,7 +32,7 @@ class ElevatorSubsystem(
             val clamped = if (slideAngle.invoke() < Math.toRadians(75.0))
                 clamp(value, 0.0, 20.0)
             else
-                value
+                clamp(value, 0.0, 30.0)
 
             controller.goal = TrapezoidProfile.State(clamped, 0.0)
             field = clamped
