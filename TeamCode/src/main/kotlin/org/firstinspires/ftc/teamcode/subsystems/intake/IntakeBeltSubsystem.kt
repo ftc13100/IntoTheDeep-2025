@@ -14,7 +14,7 @@ class IntakeBeltSubsystem(
     }
 
     fun intakePos() {
-        intakeBelt.position = 0.5
+        intakeBelt.position = 0.47
         beltPos = !beltPos
     }
 

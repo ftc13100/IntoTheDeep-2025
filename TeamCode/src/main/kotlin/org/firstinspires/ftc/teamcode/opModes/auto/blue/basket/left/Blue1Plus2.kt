@@ -15,8 +15,8 @@ import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeBeltSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.slides.ElevatorSubsystem
 
-@Autonomous(name = "Blue 1 + 1 High Basket", group = "Basket", preselectTeleOp = "MainTeleOp")
-class Blue1Plus1: OpMode() {
+@Autonomous(name = "Blue 1 + 2 High Basket", group = "Basket", preselectTeleOp = "MainTeleOp")
+class Blue1Plus2: OpMode() {
     private lateinit var armLeft: Motor
     private lateinit var armRight: Motor
     private lateinit var elevatorLeft: Motor
@@ -50,13 +50,13 @@ class Blue1Plus1: OpMode() {
         elevatorSubsystem = ElevatorSubsystem(elevatorRight, elevatorLeft, armSubsystem::armAngle)
 
         val trajectory = driveSubsystem.trajectorySequenceBuilder(AutoStartPose.BLUE_LEFT.startPose)
-            .addTemporalMarker(0.1) {
+            .addTemporalMarker(2.0) {
                 intakeSubsystem.intake()
                 intakeBeltSubsystem.intakePos()
             }
             .splineToLinearHeading(Pose2d(54.0, 55.0, Math.toRadians(225.0)), Math.toRadians(0.0))
             .back(4.0)
-            .addTemporalMarker(3.0) {
+            .addTemporalMarker(1.5) {
                 armSubsystem.setpoint = Math.toRadians(98.0)
             }
             .waitSeconds(1.0)
@@ -64,63 +64,135 @@ class Blue1Plus1: OpMode() {
                 elevatorSubsystem.setpoint = 30.0
             }
             .waitSeconds(1.0)
-            .addTemporalMarker(5.0) {
+            .addTemporalMarker(4.5) {
                 intakeBeltSubsystem.outtakePos()
             }
-            .waitSeconds(2.0)
-            .addTemporalMarker(7.0) {
+            .waitSeconds(1.5)
+            .addTemporalMarker(6.0) {
                 intakeSubsystem.outtake()
             }
             .waitSeconds(0.5)
+            .addTemporalMarker(6.5) {
+                intakeBeltSubsystem.intakePos()
+                elevatorSubsystem.setpoint = 0.0
+            }
+            .turn(Math.toRadians(32.0))
+            .waitSeconds(1.0)
+            .forward(3.0)
             .addTemporalMarker(7.5) {
+                armSubsystem.setpoint = Math.toRadians(0.0)
+            }
+            .waitSeconds(1.0)
+            .addTemporalMarker(8.5) {
+                elevatorSubsystem.setpoint = 30.0
+            }
+            .waitSeconds(1.5)
+            .addTemporalMarker(10.0) {
+                intakeBeltSubsystem.intakePos()
+            }
+            .waitSeconds(1.5)
+            .addTemporalMarker(11.5) {
+                intakeSubsystem.intake()
+            }
+            .waitSeconds(0.5)
+            .addTemporalMarker(12.0) {
+                intakeBeltSubsystem.outtakePos()
+                elevatorSubsystem.setpoint = 0.0
+            }
+            .turn(Math.toRadians(-30.0))
+            .waitSeconds(1.0)
+            .back(2.0)
+            .addTemporalMarker(13.0) {
+                armSubsystem.setpoint = Math.toRadians(98.0)
+                intakeBeltSubsystem.intakePos()
+            }
+            .waitSeconds(1.0)
+            .addTemporalMarker(15.0) {
+                elevatorSubsystem.setpoint = 33.0
+            }
+            .waitSeconds(2.0)
+            .addTemporalMarker(17.0) {
+                intakeBeltSubsystem.outtakePos()
+            }
+            .turn(Math.toRadians(52.0))
+            .waitSeconds(1.5)
+            .addTemporalMarker(18.5) {
+                intakeSubsystem.outtake()
+            }
+            .waitSeconds(0.5)
+            .addTemporalMarker(19.0) {
                 intakeBeltSubsystem.intakePos()
                 elevatorSubsystem.setpoint = 0.0
             }
             .waitSeconds(1.5)
-            .addTemporalMarker(9.5) {
-                armSubsystem.setpoint = 0.0
+            .addTemporalMarker(20.5) {
                 intakeBeltSubsystem.outtakePos()
+                armSubsystem.setpoint = 0.0
             }
             .waitSeconds(1.0)
-            .turn(Math.toRadians(38.0))
-            .addTemporalMarker(11.0) {
-                elevatorSubsystem.setpoint = 31.0
-            }
-            .waitSeconds(2.0)
-            .addTemporalMarker(13.0) {
+            .forward(2.0)
+            .addTemporalMarker(21.5) {
+                elevatorSubsystem.setpoint = 30.0
                 intakeBeltSubsystem.intakePos()
             }
-            .waitSeconds(1.0)
-            .addTemporalMarker(14.0) {
+            .turn(Math.toRadians(-60.0))
+            .waitSeconds(2.0)
+            .addTemporalMarker(23.5) {
                 intakeSubsystem.intake()
             }
-            .waitSeconds(1.0)
-            .addTemporalMarker(15.0) {
+            .waitSeconds(0.5)
+            .addTemporalMarker(24.0) {
+                intakeBeltSubsystem.outtakePos()
                 elevatorSubsystem.setpoint = 0.0
             }
-            .waitSeconds(2.0)
-            .turn(Math.toRadians(-40.0))
-            .addTemporalMarker(17.0) {
+            .waitSeconds(0.5)
+            .back(2.0)
+            .addTemporalMarker(24.5) {
                 armSubsystem.setpoint = Math.toRadians(98.0)
+                intakeBeltSubsystem.intakePos()
             }
-            .waitSeconds(1.0)
-            .back(0.5)
-            .addTemporalMarker(18.0) {
+            .waitSeconds(1.5)
+            .addTemporalMarker(27.0) {
                 elevatorSubsystem.setpoint = 33.0
             }
-            .waitSeconds(3.0)
-            .addTemporalMarker(21.0) {
+            .waitSeconds(1.5)
+            .addTemporalMarker(28.5) {
                 intakeBeltSubsystem.outtakePos()
             }
-            .waitSeconds(1.0)
-            .addTemporalMarker(22.0) {
+            .waitSeconds(0.5)
+            .addTemporalMarker(29.0) {
                 intakeSubsystem.outtake()
             }
-            .waitSeconds(1.0)
-            .addTemporalMarker(23.0) {
-                elevatorSubsystem.setpoint = 0.0
-            }
-            .splineToSplineHeading(Pose2d(25.0, 10.0, Math.toRadians(0.0)), Math.toRadians(180.0))
+            // .strafetolinearheading
+
+//            .waitSeconds(0.5)
+//            .addTemporalMarker(6.0) {
+//                intakeBeltSubsystem.outtakePos()
+//                armSubsystem.setpoint = 0.0
+//            }
+//            .turn(Math.toRadians(40.0))
+//            .waitSeconds(0.5)
+//            .addTemporalMarker(6.5) {
+//                elevatorSubsystem.setpoint = 30.0
+//            }
+//            .waitSeconds(1.0)
+//            .addTemporalMarker(7.5) {
+//                intakeBeltSubsystem.intakePos()
+//            }
+//            .waitSeconds(0.5)
+//            .addTemporalMarker(8.0) {
+//                intakeSubsystem.intake()
+//            }
+//            .waitSeconds(0.5)
+//            .addTemporalMarker(8.5) {
+//                elevatorSubsystem.setpoint = 0.0
+//                intakeBeltSubsystem.outtakePos()
+//            }
+//            .turn(Math.toRadians(-40.0))
+//            .waitSeconds(1.0)
+//            .addTemporalMarker(9.5) {
+//                armSubsystem.setpoint = Math.toRadians(98.0)
+//            }
             .build()
 
         driveSubsystem.poseEstimate = AutoStartPose.BLUE_LEFT.startPose

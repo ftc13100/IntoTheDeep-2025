@@ -20,7 +20,6 @@ class OpenElevatorSubsystem(
     init {
         elevatorRight.inverted = true
         elevatorRight.encoder.setDirection(Motor.Direction.REVERSE)
-
         elevatorMotors.resetEncoder()
     }
 

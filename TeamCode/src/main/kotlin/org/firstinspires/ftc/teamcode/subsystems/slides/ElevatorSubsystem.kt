@@ -7,6 +7,8 @@ import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup
 import com.arcrobotics.ftclib.trajectory.TrapezoidProfile
 import com.arcrobotics.ftclib.util.MathUtils.clamp
+import com.qualcomm.robotcore.hardware.DcMotor
+import com.qualcomm.robotcore.hardware.DcMotorEx
 import org.firstinspires.ftc.teamcode.constants.SlidesConstants
 import kotlin.math.sin
 
@@ -49,7 +51,6 @@ class ElevatorSubsystem(
     init {
         elevatorRight.inverted = true
         elevatorRight.encoder.setDirection(Motor.Direction.REVERSE)
-
         extendMotors.resetEncoder()
         extendMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
     }
