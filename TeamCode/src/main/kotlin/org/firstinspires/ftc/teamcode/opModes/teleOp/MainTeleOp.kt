@@ -136,7 +136,7 @@ class MainTeleOp : CommandOpMode() {
                     slidesSubsystem.disable()
                     slidesSubsystem.spinDown()
                     armSubsystem.anticlockwise()
-                })
+                }).perpetually()
             )
 
 
