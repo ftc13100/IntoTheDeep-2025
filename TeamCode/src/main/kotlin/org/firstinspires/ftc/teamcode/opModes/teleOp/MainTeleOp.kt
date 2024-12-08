@@ -130,6 +130,16 @@ class MainTeleOp : CommandOpMode() {
             InstantCommand({ intakeBeltSubsystem.decreasePos() })
         )
 
+        driver.getGamepadButton(GamepadKeys.Button.Y)
+            .whenPressed(
+                RunCommand({
+                    slidesSubsystem.disable()
+                    slidesSubsystem.spinDown()
+                    armSubsystem.anticlockwise()
+                })
+            )
+
+
         driveSubsystem.defaultCommand = driveCommand
 
         RunCommand({

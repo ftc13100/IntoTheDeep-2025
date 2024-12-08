@@ -7,14 +7,12 @@ import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup
 import com.arcrobotics.ftclib.trajectory.TrapezoidProfile
 import com.arcrobotics.ftclib.util.MathUtils.clamp
-import com.qualcomm.robotcore.hardware.DcMotor
-import com.qualcomm.robotcore.hardware.DcMotorEx
 import org.firstinspires.ftc.teamcode.constants.SlidesConstants
 import kotlin.math.sin
 
 @Config
 class ElevatorSubsystem(
-    private val elevatorRight : Motor,
+    elevatorRight : Motor,
     elevatorLeft : Motor,
     private val slideAngle: () -> Double
 ) : SubsystemBase() {
@@ -51,8 +49,12 @@ class ElevatorSubsystem(
     init {
         elevatorRight.inverted = true
         elevatorRight.encoder.setDirection(Motor.Direction.REVERSE)
+
         extendMotors.resetEncoder()
         extendMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
+
+        setpoint = 0.0
+        enabled = true
     }
 
     override fun periodic() {
@@ -68,8 +70,16 @@ class ElevatorSubsystem(
         enabled != enabled
     }
 
+    fun disable() {
+        enabled = false
+    }
+
     fun spinUp() {
-        extendMotors.set(1.0);
+        extendMotors.set(1.0)
+    }
+
+    fun spinDown() {
+        extendMotors.set(-1.0)
     }
 
     fun stop() {

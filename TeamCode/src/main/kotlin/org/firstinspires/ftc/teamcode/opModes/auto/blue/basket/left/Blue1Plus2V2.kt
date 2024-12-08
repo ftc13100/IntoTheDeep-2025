@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.subsystems.drive.DriveSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeBeltSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.slides.ElevatorSubsystem
+import org.firstinspires.ftc.teamcode.utils.roadrunner.trajectorysequence.TrajectorySequence
 
 @Autonomous(name = "V2 Blue 1 + 2", group = "Basket", preselectTeleOp = "MainTeleOp")
 class Blue1Plus2V2: OpMode() {
@@ -30,6 +31,9 @@ class Blue1Plus2V2: OpMode() {
     private lateinit var intakeBeltSubsystem: IntakeBeltSubsystem
     private lateinit var armSubsystem: ArmSubsystem
     private lateinit var elevatorSubsystem: ElevatorSubsystem
+
+    private lateinit var toBasket1: TrajectorySequence
+    private lateinit var toBasket2: TrajectorySequence
 
     override fun init() {
         telemetry = MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry)
@@ -49,7 +53,7 @@ class Blue1Plus2V2: OpMode() {
         armSubsystem = ArmSubsystem(armRight, armLeft)
         elevatorSubsystem = ElevatorSubsystem(elevatorRight, elevatorLeft, armSubsystem::armAngle)
 
-        val toBasket1 = driveSubsystem.trajectorySequenceBuilder(AutoStartPose.BLUE_LEFT.startPose)
+        toBasket1 = driveSubsystem.trajectorySequenceBuilder(AutoStartPose.BLUE_LEFT.startPose)
             .splineToLinearHeading(Pose2d(54.0, 56.0, Math.toRadians(225.0)), Math.toRadians(0.0))
             .addTemporalMarker(0.1) {
                 intakeSubsystem.intake()
@@ -175,6 +179,9 @@ class Blue1Plus2V2: OpMode() {
             }
             .splineToSplineHeading(Pose2d(28.0, 10.0, Math.toRadians(0.0)), 90.0)
             .back(5.0)
+            .addDisplacementMarker {
+                driveSubsystem.followTrajectorySequenceAsync(toBasket2)
+            }
             .build()
         driveSubsystem.poseEstimate = AutoStartPose.BLUE_LEFT.startPose
         driveSubsystem.followTrajectorySequenceAsync(toBasket1)
