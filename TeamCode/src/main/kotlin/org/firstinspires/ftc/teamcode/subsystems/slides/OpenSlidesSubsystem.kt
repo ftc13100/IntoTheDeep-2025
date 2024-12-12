@@ -3,20 +3,21 @@ package org.firstinspires.ftc.teamcode.subsystems.slides
 import com.arcrobotics.ftclib.command.SubsystemBase
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup
+import com.qualcomm.robotcore.hardware.HardwareMap
+import org.firstinspires.ftc.teamcode.constants.ControlBoard
 
-class OpenSlidesSubsystem(
-    //sets them as a private variable thats a motor (same name as in driver hub)
-    elevatorLeft: Motor,
-    elevatorRight: Motor,
-) : SubsystemBase() {
-    //makes a motor group bc you have to move them at the same time
-    private val elevatorMotors = MotorGroup(elevatorLeft, elevatorRight)
+object OpenSlidesSubsystem: SubsystemBase() {
+    private lateinit var elevatorMotors: MotorGroup
 
-    init {
+    fun initialize(hardwareMap: HardwareMap) {
+        val elevatorLeft = Motor(hardwareMap, ControlBoard.SLIDES_LEFT.deviceName)
+        val elevatorRight = Motor(hardwareMap, ControlBoard.SLIDES_LEFT.deviceName)
+
         elevatorLeft.inverted = true
+
+        elevatorMotors = MotorGroup(elevatorLeft, elevatorRight)
     }
 
-    // Functions for moving slides up and down, number being speed, 1 being 100%
     fun up() {
         elevatorMotors.set(1.0)
     }

@@ -5,24 +5,27 @@ import com.arcrobotics.ftclib.command.SubsystemBase
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.hardware.motors.Motor.GoBILDA
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup
+import com.qualcomm.robotcore.hardware.HardwareMap
+import org.firstinspires.ftc.teamcode.constants.ArmConstants
+import org.firstinspires.ftc.teamcode.constants.ControlBoard
 import kotlin.math.PI
+import kotlin.math.cos
 
 @Config
-class OpenArmSubsystem(
-// Here I am just declaring the motors and what they are called on our driver hub.
-        armRight : Motor,
-        armLeft : Motor,
+object OpenArmSubsystem : SubsystemBase() {
+    private lateinit var turnMotors: MotorGroup
 
-) : SubsystemBase() {
-
-//Here I am making a motor group, as the arm motors are going to work together to to turn the slides.
-
-    private val turnMotors = MotorGroup(armRight, armLeft)
     val armAngle: Double
         get() = turnMotors.positions[0] / GoBILDA.RPM_312.cpr * 2 * PI
 
-    init {
+    fun initialize(hardwareMap: HardwareMap) {
+        val armLeft = Motor(hardwareMap, ControlBoard.ARM_LEFT.deviceName)
+        val armRight = Motor(hardwareMap, ControlBoard.ARM_RIGHT.deviceName)
+
         armLeft.inverted = true
+
+        turnMotors = MotorGroup(armRight, armLeft)
+
         turnMotors.resetEncoder()
         turnMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
     }
@@ -38,11 +41,7 @@ class OpenArmSubsystem(
     }
 
     fun stop() {
-        turnMotors.set(kCos * Math.cos(armAngle))
+        turnMotors.set(ArmConstants.kCos.value * cos(armAngle))
     }
 
-    companion object {
-        @JvmField
-        var kCos = 0.5
-    }
 }
