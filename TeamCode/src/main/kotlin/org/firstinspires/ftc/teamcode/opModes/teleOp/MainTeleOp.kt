@@ -27,7 +27,6 @@ class MainTeleOp : CommandOpMode() {
 
     private lateinit var slidesSubsystem: OpenSlidesSubsystem
     private lateinit var armSubsystem: OpenArmSubsystem
-    private lateinit var driveSubsystem: DriveSubsystem
     private lateinit var intakeSubsystem: IntakeSubsystem
 
     private lateinit var spinUpCommand: SpinUpCommand
@@ -56,7 +55,7 @@ class MainTeleOp : CommandOpMode() {
 
         slidesSubsystem = OpenSlidesSubsystem(elevatorRight, elevatorLeft)
         armSubsystem = OpenArmSubsystem(armRight, armLeft)
-        driveSubsystem = DriveSubsystem(hardwareMap)
+        DriveSubsystem.initialize(hardwareMap)
         //intakeSubsystem = IntakeSubsystem(intake)
 
         spinUpCommand = SpinUpCommand(slidesSubsystem)
@@ -65,7 +64,7 @@ class MainTeleOp : CommandOpMode() {
         armDownCommand = OpenArmCommand(armSubsystem, false)
         //intakeCommand = IntakeCommand(true, intakeSubsystem)
         //outtakeCommand = IntakeCommand(false, intakeSubsystem)
-        driveCommand = DriveCommand(driveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX, 0.0)
+        driveCommand = DriveCommand(DriveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX, 0.0)
 
         operator.getGamepadButton(GamepadKeys.Button.DPAD_UP).whileHeld(spinUpCommand)
         operator.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whileHeld(spinDownCommand)
@@ -77,7 +76,7 @@ class MainTeleOp : CommandOpMode() {
        // operator.getGamepadButton(GamepadKeys.Button.A).whileHeld(outtakeCommand)
 
 
-        driveSubsystem.defaultCommand = driveCommand
+        DriveSubsystem.defaultCommand = driveCommand
 
         RunCommand({
             telemetry.addData("Arm Position: ", armSubsystem.armAngle)
