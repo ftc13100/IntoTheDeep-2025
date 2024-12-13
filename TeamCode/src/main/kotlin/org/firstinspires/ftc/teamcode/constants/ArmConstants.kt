@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.constants
 
 enum class ArmConstants(val value: Double) {
-    kP(1.0),
+    kP(2.0),
     kI(0.0),
-    kD(0.08),
-    kCos(0.004)
+    kD(0.0),
+    kCos(0.02)
 }

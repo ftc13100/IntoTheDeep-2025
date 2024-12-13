@@ -8,6 +8,7 @@ import com.arcrobotics.ftclib.hardware.motors.MotorGroup
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.constants.ArmConstants
 import org.firstinspires.ftc.teamcode.constants.ControlBoard
+import org.firstinspires.ftc.teamcode.opModes.teleOp.MainTeleOp.Companion.kT
 import kotlin.math.PI
 import kotlin.math.cos
 
@@ -16,7 +17,7 @@ object OpenArmSubsystem : SubsystemBase() {
     private lateinit var turnMotors: MotorGroup
 
     val armAngle: Double
-        get() = turnMotors.positions[0] / GoBILDA.RPM_312.cpr * 2 * PI
+        get() = turnMotors.positions[0] / GoBILDA.RPM_60.cpr * PI
 
     fun initialize(hardwareMap: HardwareMap) {
         val armLeft = Motor(hardwareMap, ControlBoard.ARM_LEFT.deviceName)
@@ -41,7 +42,6 @@ object OpenArmSubsystem : SubsystemBase() {
     }
 
     fun stop() {
-        turnMotors.set(ArmConstants.kCos.value * cos(armAngle))
+        turnMotors.set(ArmConstants.kCos.value * cos(armAngle) + kT * 0.0)
     }
-
 }

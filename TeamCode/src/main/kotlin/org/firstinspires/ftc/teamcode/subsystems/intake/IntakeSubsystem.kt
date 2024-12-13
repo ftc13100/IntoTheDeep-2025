@@ -1,20 +1,28 @@
 package org.firstinspires.ftc.teamcode.subsystems.intake
 
 import com.arcrobotics.ftclib.command.SubsystemBase
-import com.arcrobotics.ftclib.hardware.motors.CRServo
 import com.qualcomm.robotcore.hardware.HardwareMap
+import com.qualcomm.robotcore.hardware.Servo
 import org.firstinspires.ftc.teamcode.constants.ControlBoard
 
 object IntakeSubsystem : SubsystemBase() {
-    private lateinit var intake: CRServo
+    private lateinit var intake: Servo
 
     fun initialize(hardwareMap: HardwareMap) {
-        intake = CRServo(hardwareMap, ControlBoard.INTAKE.deviceName)
+        intake = hardwareMap.get(Servo::class.java, ControlBoard.INTAKE.deviceName)
     }
 
-    fun intake() = intake.set(1.0)
+    var intakePos = false
 
-    fun outtake() = intake.set(-0.5)
+    fun intake() {
+        intake.position = 1.0
+        intakePos = !intakePos
+    }
 
-    fun stop() = intake.stop()
+    fun outtake() {
+        intake.position = 0.6
+        intakePos = !intakePos
+    }
+
+    fun setSpeed(speed: Double) { intake.position = speed }
 }
