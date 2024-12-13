@@ -42,11 +42,11 @@ class SlidesPIDTuner : CommandOpMode() {
         slidesLeft = Motor(hardwareMap, ControlBoard.SLIDES_LEFT.deviceName, Motor.GoBILDA.RPM_1150)
         slidesRight = Motor(hardwareMap, ControlBoard.SLIDES_RIGHT.deviceName, Motor.GoBILDA.RPM_1150)
 
-        armSubsystem = OpenArmSubsystem(armRight, armLeft) { 0.0 }
+        OpenArmSubsystem.initialize(hardwareMap)
         slidesSubsystem = ElevatorSubsystem(slidesRight, slidesLeft, armSubsystem::armAngle)
 
-        armUpCommand = OpenArmCommand(armSubsystem, true)
-        armDownCommand = OpenArmCommand(armSubsystem, false)
+        armUpCommand = OpenArmCommand(OpenArmSubsystem, true)
+        armDownCommand = OpenArmCommand(OpenArmSubsystem, false)
 
         operator.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(armUpCommand)
         operator.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whileHeld(armDownCommand)

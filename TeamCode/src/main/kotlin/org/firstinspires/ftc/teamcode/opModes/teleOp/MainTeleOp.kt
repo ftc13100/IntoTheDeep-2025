@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.commands.intake.IntakeCommand
 import org.firstinspires.ftc.teamcode.subsystems.arm.OpenArmSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.drive.DriveSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem
-import org.firstinspires.ftc.teamcode.subsystems.slides.OpenSlidesSubsystem
+import org.firstinspires.ftc.teamcode.subsystems.slides.OpenElevatorSubsystem
 
 @TeleOp
 class MainTeleOp : CommandOpMode() {
@@ -32,13 +32,13 @@ class MainTeleOp : CommandOpMode() {
         driver = GamepadEx(gamepad1)
         operator = GamepadEx(gamepad2)
 
-        OpenSlidesSubsystem.initialize(hardwareMap)
+        OpenElevatorSubsystem.initialize(hardwareMap)
         OpenArmSubsystem.initialize(hardwareMap)
         DriveSubsystem.initialize(hardwareMap)
         IntakeSubsystem.initialize(hardwareMap)
 
-        spinUpCommand = SpinUpCommand(OpenSlidesSubsystem)
-        spinDownCommand = SpinDownCommand(OpenSlidesSubsystem)
+        spinUpCommand = SpinUpCommand(OpenElevatorSubsystem)
+        spinDownCommand = SpinDownCommand(OpenElevatorSubsystem)
         armUpCommand = OpenArmCommand(OpenArmSubsystem, true)
         armDownCommand = OpenArmCommand(OpenArmSubsystem, false)
         //intakeCommand = IntakeCommand(true, intakeSubsystem)

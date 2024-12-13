@@ -8,7 +8,6 @@ import com.arcrobotics.ftclib.hardware.motors.MotorGroup
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.constants.ArmConstants
 import org.firstinspires.ftc.teamcode.constants.ControlBoard
-import org.firstinspires.ftc.teamcode.opModes.teleOp.MainTeleOp.Companion.kT
 import kotlin.math.PI
 import kotlin.math.cos
 
@@ -42,6 +41,6 @@ object OpenArmSubsystem : SubsystemBase() {
     }
 
     fun stop() {
-        turnMotors.set(ArmConstants.kCos.value * cos(armAngle) + kT * 0.0)
+        turnMotors.set(ArmConstants.kCos.value * cos(armAngle))
     }
 }

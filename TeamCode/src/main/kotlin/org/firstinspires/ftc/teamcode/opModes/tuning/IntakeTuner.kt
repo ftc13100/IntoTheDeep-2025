@@ -27,7 +27,7 @@ class IntakeTuner : CommandOpMode() {
         intake = hardwareMap.get(Servo::class.java, ControlBoard.INTAKE.deviceName)
         intakeBelt = hardwareMap.get(Servo::class.java, ControlBoard.INTAKE_BELT.deviceName)
 
-        intakeSubsystem = IntakeSubsystem(intake)
+        IntakeSubsystem.initialize(hardwareMap)
         intakeBeltSubsystem = IntakeBeltSubsystem(intakeBelt)
 
         RunCommand({
