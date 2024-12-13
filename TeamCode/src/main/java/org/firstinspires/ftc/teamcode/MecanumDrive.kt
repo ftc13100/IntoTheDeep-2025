@@ -50,7 +50,6 @@ import org.firstinspires.ftc.teamcode.messages.DriveCommandMessage
 import org.firstinspires.ftc.teamcode.messages.MecanumCommandMessage
 import org.firstinspires.ftc.teamcode.messages.MecanumLocalizerInputsMessage
 import org.firstinspires.ftc.teamcode.messages.PoseMessage
-import java.util.Arrays
 import java.util.LinkedList
 import kotlin.math.ceil
 import kotlin.math.max
@@ -102,7 +101,7 @@ class MecanumDrive(hardwareMap: HardwareMap, var pose: Pose2d) {
         PARAMS.maxAngVel, -PARAMS.maxAngAccel, PARAMS.maxAngAccel
     )
     val defaultVelConstraint: VelConstraint = MinVelConstraint(
-        Arrays.asList(
+        listOf(
             kinematics.WheelVelConstraint(PARAMS.maxWheelVel),
             AngularVelConstraint(PARAMS.maxAngVel)
         )
