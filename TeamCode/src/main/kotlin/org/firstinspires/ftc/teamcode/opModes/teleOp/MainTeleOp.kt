@@ -10,10 +10,10 @@ import org.firstinspires.ftc.teamcode.commands.drive.DriveCommand
 import org.firstinspires.ftc.teamcode.commands.elevator.SpinDownCommand
 import org.firstinspires.ftc.teamcode.commands.elevator.SpinUpCommand
 import org.firstinspires.ftc.teamcode.commands.intake.IntakeCommand
-import org.firstinspires.ftc.teamcode.subsystems.arm.OpenArmSubsystem
+import org.firstinspires.ftc.teamcode.subsystems.arm.ArmSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.drive.DriveSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem
-import org.firstinspires.ftc.teamcode.subsystems.slides.OpenElevatorSubsystem
+import org.firstinspires.ftc.teamcode.subsystems.slides.ElevatorSubsystem
 
 @TeleOp
 class MainTeleOp : CommandOpMode() {
@@ -32,17 +32,17 @@ class MainTeleOp : CommandOpMode() {
         driver = GamepadEx(gamepad1)
         operator = GamepadEx(gamepad2)
 
-        OpenElevatorSubsystem.initialize(hardwareMap)
-        OpenArmSubsystem.initialize(hardwareMap)
+        ElevatorSubsystem.initialize(hardwareMap)
+        ArmSubsystem.initialize(hardwareMap)
         DriveSubsystem.initialize(hardwareMap)
         IntakeSubsystem.initialize(hardwareMap)
 
-        spinUpCommand = SpinUpCommand(OpenElevatorSubsystem)
-        spinDownCommand = SpinDownCommand(OpenElevatorSubsystem)
-        armUpCommand = OpenArmCommand(OpenArmSubsystem, true)
-        armDownCommand = OpenArmCommand(OpenArmSubsystem, false)
-        //intakeCommand = IntakeCommand(true, intakeSubsystem)
-        //outtakeCommand = IntakeCommand(false, intakeSubsystem)
+        spinUpCommand = SpinUpCommand(ElevatorSubsystem)
+        spinDownCommand = SpinDownCommand(ElevatorSubsystem)
+        armUpCommand = OpenArmCommand(ArmSubsystem, true)
+        armDownCommand = OpenArmCommand(ArmSubsystem, false)
+//        intakeCommand = IntakeCommand(true, intakeSubsystem)
+//        outtakeCommand = IntakeCommand(false, intakeSubsystem)
         driveCommand = DriveCommand(DriveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX, 0.0)
 
         operator.getGamepadButton(GamepadKeys.Button.DPAD_UP).whileHeld(spinUpCommand)
@@ -57,7 +57,7 @@ class MainTeleOp : CommandOpMode() {
         DriveSubsystem.defaultCommand = driveCommand
 
         RunCommand({
-            telemetry.addData("Arm Position: ", OpenArmSubsystem.armAngle)
+            telemetry.addData("Arm Position: ", ArmSubsystem.angle)
             telemetry.update()
         }).perpetually().schedule()
     }

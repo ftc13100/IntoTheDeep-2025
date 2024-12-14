@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems.drive
 
 import com.acmerobotics.dashboard.canvas.Canvas
+import com.acmerobotics.dashboard.config.Config
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket
 import com.acmerobotics.roadrunner.AccelConstraint
 import com.acmerobotics.roadrunner.Action
@@ -57,53 +58,76 @@ import java.util.LinkedList
 import kotlin.math.ceil
 import kotlin.math.max
 
+@Config
 object DriveSubsystem : SubsystemBase() {
     private lateinit var hardwareMap: HardwareMap
     var pose: Pose2d = Pose2d(0.0, 0.0, 0.0)
 
-    var PARAMS: Params = Params()
-
-    fun initialize(hardwareMap: HardwareMap,
-                   pose2d: Pose2d = Pose2d(0.0, 0.0, 0.0)
-    ) {
-        this.hardwareMap = hardwareMap
-        this.pose = pose2d
-    }
+    @JvmField
+    var PARAMS = Params()
 
     class Params {
         // IMU orientation
         // TODO: fill in these values based on
         //   see https://ftc-docs.firstinspires.org/en/latest/programming_resources/imu/imu.html?highlight=imu#physical-hub-mounting
         var logoFacingDirection: RevHubOrientationOnRobot.LogoFacingDirection =
-            RevHubOrientationOnRobot.LogoFacingDirection.UP
-        var usbFacingDirection: UsbFacingDirection = UsbFacingDirection.FORWARD
+            RevHubOrientationOnRobot.LogoFacingDirection.DOWN
+        var usbFacingDirection: UsbFacingDirection = UsbFacingDirection.RIGHT
 
         // drive model parameters
+        @JvmField
         var inPerTick: Double = 1.0
+
+        @JvmField
         var lateralInPerTick: Double = inPerTick
+
+        @JvmField
         var trackWidthTicks: Double = 0.0
 
         // feedforward parameters (in tick units)
+        @JvmField
         var kS: Double = 0.0
+
+        @JvmField
         var kV: Double = 0.0
+
+        @JvmField
         var kA: Double = 0.0
 
         // path profile parameters (in inches)
+        @JvmField
         var maxWheelVel: Double = 50.0
+
+        @JvmField
         var minProfileAccel: Double = -30.0
+
+        @JvmField
         var maxProfileAccel: Double = 50.0
 
         // turn profile parameters (in radians)
+        @JvmField
         var maxAngVel: Double = Math.PI // shared with path
+
+        @JvmField
         var maxAngAccel: Double = Math.PI
 
         // path controller gains
+        @JvmField
         var axialGain: Double = 0.0
+
+        @JvmField
         var lateralGain: Double = 0.0
+
+        @JvmField
         var headingGain: Double = 0.0 // shared with turn
 
+        @JvmField
         var axialVelGain: Double = 0.0
+
+        @JvmField
         var lateralVelGain: Double = 0.0
+
+        @JvmField
         var headingVelGain: Double = 0.0 // shared with turn
     }
 
@@ -123,16 +147,16 @@ object DriveSubsystem : SubsystemBase() {
     val defaultAccelConstraint: AccelConstraint =
         ProfileAccelConstraint(PARAMS.minProfileAccel, PARAMS.maxProfileAccel)
 
-    val leftFront: DcMotorEx
-    val leftBack: DcMotorEx
-    val rightBack: DcMotorEx
-    val rightFront: DcMotorEx
+    lateinit var leftFront: DcMotorEx
+    lateinit var leftBack: DcMotorEx
+    lateinit var rightBack: DcMotorEx
+    lateinit var rightFront: DcMotorEx
 
-    val voltageSensor: VoltageSensor
+    lateinit var voltageSensor: VoltageSensor
 
-    val lazyImu: LazyImu
+    lateinit var lazyImu: LazyImu
 
-    val localizer: Localizer
+    lateinit var localizer: Localizer
 
     private val poseHistory = LinkedList<Pose2d>()
 
@@ -240,7 +264,12 @@ object DriveSubsystem : SubsystemBase() {
         }
     }
 
-    init {
+    fun initialize(hardwareMap: HardwareMap,
+                   pose2d: Pose2d = Pose2d(0.0, 0.0, 0.0)
+    ) : DriveSubsystem {
+        this.hardwareMap = hardwareMap
+        this.pose = pose2d
+
         throwIfModulesAreOutdated(hardwareMap)
 
         for (module in hardwareMap.getAll(LynxModule::class.java)) {
@@ -275,6 +304,8 @@ object DriveSubsystem : SubsystemBase() {
         localizer = DriveLocalizer()
 
         write("MECANUM_PARAMS", PARAMS)
+
+        return this
     }
 
     fun setDrivePowers(powers: PoseVelocity2d) {

@@ -24,8 +24,8 @@ class IntakeTuner : CommandOpMode() {
     override fun initialize() {
         telemetry = MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry)
 
-        intake = hardwareMap.get(Servo::class.java, ControlBoard.INTAKE.deviceName)
-        intakeBelt = hardwareMap.get(Servo::class.java, ControlBoard.INTAKE_BELT.deviceName)
+        intake = hardwareMap[Servo::class.java, ControlBoard.INTAKE.deviceName]
+        intakeBelt = hardwareMap[Servo::class.java, ControlBoard.INTAKE_BELT.deviceName]
 
         IntakeSubsystem.initialize(hardwareMap)
         intakeBeltSubsystem = IntakeBeltSubsystem(intakeBelt)

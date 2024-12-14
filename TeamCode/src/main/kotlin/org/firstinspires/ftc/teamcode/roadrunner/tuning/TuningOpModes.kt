@@ -28,12 +28,13 @@ import org.firstinspires.ftc.teamcode.subsystems.drive.DriveSubsystem
 
 object TuningOpModes {
     // TODO: change this to TankDrive.class if you're using tank
-    val DRIVE_CLASS: Class<*> = DriveSubsystem::class.java
+    val DRIVE_CLASS = DriveSubsystem::class.java
 
-    const val GROUP: String = "quickstart"
-    const val DISABLED: Boolean = false
+    val GROUP = "quickstart"
+    val DISABLED = false
 
-    private fun metaForClass(cls: Class<out OpMode?>): OpModeMeta {
+    @JvmStatic
+    private fun metaForClass(cls: Class<out OpMode>): OpModeMeta {
         return OpModeMeta.Builder()
             .setName(cls.simpleName)
             .setGroup(GROUP)
@@ -42,6 +43,7 @@ object TuningOpModes {
     }
 
     @OpModeRegistrar
+    @JvmStatic
     fun register(manager: OpModeManager) {
         if (DISABLED) return
 
@@ -61,7 +63,7 @@ object TuningOpModes {
 
                         when (md.localizer) {
                             is DriveSubsystem.DriveLocalizer -> {
-                                val dl = md.localizer
+                                val dl = md.localizer as DriveSubsystem.DriveLocalizer
                                 leftEncs.add(dl.leftFront)
                                 leftEncs.add(dl.leftBack)
                                 rightEncs.add(dl.rightFront)
@@ -69,7 +71,7 @@ object TuningOpModes {
                             }
 
                             is ThreeDeadWheelLocalizer -> {
-                                val dl = md.localizer
+                                val dl = md.localizer as ThreeDeadWheelLocalizer
                                 parEncs.add(dl.par0)
                                 parEncs.add(dl.par1)
                                 perpEncs.add(dl.perp)

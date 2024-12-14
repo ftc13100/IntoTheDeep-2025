@@ -2,31 +2,21 @@ package org.firstinspires.ftc.teamcode.opModes.tuning.slides
 
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
-import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.util.ElapsedTime
-import org.firstinspires.ftc.teamcode.constants.ControlBoard
 import org.firstinspires.ftc.teamcode.subsystems.slides.ElevatorSubsystem
 
 @Autonomous
 class SlidesConstraintsTuner : LinearOpMode() {
-    private lateinit var leftMotor: Motor
-    private lateinit var rightMotor: Motor
-
-    private lateinit var elevator: ElevatorSubsystem
-
     private var maxVel = 0.0
     private var maxAccel = 0.0
 
     private val timer = ElapsedTime(ElapsedTime.Resolution.SECONDS)
     override fun runOpMode() {
         telemetry = MultipleTelemetry(FtcDashboard.getInstance().telemetry, telemetry)
+        ElevatorSubsystem.initialize(hardwareMap)
 
-        leftMotor = Motor(hardwareMap, ControlBoard.SLIDES_LEFT.deviceName)
-        rightMotor = Motor(hardwareMap, ControlBoard.SLIDES_RIGHT.deviceName)
-
-        elevator = ElevatorSubsystem(rightMotor, leftMotor) { 0.0 }
         waitForStart()
 
         var dt = 0L
@@ -35,16 +25,16 @@ class SlidesConstraintsTuner : LinearOpMode() {
         timer.reset()
         while (opModeIsActive()) {
             while (timer.seconds() < TIME_TO_RUN) {
-                elevator.spinUp()
+                ElevatorSubsystem.spinUp()
 
                 dt = timer.nanoseconds() - dt
-                dv = elevator.slideVelocity - dv / dt
+                dv = ElevatorSubsystem.velocity - dv / dt
 
-                maxVel = elevator.slideVelocity.coerceAtLeast(maxVel)
+                maxVel = ElevatorSubsystem.velocity.coerceAtLeast(maxVel)
                 maxAccel = dv.coerceAtLeast(maxAccel)
 
-                telemetry.addData("Velocity", elevator.slideVelocity)
-                telemetry.addData("Position", elevator.slidePos)
+                telemetry.addData("Velocity", ElevatorSubsystem.velocity)
+                telemetry.addData("Position", ElevatorSubsystem.position)
 
                 telemetry.addData("Max Velocity", maxVel)
                 telemetry.addData("Max Acceleration", maxAccel)

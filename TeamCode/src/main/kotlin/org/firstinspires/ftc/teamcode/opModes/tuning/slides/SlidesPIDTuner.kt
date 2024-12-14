@@ -7,25 +7,14 @@ import com.arcrobotics.ftclib.command.CommandOpMode
 import com.arcrobotics.ftclib.command.RunCommand
 import com.arcrobotics.ftclib.gamepad.GamepadEx
 import com.arcrobotics.ftclib.gamepad.GamepadKeys
-import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.commands.arm.OpenArmCommand
-import org.firstinspires.ftc.teamcode.constants.ControlBoard
-import org.firstinspires.ftc.teamcode.subsystems.arm.OpenArmSubsystem
+import org.firstinspires.ftc.teamcode.subsystems.arm.ArmSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.slides.ElevatorSubsystem
 
 @TeleOp
 @Config
 class SlidesPIDTuner : CommandOpMode() {
-    private lateinit var slidesLeft: Motor
-    private lateinit var slidesRight: Motor
-
-    private lateinit var armLeft: Motor
-    private lateinit var armRight: Motor
-
-    private lateinit var armSubsystem: OpenArmSubsystem
-    private lateinit var slidesSubsystem: ElevatorSubsystem
-
     private lateinit var armUpCommand: OpenArmCommand
     private lateinit var armDownCommand: OpenArmCommand
 
@@ -36,34 +25,28 @@ class SlidesPIDTuner : CommandOpMode() {
 
         telemetry = MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry)
 
-        armLeft = Motor(hardwareMap, ControlBoard.ARM_LEFT.deviceName, Motor.GoBILDA.RPM_60)
-        armRight = Motor(hardwareMap, ControlBoard.ARM_RIGHT.deviceName, Motor.GoBILDA.RPM_60)
+        ArmSubsystem.initialize(hardwareMap)
+        ElevatorSubsystem.initialize(hardwareMap)
 
-        slidesLeft = Motor(hardwareMap, ControlBoard.SLIDES_LEFT.deviceName, Motor.GoBILDA.RPM_1150)
-        slidesRight = Motor(hardwareMap, ControlBoard.SLIDES_RIGHT.deviceName, Motor.GoBILDA.RPM_1150)
-
-        OpenArmSubsystem.initialize(hardwareMap)
-        slidesSubsystem = ElevatorSubsystem(slidesRight, slidesLeft, armSubsystem::armAngle)
-
-        armUpCommand = OpenArmCommand(OpenArmSubsystem, true)
-        armDownCommand = OpenArmCommand(OpenArmSubsystem, false)
+        armUpCommand = OpenArmCommand(ArmSubsystem, true)
+        armDownCommand = OpenArmCommand(ArmSubsystem, false)
 
         operator.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(armUpCommand)
         operator.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whileHeld(armDownCommand)
 
         RunCommand({
-            slidesSubsystem.setpoint = target
+            ElevatorSubsystem.setpoint = target
         }).perpetually().schedule()
 
         RunCommand({
-            telemetry.addData("Slides Position", slidesSubsystem.slidePos)
+            telemetry.addData("Slides Position", ElevatorSubsystem.position)
             telemetry.addData("Setpoint", target)
-            telemetry.addData("arm angle", armSubsystem.armAngle)
-            telemetry.addData("slides Velocity", slidesSubsystem.slideVelocity)
+            telemetry.addData("Arm Angle", ArmSubsystem.angle)
+            telemetry.addData("Slides Velocity", ElevatorSubsystem.velocity)
             telemetry.update()
         }).perpetually().schedule()
 
-        register(slidesSubsystem)
+        register(ElevatorSubsystem)
     }
 
     companion object {
