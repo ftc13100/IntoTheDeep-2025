@@ -19,27 +19,31 @@ class SlidesConstraintsTuner : LinearOpMode() {
 
         waitForStart()
 
-        var dt = 0L
-        var dv = 0.0
+        var dt = 0.0
+        var prev = 0.0
 
         timer.reset()
         while (opModeIsActive()) {
             while (timer.seconds() < TIME_TO_RUN) {
                 ElevatorSubsystem.spinUp()
 
-                dt = timer.nanoseconds() - dt
-                dv = ElevatorSubsystem.velocity - dv / dt
+                dt = timer.seconds() - dt
+
+                val curr = ElevatorSubsystem.velocity
+                val dv = curr - prev
 
                 maxVel = ElevatorSubsystem.velocity.coerceAtLeast(maxVel)
-                maxAccel = dv.coerceAtLeast(maxAccel)
+                maxAccel = maxAccel.coerceAtLeast(dv / dt)
+
+                prev = curr
 
                 telemetry.addData("Velocity", ElevatorSubsystem.velocity)
                 telemetry.addData("Position", ElevatorSubsystem.position)
 
                 telemetry.addData("Max Velocity", maxVel)
                 telemetry.addData("Max Acceleration", maxAccel)
-                telemetry.update()
 
+                telemetry.update()
 
                 if (isStopRequested) break
             }
@@ -52,6 +56,6 @@ class SlidesConstraintsTuner : LinearOpMode() {
 
     companion object {
         @JvmField
-        var TIME_TO_RUN = 1.5
+        var TIME_TO_RUN = 0.7
     }
 }

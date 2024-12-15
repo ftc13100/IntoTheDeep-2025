@@ -47,8 +47,6 @@ class MainTeleOp : CommandOpMode() {
 
         operator.getGamepadButton(GamepadKeys.Button.DPAD_UP).whileHeld(spinUpCommand)
         operator.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whileHeld(spinDownCommand)
-        operator.getGamepadButton(GamepadKeys.Button.DPAD_UP).whileHeld(spinUpCommand)
-        operator.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whileHeld(spinDownCommand)
         operator.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whileHeld(armUpCommand)
         operator.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(armDownCommand)
         //operator.getGamepadButton(GamepadKeys.Button.Y).whenHeld(intakeCommand)
@@ -57,7 +55,11 @@ class MainTeleOp : CommandOpMode() {
         DriveSubsystem.defaultCommand = driveCommand
 
         RunCommand({
-            telemetry.addData("Arm Position: ", ArmSubsystem.angle)
+            telemetry.addData("Arm Position", ArmSubsystem.angle)
+
+            telemetry.addData("Slides Position", ElevatorSubsystem.position)
+            telemetry.addData("Slides Velocity", ElevatorSubsystem.velocity)
+
             telemetry.update()
         }).perpetually().schedule()
     }

@@ -11,7 +11,6 @@ import org.firstinspires.ftc.teamcode.constants.ArmConstants
 import org.firstinspires.ftc.teamcode.constants.ControlBoard
 import org.firstinspires.ftc.teamcode.utils.PIDSubsystem
 import kotlin.math.PI
-import kotlin.math.cos
 
 @Config
 object ArmSubsystem : PIDSubsystem(
@@ -41,21 +40,23 @@ object ArmSubsystem : PIDSubsystem(
         turnMotors.resetEncoder()
         turnMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
 
+        disable()
+
         return this
     }
 
 
 // Here are functions that work the motor, and the double is the speed of the motor, 1 being 100%.
     fun clockwise() {
-        turnMotors.set(0.50)
+        turnMotors.set(1.0)
     }
 
     fun anticlockwise() {
-        turnMotors.set(-0.50)
+        turnMotors.set(-1.0)
     }
 
     fun stop() {
-        turnMotors.set(ArmConstants.kCos.value * cos(angle))
+        turnMotors.set(0.0)
     }
 
     override fun useOutput(output: Double, setpoint: Double) {
