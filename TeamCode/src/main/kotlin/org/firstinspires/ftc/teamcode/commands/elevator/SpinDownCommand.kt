@@ -6,8 +6,6 @@ import org.firstinspires.ftc.teamcode.subsystems.slides.ElevatorSubsystem
 class SpinDownCommand(
     private val subsystem: ElevatorSubsystem
 ) : CommandBase() {
-
-
     override fun execute() {
         subsystem.spinDown()
     }

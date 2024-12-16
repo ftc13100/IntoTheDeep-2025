@@ -36,13 +36,16 @@ class SlidesPIDTuner : CommandOpMode() {
 
         RunCommand({
             ElevatorSubsystem.setpoint = target
+            ElevatorSubsystem.operateElevator()
         }).perpetually().schedule()
 
         RunCommand({
             telemetry.addData("Slides Position", ElevatorSubsystem.position)
             telemetry.addData("Setpoint", target)
+
             telemetry.addData("Arm Angle", ArmSubsystem.angle)
             telemetry.addData("Slides Velocity", ElevatorSubsystem.velocity)
+
             telemetry.update()
         }).perpetually().schedule()
 

@@ -22,6 +22,7 @@ class ArmPIDTuner : CommandOpMode() {
 
         RunCommand({
             ArmSubsystem.setpoint = Math.toRadians(target)
+            ArmSubsystem.operateArm()
         }).perpetually().schedule()
 
         RunCommand({

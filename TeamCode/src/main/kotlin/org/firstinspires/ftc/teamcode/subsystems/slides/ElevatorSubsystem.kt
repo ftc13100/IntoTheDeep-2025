@@ -38,6 +38,9 @@ object ElevatorSubsystem: SubsystemBase() {
             field = clamped
         }
 
+    val isBusy
+        get() = controller.atGoal()
+
     val position: Double
         get() = elevatorMotors.positions[0] * SlidesConstants.MAX_HEIGHT_INCH.value / SlidesConstants.MAX_HEIGHT_TICKS.value
 
@@ -69,7 +72,7 @@ object ElevatorSubsystem: SubsystemBase() {
         elevatorMotors.set(SlidesConstants.kG.value * sin(ArmSubsystem.angle))
     }
 
-    override fun periodic() {
+    fun operateElevator() {
         val output = controller.calculate(position) +
                 SlidesConstants.kG.value * sin(ArmSubsystem.angle)
 

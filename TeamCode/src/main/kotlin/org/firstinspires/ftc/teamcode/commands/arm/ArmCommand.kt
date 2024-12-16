@@ -10,4 +10,10 @@ class ArmCommand(
     override fun initialize() {
         subsystem.setpoint = setpoint
     }
+
+    override fun execute() = subsystem.operateArm()
+
+    override fun isFinished(): Boolean = subsystem.isBusy
+
+    override fun end(interrupted: Boolean) = subsystem.stop()
 }

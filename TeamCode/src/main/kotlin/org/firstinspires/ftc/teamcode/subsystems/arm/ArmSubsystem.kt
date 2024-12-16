@@ -34,6 +34,8 @@ object ArmSubsystem : SubsystemBase() {
             ArmConstants.MAX_ACCELERATION.value
         )
     )
+    val isBusy
+        get() = controller.atGoal()
 
     var setpoint = controller.goal.position
         set(value) {
@@ -43,7 +45,7 @@ object ArmSubsystem : SubsystemBase() {
 
     private var enabled = true
 
-    fun initialize(hardwareMap: HardwareMap) : ArmSubsystem {
+    fun initialize(hardwareMap: HardwareMap) {
         val armLeft = Motor(hardwareMap, ControlBoard.ARM_LEFT.deviceName)
         val armRight = Motor(hardwareMap, ControlBoard.ARM_RIGHT.deviceName)
 
@@ -53,8 +55,6 @@ object ArmSubsystem : SubsystemBase() {
 
         turnMotors.resetEncoder()
         turnMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
-
-        return this
     }
 
 
@@ -70,7 +70,7 @@ object ArmSubsystem : SubsystemBase() {
         turnMotors.set(0.0)
     }
 
-    override fun periodic() {
+    fun operateArm() {
         val output = controller.calculate(angle) + feedforward.calculate(angle, velocity)
 
         if (enabled)
