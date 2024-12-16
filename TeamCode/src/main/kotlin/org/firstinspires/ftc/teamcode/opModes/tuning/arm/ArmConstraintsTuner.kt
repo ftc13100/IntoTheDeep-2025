@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.teamcode.subsystems.arm.ArmSubsystem
-import org.firstinspires.ftc.teamcode.subsystems.slides.ElevatorSubsystem
 
 @Autonomous
 class ArmConstraintsTuner : LinearOpMode() {
@@ -30,7 +29,7 @@ class ArmConstraintsTuner : LinearOpMode() {
 
                 dt = timer.seconds() - dt
 
-                val curr = ElevatorSubsystem.velocity
+                val curr = ArmSubsystem.velocity
                 val dv = curr - prev
 
                 maxVel = ArmSubsystem.velocity.coerceAtLeast(maxVel)
@@ -38,8 +37,8 @@ class ArmConstraintsTuner : LinearOpMode() {
 
                 prev = curr
 
-                telemetry.addData("Velocity", ElevatorSubsystem.velocity)
-                telemetry.addData("Position", ElevatorSubsystem.position)
+                telemetry.addData("Velocity", ArmSubsystem.velocity)
+                telemetry.addData("Angle", ArmSubsystem.angle)
 
                 telemetry.addData("Max Velocity", maxVel)
                 telemetry.addData("Max Acceleration", maxAccel)
@@ -48,6 +47,7 @@ class ArmConstraintsTuner : LinearOpMode() {
 
                 if (isStopRequested) break
             }
+            ArmSubsystem.stop()
 
             telemetry.addData("Final Max Velocity", maxVel)
             telemetry.addData("Final Max Acceleration", maxAccel)
@@ -57,6 +57,6 @@ class ArmConstraintsTuner : LinearOpMode() {
 
     companion object {
         @JvmField
-        var TIME_TO_RUN = 0.7
+        var TIME_TO_RUN = 1.5
     }
 }

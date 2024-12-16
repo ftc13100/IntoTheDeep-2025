@@ -27,7 +27,7 @@ object ElevatorSubsystem: SubsystemBase() {
         )
     )
 
-    var setpoint = 0.0
+    var setpoint = controller.goal.position
         set(value) {
             val clamped = if (ArmSubsystem.angle < Math.toRadians(75.0))
                 clamp(value, 0.0, 20.0)

@@ -1,33 +1,47 @@
 package org.firstinspires.ftc.teamcode.subsystems.arm
 
 import com.acmerobotics.dashboard.config.Config
-import com.arcrobotics.ftclib.controller.PIDController
+import com.arcrobotics.ftclib.command.SubsystemBase
 import com.arcrobotics.ftclib.controller.wpilibcontroller.ArmFeedforward
+import com.arcrobotics.ftclib.controller.wpilibcontroller.ProfiledPIDController
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.hardware.motors.Motor.GoBILDA
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup
+import com.arcrobotics.ftclib.trajectory.TrapezoidProfile
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.constants.ArmConstants
 import org.firstinspires.ftc.teamcode.constants.ControlBoard
-import org.firstinspires.ftc.teamcode.utils.PIDSubsystem
 import kotlin.math.PI
 
 @Config
-object ArmSubsystem : PIDSubsystem(
-    PIDController(
-        ArmConstants.kP.value,
-        ArmConstants.kI.value,
-        ArmConstants.kD.value
-    )
-) {
+object ArmSubsystem : SubsystemBase() {
     private lateinit var turnMotors: MotorGroup
-    private var feedforward = ArmFeedforward(0.0, ArmConstants.kCos.value, 0.0);
 
     val velocity: Double
         get() = turnMotors.velocities[0] / GoBILDA.RPM_30.cpr * PI
 
     val angle: Double
         get() = turnMotors.positions[0] / GoBILDA.RPM_30.cpr * PI
+
+    private var feedforward = ArmFeedforward(0.0, ArmConstants.kCos.value, 0.0);
+
+    private val controller = ProfiledPIDController(
+        ArmConstants.kP.value,
+        ArmConstants.kI.value,
+        ArmConstants.kD.value,
+        TrapezoidProfile.Constraints(
+            ArmConstants.MAX_VELOCITY.value,
+            ArmConstants.MAX_ACCELERATION.value
+        )
+    )
+
+    var setpoint = controller.goal.position
+        set(value) {
+            controller.goal = TrapezoidProfile.State(value, 0.0)
+            field = value
+        }
+
+    private var enabled = true
 
     fun initialize(hardwareMap: HardwareMap) : ArmSubsystem {
         val armLeft = Motor(hardwareMap, ControlBoard.ARM_LEFT.deviceName)
@@ -44,7 +58,6 @@ object ArmSubsystem : PIDSubsystem(
     }
 
 
-// Here are functions that work the motor, and the double is the speed of the motor, 1 being 100%.
     fun clockwise() {
         turnMotors.set(1.0)
     }
@@ -57,20 +70,18 @@ object ArmSubsystem : PIDSubsystem(
         turnMotors.set(0.0)
     }
 
-    override fun useOutput(output: Double, setpoint: Double) {
-//        controller.setPIDF(kP, kI, kD, 0.0)
-//        feedforward = ArmFeedforward(kS, kCos, kV)
+    override fun periodic() {
+        val output = controller.calculate(angle) + feedforward.calculate(angle, velocity)
 
-        turnMotors.set(output + feedforward.calculate(angle, velocity))
+        if (enabled)
+            turnMotors.set(output)
     }
 
-    @JvmField var kP = 0.0
-    @JvmField var kI = 0.0
-    @JvmField var kD = 0.0
-
-    @JvmField var kCos = 0.0
-    @JvmField var kS = 0.0
-    @JvmField var kV = 0.0
-
-    override fun getMeasurement() = angle
+//    @JvmField var kP = 0.0
+//    @JvmField var kI = 0.0
+//    @JvmField var kD = 0.0
+//
+//    @JvmField var kCos = 0.0
+//    @JvmField var kS = 0.0
+//    @JvmField var kV = 0.0
 }
