@@ -18,7 +18,6 @@ class IntakeTuner : CommandOpMode() {
     private lateinit var intake: Servo
     private lateinit var intakeBelt: Servo
 
-    private lateinit var intakeSubsystem: IntakeSubsystem
     private lateinit var intakeBeltSubsystem: IntakeBeltSubsystem
 
     override fun initialize() {
@@ -31,7 +30,7 @@ class IntakeTuner : CommandOpMode() {
         intakeBeltSubsystem = IntakeBeltSubsystem(intakeBelt)
 
         RunCommand({
-            intakeSubsystem.setSpeed(claw)
+            IntakeSubsystem.setSpeed(claw)
         }).perpetually().schedule()
 
         RunCommand({

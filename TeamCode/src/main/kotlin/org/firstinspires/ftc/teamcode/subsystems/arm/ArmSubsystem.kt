@@ -24,10 +24,10 @@ object ArmSubsystem : PIDSubsystem(
     private var feedforward = ArmFeedforward(0.0, ArmConstants.kCos.value, 0.0);
 
     val velocity: Double
-        get() = turnMotors.velocities[0] / GoBILDA.RPM_60.cpr * PI
+        get() = turnMotors.velocities[0] / GoBILDA.RPM_30.cpr * PI
 
     val angle: Double
-        get() = turnMotors.positions[0] / GoBILDA.RPM_60.cpr * PI
+        get() = turnMotors.positions[0] / GoBILDA.RPM_30.cpr * PI
 
     fun initialize(hardwareMap: HardwareMap) : ArmSubsystem {
         val armLeft = Motor(hardwareMap, ControlBoard.ARM_LEFT.deviceName)
@@ -39,8 +39,6 @@ object ArmSubsystem : PIDSubsystem(
 
         turnMotors.resetEncoder()
         turnMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
-
-        disable()
 
         return this
     }
@@ -61,10 +59,18 @@ object ArmSubsystem : PIDSubsystem(
 
     override fun useOutput(output: Double, setpoint: Double) {
 //        controller.setPIDF(kP, kI, kD, 0.0)
-//        feedforward = ArmFeedforward(0.0, kCos, 0.0)
+//        feedforward = ArmFeedforward(kS, kCos, kV)
 
         turnMotors.set(output + feedforward.calculate(angle, velocity))
     }
+
+    @JvmField var kP = 0.0
+    @JvmField var kI = 0.0
+    @JvmField var kD = 0.0
+
+    @JvmField var kCos = 0.0
+    @JvmField var kS = 0.0
+    @JvmField var kV = 0.0
 
     override fun getMeasurement() = angle
 }
