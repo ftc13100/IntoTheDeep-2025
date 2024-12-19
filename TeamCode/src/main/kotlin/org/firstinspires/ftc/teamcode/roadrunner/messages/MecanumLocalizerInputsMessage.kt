@@ -5,22 +5,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles
 
 class MecanumLocalizerInputsMessage(
-    var leftFront: PositionVelocityPair,
-    var leftBack: PositionVelocityPair,
-    var rightBack: PositionVelocityPair,
-    var rightFront: PositionVelocityPair,
+    @JvmField var leftFront: PositionVelocityPair,
+    @JvmField var leftBack: PositionVelocityPair,
+    @JvmField var rightBack: PositionVelocityPair,
+    @JvmField var rightFront: PositionVelocityPair,
     angles: YawPitchRollAngles
 ) {
-    var timestamp: Long = System.nanoTime()
-    var yaw: Double = 0.0
-    var pitch: Double = 0.0
-    var roll: Double = 0.0
-
-    init {
-        run {
-            this.yaw = angles.getYaw(AngleUnit.RADIANS)
-            this.pitch = angles.getPitch(AngleUnit.RADIANS)
-            this.roll = angles.getRoll(AngleUnit.RADIANS)
-        }
-    }
+    @JvmField var timestamp: Long = System.nanoTime()
+    @JvmField var yaw: Double = angles.getYaw(AngleUnit.RADIANS)
+    @JvmField var pitch: Double = angles.getPitch(AngleUnit.RADIANS)
+    @JvmField var roll: Double = angles.getRoll(AngleUnit.RADIANS)
 }

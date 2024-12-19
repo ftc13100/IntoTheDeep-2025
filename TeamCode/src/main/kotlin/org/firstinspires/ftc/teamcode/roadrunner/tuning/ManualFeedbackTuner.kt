@@ -16,7 +16,7 @@ class ManualFeedbackTuner : LinearOpMode() {
                 val drive = DriveSubsystem
 
                 if (drive.localizer is ThreeDeadWheelLocalizer) {
-                    if (ThreeDeadWheelLocalizer.PARAMS.perpXTicks == 0.0 && ThreeDeadWheelLocalizer.PARAMS.par0YTicks == 0.0 && ThreeDeadWheelLocalizer.Companion.PARAMS.par1YTicks == 1.0) {
+                    if (ThreeDeadWheelLocalizer.PARAMS.strafeXTicks == 0.0 && ThreeDeadWheelLocalizer.PARAMS.leftYTicks == 0.0 && ThreeDeadWheelLocalizer.Companion.PARAMS.rightYTicks == 1.0) {
                         throw RuntimeException("Odometry wheel locations not set! Run AngularRampLogger to tune them.")
                     }
                 }
@@ -24,7 +24,7 @@ class ManualFeedbackTuner : LinearOpMode() {
 
                 while (opModeIsActive()) {
                     runBlocking(
-                        drive.actionBuilder(Pose2d(0.0, 0.0, 0.0))
+                        drive.actionBuilder { Pose2d(0.0, 0.0, 0.0) }
                             .lineToX(DISTANCE)
                             .lineToX(0.0)
                             .build()

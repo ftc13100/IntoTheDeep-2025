@@ -4,11 +4,12 @@ import com.arcrobotics.ftclib.command.CommandBase
 import org.firstinspires.ftc.teamcode.subsystems.slides.ElevatorSubsystem
 
 class ElevatorCommand(
+    private val setpoint: Double,
     private val subsystem: ElevatorSubsystem,
-    private val setpoint: Double
 ) : CommandBase() {
     override fun initialize() {
         subsystem.setpoint = setpoint
+        addRequirements(ElevatorSubsystem)
     }
 
     override fun execute() = subsystem.operateElevator()

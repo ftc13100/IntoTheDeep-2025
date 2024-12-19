@@ -43,6 +43,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot.UsbFacingDirection
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
+import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.IMU
 import com.qualcomm.robotcore.hardware.VoltageSensor
@@ -50,6 +51,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.teamcode.constants.ControlBoard
 import org.firstinspires.ftc.teamcode.roadrunner.Drawing
 import org.firstinspires.ftc.teamcode.roadrunner.Localizer
+import org.firstinspires.ftc.teamcode.roadrunner.ThreeDeadWheelLocalizer
 import org.firstinspires.ftc.teamcode.roadrunner.messages.DriveCommandMessage
 import org.firstinspires.ftc.teamcode.roadrunner.messages.MecanumCommandMessage
 import org.firstinspires.ftc.teamcode.roadrunner.messages.MecanumLocalizerInputsMessage
@@ -61,7 +63,7 @@ import kotlin.math.max
 @Config
 object DriveSubsystem : SubsystemBase() {
     private lateinit var hardwareMap: HardwareMap
-    var pose: Pose2d = Pose2d(0.0, 0.0, 0.0)
+    var pose = Pose2d(0.0, 0.0, 0.0)
 
     @JvmField
     var PARAMS = Params()
@@ -70,65 +72,37 @@ object DriveSubsystem : SubsystemBase() {
         // IMU orientation
         // TODO: fill in these values based on
         //   see https://ftc-docs.firstinspires.org/en/latest/programming_resources/imu/imu.html?highlight=imu#physical-hub-mounting
-        var logoFacingDirection: RevHubOrientationOnRobot.LogoFacingDirection =
-            RevHubOrientationOnRobot.LogoFacingDirection.DOWN
-        var usbFacingDirection: UsbFacingDirection = UsbFacingDirection.RIGHT
+        var logoFacingDirection = RevHubOrientationOnRobot.LogoFacingDirection.DOWN
+        var usbFacingDirection = UsbFacingDirection.LEFT
 
         // drive model parameters
-        @JvmField
-        var inPerTick: Double = 1.0
-
-        @JvmField
-        var lateralInPerTick: Double = inPerTick
-
-        @JvmField
-        var trackWidthTicks: Double = 0.0
+        @JvmField var inPerTick = 0.002953423066
+        @JvmField var lateralInPerTick = inPerTick
+        @JvmField var trackWidthTicks = 4669.698132939092
 
         // feedforward parameters (in tick units)
-        @JvmField
-        var kS: Double = 0.0
-
-        @JvmField
-        var kV: Double = 0.0
-
-        @JvmField
-        var kA: Double = 0.0
+        @JvmField var kS = 1.308709766262468
+        @JvmField var kV = 3.701322333374629E-4
+        @JvmField var kA = 0.0001
 
         // path profile parameters (in inches)
-        @JvmField
-        var maxWheelVel: Double = 50.0
-
-        @JvmField
-        var minProfileAccel: Double = -30.0
-
-        @JvmField
-        var maxProfileAccel: Double = 50.0
+        @JvmField var maxWheelVel = 50.0
+        @JvmField var minProfileAccel = -30.0
+        @JvmField var maxProfileAccel = 50.0
 
         // turn profile parameters (in radians)
-        @JvmField
-        var maxAngVel: Double = Math.PI // shared with path
-
-        @JvmField
-        var maxAngAccel: Double = Math.PI
+        @JvmField var maxAngVel = Math.PI // shared with path
+        @JvmField var maxAngAccel = Math.PI
 
         // path controller gains
-        @JvmField
-        var axialGain: Double = 0.0
+        @JvmField var axialGain = 0.0
+        @JvmField var lateralGain = 0.0
+        @JvmField var headingGain = 0.0 // shared with turn
 
-        @JvmField
-        var lateralGain: Double = 0.0
+        @JvmField var axialVelGain = 0.0
 
-        @JvmField
-        var headingGain: Double = 0.0 // shared with turn
-
-        @JvmField
-        var axialVelGain: Double = 0.0
-
-        @JvmField
-        var lateralVelGain: Double = 0.0
-
-        @JvmField
-        var headingVelGain: Double = 0.0 // shared with turn
+        @JvmField var lateralVelGain = 0.0
+        @JvmField var headingVelGain = 0.0 // shared with turn
     }
 
     val kinematics: MecanumKinematics = MecanumKinematics(
@@ -148,8 +122,8 @@ object DriveSubsystem : SubsystemBase() {
         ProfileAccelConstraint(PARAMS.minProfileAccel, PARAMS.maxProfileAccel)
 
     lateinit var leftFront: DcMotorEx
-    lateinit var leftBack: DcMotorEx
-    lateinit var rightBack: DcMotorEx
+    lateinit var leftRear: DcMotorEx
+    lateinit var rightRear: DcMotorEx
     lateinit var rightFront: DcMotorEx
 
     lateinit var voltageSensor: VoltageSensor
@@ -168,10 +142,10 @@ object DriveSubsystem : SubsystemBase() {
     class DriveLocalizer : Localizer {
         val leftFront: Encoder =
             OverflowEncoder(RawEncoder(DriveSubsystem.leftFront))
-        val leftBack: Encoder =
-            OverflowEncoder(RawEncoder(DriveSubsystem.leftBack))
-        val rightBack: Encoder =
-            OverflowEncoder(RawEncoder(DriveSubsystem.rightBack))
+        val leftRear: Encoder =
+            OverflowEncoder(RawEncoder(DriveSubsystem.leftRear))
+        val rightRear: Encoder =
+            OverflowEncoder(RawEncoder(DriveSubsystem.rightRear))
         val rightFront: Encoder =
             OverflowEncoder(RawEncoder(DriveSubsystem.rightFront))
         val imu: IMU = lazyImu.get()
@@ -190,8 +164,8 @@ object DriveSubsystem : SubsystemBase() {
 
         override fun update(): Twist2dDual<Time> {
             val leftFrontPosVel = leftFront.getPositionAndVelocity()
-            val leftBackPosVel = leftBack.getPositionAndVelocity()
-            val rightBackPosVel = rightBack.getPositionAndVelocity()
+            val leftBackPosVel = leftRear.getPositionAndVelocity()
+            val rightBackPosVel = rightRear.getPositionAndVelocity()
             val rightFrontPosVel = rightFront.getPositionAndVelocity()
 
             val angles = imu.robotYawPitchRollAngles
@@ -264,11 +238,11 @@ object DriveSubsystem : SubsystemBase() {
         }
     }
 
-    fun initialize(hardwareMap: HardwareMap,
-                   pose2d: Pose2d = Pose2d(0.0, 0.0, 0.0)
-    ) : DriveSubsystem {
+    fun initialize(hardwareMap: HardwareMap, reset: Boolean = true) {
+        if (reset)
+            pose = Pose2d(0.0, 0.0, 0.0)
+
         this.hardwareMap = hardwareMap
-        this.pose = pose2d
 
         throwIfModulesAreOutdated(hardwareMap)
 
@@ -279,17 +253,17 @@ object DriveSubsystem : SubsystemBase() {
         // TODO: make sure your config has motors with these names (or change them)
         //   see https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html
         leftFront = hardwareMap.get(DcMotorEx::class.java, ControlBoard.DRIVE_LEFT_FRONT.deviceName)
-        leftBack = hardwareMap.get(DcMotorEx::class.java, ControlBoard.DRIVE_LEFT_REAR.deviceName)
-        rightBack = hardwareMap.get(DcMotorEx::class.java, ControlBoard.DRIVE_RIGHT_REAR.deviceName)
+        leftRear = hardwareMap.get(DcMotorEx::class.java, ControlBoard.DRIVE_LEFT_REAR.deviceName)
+        rightRear = hardwareMap.get(DcMotorEx::class.java, ControlBoard.DRIVE_RIGHT_REAR.deviceName)
         rightFront = hardwareMap.get(DcMotorEx::class.java, ControlBoard.DRIVE_RIGHT_FRONT.deviceName)
 
         leftFront.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
-        leftBack.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
-        rightBack.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
+        leftRear.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
+        rightRear.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
         rightFront.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
 
         // TODO: reverse motor directions if needed
-        //   leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftRear.direction = DcMotorSimple.Direction.REVERSE;
 
         // TODO: make sure your config has an IMU with this name (can be BNO or BHI)
         //   see https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html
@@ -301,11 +275,9 @@ object DriveSubsystem : SubsystemBase() {
 
         voltageSensor = hardwareMap.voltageSensor.iterator().next()
 
-        localizer = DriveLocalizer()
+        localizer = ThreeDeadWheelLocalizer(hardwareMap, PARAMS.inPerTick)
 
         write("MECANUM_PARAMS", PARAMS)
-
-        return this
     }
 
     fun setDrivePowers(powers: PoseVelocity2d) {
@@ -319,8 +291,8 @@ object DriveSubsystem : SubsystemBase() {
         }
 
         leftFront.power = wheelVels.leftFront[0] / maxPowerMag
-        leftBack.power = wheelVels.leftBack[0] / maxPowerMag
-        rightBack.power = wheelVels.rightBack[0] / maxPowerMag
+        leftRear.power = wheelVels.leftBack[0] / maxPowerMag
+        rightRear.power = wheelVels.rightBack[0] / maxPowerMag
         rightFront.power = wheelVels.rightFront[0] / maxPowerMag
     }
 
@@ -358,8 +330,8 @@ object DriveSubsystem : SubsystemBase() {
 
             if (t >= timeTrajectory.duration) {
                 leftFront.power = 0.0
-                leftBack.power = 0.0
-                rightBack.power = 0.0
+                leftRear.power = 0.0
+                rightRear.power = 0.0
                 rightFront.power = 0.0
 
                 return false
@@ -395,8 +367,8 @@ object DriveSubsystem : SubsystemBase() {
             )
 
             leftFront.power = leftFrontPower
-            leftBack.power = leftBackPower
-            rightBack.power = rightBackPower
+            leftRear.power = leftBackPower
+            rightRear.power = rightBackPower
             rightFront.power = rightFrontPower
 
             p.put("x", pose.position.x)
@@ -446,8 +418,8 @@ object DriveSubsystem : SubsystemBase() {
 
             if (t >= turn.duration) {
                 leftFront.power = 0.0
-                leftBack.power = 0.0
-                rightBack.power = 0.0
+                leftRear.power = 0.0
+                rightRear.power = 0.0
                 rightFront.power = 0.0
 
                 return false
@@ -482,8 +454,8 @@ object DriveSubsystem : SubsystemBase() {
             )
 
             leftFront.power = feedforward.compute(wheelVels.leftFront) / voltage
-            leftBack.power = feedforward.compute(wheelVels.leftBack) / voltage
-            rightBack.power = feedforward.compute(wheelVels.rightBack) / voltage
+            leftRear.power = feedforward.compute(wheelVels.leftBack) / voltage
+            rightRear.power = feedforward.compute(wheelVels.rightBack) / voltage
             rightFront.power = feedforward.compute(wheelVels.rightFront) / voltage
 
             val c = p.fieldOverlay()
@@ -509,7 +481,7 @@ object DriveSubsystem : SubsystemBase() {
 
     fun updatePoseEstimate(): PoseVelocity2d {
         val twist = localizer.update()
-        pose = pose.plus(twist.value())
+        pose += twist.value()
 
         poseHistory.add(pose)
         while (poseHistory.size > 100) {
@@ -538,17 +510,17 @@ object DriveSubsystem : SubsystemBase() {
         c.strokePolyline(xPoints, yPoints)
     }
 
-    fun actionBuilder(beginPose: Pose2d): TrajectoryActionBuilder {
+    fun actionBuilder(beginPose: () -> Pose2d): TrajectoryActionBuilder {
         return TrajectoryActionBuilder(
-            { turn: TimeTurn -> TurnAction(turn) },
-            { t: TimeTrajectory -> FollowTrajectoryAction(t) },
+            { TurnAction(it) },
+            { FollowTrajectoryAction(it) },
             TrajectoryBuilderParams(
                 1e-6,
                 ProfileParams(
                     0.25, 0.1, 1e-2
                 )
             ),
-            beginPose, 0.0,
+            beginPose.invoke(), 0.0,
             defaultTurnConstraints,
             defaultVelConstraint, defaultAccelConstraint
         )
@@ -557,8 +529,8 @@ object DriveSubsystem : SubsystemBase() {
     fun drive(leftY: Double, leftX: Double, rightX: Double) {
         setDrivePowers(
             PoseVelocity2d(
-                linearVel = Vector2d(leftX, leftY),
-                angVel = rightX
+                linearVel = Vector2d(leftY, -leftX),
+                angVel = -rightX
             )
         )
     }

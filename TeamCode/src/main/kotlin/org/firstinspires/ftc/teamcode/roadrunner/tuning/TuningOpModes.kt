@@ -21,7 +21,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar
 import com.qualcomm.robotcore.hardware.HardwareMap
-import org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta
 import org.firstinspires.ftc.teamcode.roadrunner.ThreeDeadWheelLocalizer
 import org.firstinspires.ftc.teamcode.subsystems.drive.DriveSubsystem
@@ -39,6 +38,7 @@ object TuningOpModes {
             .setName(cls.simpleName)
             .setGroup(GROUP)
             .setFlavor(OpModeMeta.Flavor.TELEOP)
+            .setSource(OpModeMeta.Source.EXTERNAL_LIBRARY)
             .build()
     }
 
@@ -52,7 +52,7 @@ object TuningOpModes {
             DriveSubsystem::class.java -> {
                 dvf = object : DriveViewFactory {
                     override fun make(h: HardwareMap): DriveView {
-                        DriveSubsystem.initialize(hardwareMap)
+                        DriveSubsystem.initialize(h)
 
                         val md = DriveSubsystem
 
@@ -65,16 +65,16 @@ object TuningOpModes {
                             is DriveSubsystem.DriveLocalizer -> {
                                 val dl = md.localizer as DriveSubsystem.DriveLocalizer
                                 leftEncs.add(dl.leftFront)
-                                leftEncs.add(dl.leftBack)
+                                leftEncs.add(dl.leftRear)
                                 rightEncs.add(dl.rightFront)
-                                rightEncs.add(dl.rightBack)
+                                rightEncs.add(dl.rightRear)
                             }
 
                             is ThreeDeadWheelLocalizer -> {
                                 val dl = md.localizer as ThreeDeadWheelLocalizer
-                                parEncs.add(dl.par0)
-                                parEncs.add(dl.par1)
-                                perpEncs.add(dl.perp)
+                                parEncs.add(dl.left)
+                                parEncs.add(dl.right)
+                                perpEncs.add(dl.strafe)
                             }
 
                             else -> {
@@ -88,14 +88,14 @@ object TuningOpModes {
                             DriveSubsystem.PARAMS.maxWheelVel,
                             DriveSubsystem.PARAMS.minProfileAccel,
                             DriveSubsystem.PARAMS.maxProfileAccel,
-                            hardwareMap.getAll(LynxModule::class.java),
+                            h.getAll(LynxModule::class.java),
                             listOf(
                                 md.leftFront,
-                                md.leftBack
+                                md.leftRear
                             ),
                             listOf(
                                 md.rightFront,
-                                md.rightBack
+                                md.rightRear
                             ),
                             leftEncs,
                             rightEncs,

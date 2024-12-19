@@ -1,11 +1,11 @@
 package org.firstinspires.ftc.teamcode.roadrunner.messages
 
 class MecanumCommandMessage(
-    var voltage: Double,
-    var leftFrontPower: Double,
-    var leftBackPower: Double,
-    var rightBackPower: Double,
-    var rightFrontPower: Double
+    @JvmField var voltage: Double,
+    @JvmField var leftFrontPower: Double,
+    @JvmField var leftBackPower: Double,
+    @JvmField var rightBackPower: Double,
+    @JvmField var rightFrontPower: Double
 ) {
-    var timestamp: Long = System.nanoTime()
+    @JvmField var timestamp: Long = System.nanoTime()
 }

@@ -17,7 +17,7 @@ class DriveCommand(
 
     override fun execute() {
         subsystem.drive(
-            leftY = zonedDrive(-leftY.invoke() * 0.9, zoneVal).pow(3),
+            leftY = zonedDrive(leftY.invoke() * 0.9, zoneVal).pow(3),
             leftX = zonedDrive(leftX.invoke() * 0.9, zoneVal).pow(3),
             rightX = zonedDrive(rightX.invoke() * 0.9, zoneVal).pow(3),
         )

@@ -16,28 +16,28 @@ import org.firstinspires.ftc.teamcode.roadrunner.messages.ThreeDeadWheelInputsMe
 
 @Config
 class ThreeDeadWheelLocalizer(hardwareMap: HardwareMap, val inPerTick: Double) : Localizer {
-    class Params {
-        var par0YTicks: Double = 0.0 // y position of the first parallel encoder (in tick units)
-        var par1YTicks: Double = 1.0 // y position of the second parallel encoder (in tick units)
-        var perpXTicks: Double = 0.0 // x position of the perpendicular encoder (in tick units)
-    }
+    data class Params(
+        @JvmField var leftYTicks: Double = -2547.028032399116, // y position of the first parallel encoder (in tick units)
+        @JvmField var rightYTicks: Double = 2556.586233603863, // y position of the second parallel encoder (in tick units)
+        @JvmField var strafeXTicks: Double = -490.4056033307692 // x position of the perpendicular encoder (in tick units)
+    )
 
     // TODO: make sure your config has **motors** with these names (or change them)
     //   the encoders should be plugged into the slot matching the named motor
     //   see https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html
-    val par0 =
+    val left =
         OverflowEncoder(RawEncoder(hardwareMap.get(DcMotorEx::class.java, ControlBoard.ODO_LEFT_ENCODER.deviceName)))
-    val par1 =
+    val right =
         OverflowEncoder(RawEncoder(hardwareMap.get(DcMotorEx::class.java, ControlBoard.ODO_RIGHT_ENCODER.deviceName)))
-    val perp =
+    val strafe =
         OverflowEncoder(RawEncoder(hardwareMap.get(DcMotorEx::class.java, ControlBoard.ODO_STRAFE_ENCODER.deviceName)))
 
     // TODO: reverse encoder directions if needed
     //   par0.setDirection(DcMotorSimple.Direction.REVERSE);
 
-    private var lastPar0Pos = 0
-    private var lastPar1Pos = 0
-    private var lastPerpPos = 0
+    private var lastLeftPos = 0
+    private var lastRightPos = 0
+    private var lastStrafePos = 0
     private var initialized = false
 
     init {
@@ -45,21 +45,21 @@ class ThreeDeadWheelLocalizer(hardwareMap: HardwareMap, val inPerTick: Double) :
     }
 
     override fun update(): Twist2dDual<Time> {
-        val par0PosVel = par0.getPositionAndVelocity()
-        val par1PosVel = par1.getPositionAndVelocity()
-        val perpPosVel = perp.getPositionAndVelocity()
+        val leftPosVel = left.getPositionAndVelocity()
+        val rightPosVel = right.getPositionAndVelocity()
+        val strafePosVel = strafe.getPositionAndVelocity()
 
         write(
             "THREE_DEAD_WHEEL_INPUTS",
-            ThreeDeadWheelInputsMessage(par0PosVel, par1PosVel, perpPosVel)
+            ThreeDeadWheelInputsMessage(leftPosVel, rightPosVel, strafePosVel)
         )
 
         if (!initialized) {
             initialized = true
 
-            lastPar0Pos = par0PosVel.position
-            lastPar1Pos = par1PosVel.position
-            lastPerpPos = perpPosVel.position
+            lastLeftPos = leftPosVel.position
+            lastRightPos = rightPosVel.position
+            lastStrafePos = strafePosVel.position
 
             return Twist2dDual(
                 Vector2dDual.constant(Vector2d(0.0, 0.0), 2),
@@ -67,41 +67,41 @@ class ThreeDeadWheelLocalizer(hardwareMap: HardwareMap, val inPerTick: Double) :
             )
         }
 
-        val par0PosDelta = par0PosVel.position - lastPar0Pos
-        val par1PosDelta = par1PosVel.position - lastPar1Pos
-        val perpPosDelta = perpPosVel.position - lastPerpPos
+        val leftPosDelta = leftPosVel.position - lastLeftPos
+        val rightPosDelta = rightPosVel.position - lastRightPos
+        val strafePosDelta = strafePosVel.position - lastStrafePos
 
         val twist = Twist2dDual(
             Vector2dDual(
                 DualNum<Time>(
                     doubleArrayOf(
-                        (PARAMS.par0YTicks * par1PosDelta - PARAMS.par1YTicks * par0PosDelta) / (PARAMS.par0YTicks - PARAMS.par1YTicks),
-                        (PARAMS.par0YTicks * par1PosVel.velocity - PARAMS.par1YTicks * par0PosVel.velocity) / (PARAMS.par0YTicks - PARAMS.par1YTicks),
+                        (PARAMS.leftYTicks * rightPosDelta - PARAMS.rightYTicks * leftPosDelta) / (PARAMS.leftYTicks - PARAMS.rightYTicks),
+                        (PARAMS.leftYTicks * rightPosVel.velocity - PARAMS.rightYTicks * leftPosVel.velocity) / (PARAMS.leftYTicks - PARAMS.rightYTicks),
                     )
                 ) * inPerTick,
                 DualNum<Time>(
                     doubleArrayOf(
-                        (PARAMS.perpXTicks / (PARAMS.par0YTicks - PARAMS.par1YTicks) * (par1PosDelta - par0PosDelta) + perpPosDelta),
-                        (PARAMS.perpXTicks / (PARAMS.par0YTicks - PARAMS.par1YTicks) * (par1PosVel.velocity - par0PosVel.velocity) + perpPosVel.velocity),
+                        (PARAMS.strafeXTicks / (PARAMS.leftYTicks - PARAMS.rightYTicks) * (rightPosDelta - leftPosDelta) + strafePosDelta),
+                        (PARAMS.strafeXTicks / (PARAMS.leftYTicks - PARAMS.rightYTicks) * (rightPosVel.velocity - leftPosVel.velocity) + strafePosVel.velocity),
                     )
                 ) * inPerTick
             ),
             DualNum(
                 doubleArrayOf(
-                    (par0PosDelta - par1PosDelta) / (PARAMS.par0YTicks - PARAMS.par1YTicks),
-                    (par0PosVel.velocity - par1PosVel.velocity) / (PARAMS.par0YTicks - PARAMS.par1YTicks),
+                    (leftPosDelta - rightPosDelta) / (PARAMS.leftYTicks - PARAMS.rightYTicks),
+                    (leftPosVel.velocity - rightPosVel.velocity) / (PARAMS.leftYTicks - PARAMS.rightYTicks),
                 )
             )
         )
 
-        lastPar0Pos = par0PosVel.position
-        lastPar1Pos = par1PosVel.position
-        lastPerpPos = perpPosVel.position
+        lastLeftPos = leftPosVel.position
+        lastRightPos = rightPosVel.position
+        lastStrafePos = strafePosVel.position
 
         return twist
     }
 
     companion object {
-        var PARAMS: Params = Params()
+        @JvmField var PARAMS = Params()
     }
 }

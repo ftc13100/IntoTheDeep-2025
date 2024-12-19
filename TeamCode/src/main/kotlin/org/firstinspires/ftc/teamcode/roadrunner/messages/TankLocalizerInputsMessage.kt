@@ -6,7 +6,7 @@ class TankLocalizerInputsMessage(
     left: List<PositionVelocityPair>,
     right: List<PositionVelocityPair>
 ) {
-    var timestamp: Long = System.nanoTime()
-    var left: Array<PositionVelocityPair> = left.toTypedArray<PositionVelocityPair>()
-    var right: Array<PositionVelocityPair> = right.toTypedArray<PositionVelocityPair>()
+    @JvmField var timestamp: Long = System.nanoTime()
+    @JvmField var left = left.toTypedArray()
+    @JvmField var right = right.toTypedArray()
 }
