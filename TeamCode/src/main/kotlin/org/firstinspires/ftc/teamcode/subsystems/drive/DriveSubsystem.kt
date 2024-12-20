@@ -95,12 +95,11 @@ object DriveSubsystem : SubsystemBase() {
         @JvmField var maxAngAccel = Math.PI
 
         // path controller gains
-        @JvmField var axialGain = 0.0
-        @JvmField var lateralGain = 0.0
-        @JvmField var headingGain = 0.0 // shared with turn
+        @JvmField var axialGain = 7.0
+        @JvmField var lateralGain = 6.0
+        @JvmField var headingGain = 1.0 // shared with turn
 
         @JvmField var axialVelGain = 0.0
-
         @JvmField var lateralVelGain = 0.0
         @JvmField var headingVelGain = 0.0 // shared with turn
     }
