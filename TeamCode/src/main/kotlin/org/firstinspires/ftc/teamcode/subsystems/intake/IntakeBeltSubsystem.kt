@@ -9,12 +9,12 @@ class IntakeBeltSubsystem(
     var beltPos = false
 
     fun outtakePos() {
-        intakeBelt.position = 0.75
+        intakeBelt.position = 0.4
         beltPos = !beltPos
     }
 
     fun intakePos() {
-        intakeBelt.position = 0.47
+        intakeBelt.position = 0.0
         beltPos = !beltPos
     }
 

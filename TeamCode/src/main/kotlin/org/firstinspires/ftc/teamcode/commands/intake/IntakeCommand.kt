@@ -7,7 +7,7 @@ class IntakeCommand(
     private val intake: Boolean,
     private val subsystem: IntakeSubsystem
 ) : CommandBase() {
-    override fun execute() {
+    override fun initialize() {
         if (intake) {
             subsystem.intake()
         }

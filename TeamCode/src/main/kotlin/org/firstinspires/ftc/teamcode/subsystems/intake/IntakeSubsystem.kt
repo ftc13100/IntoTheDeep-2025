@@ -15,12 +15,12 @@ object IntakeSubsystem : SubsystemBase() {
     var intakePos = false
 
     fun intake() {
-        intake.position = 1.0
+        intake.position = 0.8
         intakePos = !intakePos
     }
 
     fun outtake() {
-        intake.position = 0.6
+        intake.position = 0.2
         intakePos = !intakePos
     }
 
