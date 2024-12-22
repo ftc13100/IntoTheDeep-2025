@@ -21,7 +21,8 @@ enum class ControlBoard(val deviceName: String) {
 
     //Intake
     INTAKE("intakeRoller"),
-    INTAKE_BELT("intakeBelt")
+    INTAKE_BELT("intakeBelt"),
+    INTAKE_ENCODER("leftSlideAxel"),
 
 
 }

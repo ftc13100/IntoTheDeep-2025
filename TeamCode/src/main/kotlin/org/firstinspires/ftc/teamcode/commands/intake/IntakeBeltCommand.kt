@@ -1,18 +1,18 @@
 package org.firstinspires.ftc.teamcode.commands.intake
 
 import com.arcrobotics.ftclib.command.CommandBase
-import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeBeltSubsystem
+import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem
 
 class IntakeBeltCommand(
     private val intakeBelt: Boolean,
-    private val intakeBeltSubsystem: IntakeBeltSubsystem
+    private val intakeSubsystem: IntakeSubsystem
 ) : CommandBase() {
     override fun execute() {
         if (intakeBelt) {
-            intakeBeltSubsystem.intakePos()
+            intakeSubsystem.intakePos()
         }
         else {
-            intakeBeltSubsystem.outtakePos()
+            intakeSubsystem.outtakePos()
         }
     }
 }
