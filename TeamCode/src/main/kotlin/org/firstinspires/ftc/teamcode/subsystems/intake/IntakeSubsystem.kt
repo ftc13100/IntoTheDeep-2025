@@ -4,22 +4,39 @@ import com.acmerobotics.roadrunner.ftc.Encoder
 import com.acmerobotics.roadrunner.ftc.OverflowEncoder
 import com.acmerobotics.roadrunner.ftc.RawEncoder
 import com.arcrobotics.ftclib.command.SubsystemBase
+import com.arcrobotics.ftclib.controller.PIDController
+import com.arcrobotics.ftclib.hardware.motors.CRServo
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.Servo
 import org.firstinspires.ftc.teamcode.constants.ControlBoard
 
 object IntakeSubsystem : SubsystemBase() {
-    private lateinit var intake: Servo
-    private lateinit var intakeBelt: Servo
+    private lateinit var claw: Servo
+    private lateinit var wrist: CRServo
     private lateinit var intakeEncoder: Encoder
 
-    val data
-        get() = intakeEncoder.getPositionAndVelocity()
+    val position
+        get() = intakeEncoder.getPositionAndVelocity().position
+
+    val velocity
+        get() = intakeEncoder.getPositionAndVelocity().velocity
+
+    @JvmField var kP = 0.0
+    @JvmField var kI = 0.0
+    @JvmField var kD = 0.0
+
+    private val controller = PIDController(kP, kI, kD)
+
+    var target = controller.setPoint
+        set(value) {
+            controller.setPoint = value
+            field = value
+        }
 
     fun initialize(hardwareMap: HardwareMap) {
-        intake = hardwareMap[Servo::class.java, ControlBoard.INTAKE.deviceName]
-        intakeBelt = hardwareMap[Servo::class.java, ControlBoard.INTAKE_BELT.deviceName]
+        claw = hardwareMap[Servo::class.java, ControlBoard.INTAKE.deviceName]
+        wrist = CRServo(hardwareMap, ControlBoard.INTAKE_BELT.deviceName)
 
         intakeEncoder = OverflowEncoder(
             RawEncoder(
@@ -28,33 +45,33 @@ object IntakeSubsystem : SubsystemBase() {
         )
     }
 
-    fun intake() {
-        intake.position = 0.8
+    fun closeClaw() {
+        claw.position = 0.8
     }
 
-    fun outtake() {
-        intake.position = 0.2
+    fun openClaw() {
+        claw.position = 0.2
     }
 
-    fun outtakePos() {
-        intakeBelt.position = 0.4
+    fun wristUp() {
+        wrist.set(1.0)
     }
 
-    fun intakePos() {
-        intakeBelt.position = 0.0
+    fun wristDown() {
+        wrist.set(-1.0)
     }
 
-    fun increasePos() {
-        intakeBelt.position += 0.005
+    fun wristStop() {
+        wrist.stop()
     }
 
-    fun decreasePos() {
-        intakeBelt.position -= 0.005
+    fun operateWrist() {
+        controller.setPID(kP, kI, kD)
+
+        val output = controller.calculate(position.toDouble())
+
+        wrist.set(output)
     }
 
-    fun setPos(pos: Double) {
-        intakeBelt.position = pos
-    }
-
-    fun setSpeed(speed: Double) { intake.position = speed }
+    fun setClaw(position: Double) { claw.position = position }
 }

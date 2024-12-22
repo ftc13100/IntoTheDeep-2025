@@ -26,26 +26,23 @@ class IntakeTuner : CommandOpMode() {
         IntakeSubsystem.initialize(hardwareMap)
 
         RunCommand({
-            IntakeSubsystem.setSpeed(claw)
+            IntakeSubsystem.setClaw(claw)
         }).perpetually().schedule()
 
         RunCommand({
-            IntakeSubsystem.setPos(belt)
+            IntakeSubsystem.target = wristTarget
         }).perpetually().schedule()
 
         RunCommand({
-            telemetry.addData("Intake Position", IntakeSubsystem.data.position)
-            telemetry.addData("Intake Velocity", IntakeSubsystem.data.velocity)
+            telemetry.addData("Intake Position", IntakeSubsystem.position)
+            telemetry.addData("Intake Velocity", IntakeSubsystem.velocity)
 
             telemetry.update()
         }).perpetually().schedule()
     }
 
     companion object {
-        @JvmField
-        var claw = 0.75
-
-        @JvmField
-        var belt = 0.0
+        @JvmField var claw = 0.75
+        @JvmField var wristTarget = 0.0
     }
 }

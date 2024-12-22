@@ -9,10 +9,10 @@ class IntakeBeltCommand(
 ) : CommandBase() {
     override fun execute() {
         if (intakeBelt) {
-            intakeSubsystem.intakePos()
+            intakeSubsystem.wristDown()
         }
         else {
-            intakeSubsystem.outtakePos()
+            intakeSubsystem.wristUp()
         }
     }
 }
