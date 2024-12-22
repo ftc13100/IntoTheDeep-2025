@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opModes.teleOp
 
 import com.arcrobotics.ftclib.command.CommandOpMode
 import com.arcrobotics.ftclib.command.ConditionalCommand
+import com.arcrobotics.ftclib.command.InstantCommand
 import com.arcrobotics.ftclib.command.RunCommand
 import com.arcrobotics.ftclib.gamepad.GamepadEx
 import com.arcrobotics.ftclib.gamepad.GamepadKeys
@@ -77,20 +78,45 @@ class MainTeleOp : CommandOpMode() {
 
         operator.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenPressed(armDownCommand)
 
-        operator.getGamepadButton(GamepadKeys.Button.Y).whenPressed(
-            ConditionalCommand(
+        operator.getGamepadButton(GamepadKeys.Button.Y).toggleWhenPressed(
+
                 intakeCommand,
                 outtakeCommand,
-                IntakeSubsystem::intakePos
-            )
+
         )
 
-        operator.getGamepadButton(GamepadKeys.Button.A).whenPressed(
-            ConditionalCommand(
+        operator.getGamepadButton(GamepadKeys.Button.A).toggleWhenPressed(
+
                 intakeBeltCommand,
                 outtakeBeltCommand,
-                intakeBeltSubsystem::beltPos
-            )
+
+        )
+
+        driver.getGamepadButton(GamepadKeys.Button.A).toggleWhenPressed(
+            InstantCommand(
+                {
+                    driveCommand = DriveCommand(
+                        DriveSubsystem,
+                        driver::getLeftX,
+                        driver::getLeftY,
+                        driver::getRightX,
+                        0.0,
+                        0.5
+                    )
+                }
+            ),
+            InstantCommand(
+                {
+                    driveCommand = DriveCommand(
+                        DriveSubsystem,
+                        driver::getLeftX,
+                        driver::getLeftY,
+                        driver::getRightX,
+                        0.0,
+                        0.9
+                    )
+                }
+            ),
         )
 
         DriveSubsystem.defaultCommand = driveCommand
