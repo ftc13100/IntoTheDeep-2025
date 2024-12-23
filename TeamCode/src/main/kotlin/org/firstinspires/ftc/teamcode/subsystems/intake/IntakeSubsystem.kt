@@ -23,7 +23,7 @@ object IntakeSubsystem : SubsystemBase() {
     private lateinit var intakeEncoder: Encoder
 
     val position
-        get() = intakeEncoder.getPositionAndVelocity().position / 8192.0 * 2 * PI - 1.82
+        get() = intakeEncoder.getPositionAndVelocity().position / 8192.0 * 2 * PI + 0.93
 
     val velocity
         get() = intakeEncoder.getPositionAndVelocity().velocity / 8192.0 * 2 * PI
@@ -70,7 +70,7 @@ object IntakeSubsystem : SubsystemBase() {
     }
 
     fun openClaw() {
-        claw.position = 0.2
+        claw.position = 0.1
     }
 
     fun wristUp() {

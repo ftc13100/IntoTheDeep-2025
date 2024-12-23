@@ -135,6 +135,8 @@ class MainTeleOp : CommandOpMode() {
             telemetry.addData("Slides Position", ElevatorSubsystem.position)
             telemetry.addData("Slides Velocity", ElevatorSubsystem.velocity)
 
+            telemetry.addData("Intake Position", Math.toDegrees(IntakeSubsystem.position))
+
             telemetry.addData("Operator Mode", operatorMode)
             telemetry.addData("Driver Mode", operatorMode)
 
