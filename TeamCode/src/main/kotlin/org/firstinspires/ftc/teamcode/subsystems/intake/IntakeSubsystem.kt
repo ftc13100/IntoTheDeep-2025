@@ -42,6 +42,7 @@ object IntakeSubsystem : SubsystemBase() {
             IntakeConstants.INTAKE_MAX_ACCELERATION.value
         )
     )
+
     private var feedforward = ArmFeedforward(0.0, kCos, 0.0)
 
     var target = controller.goal.position
@@ -49,6 +50,9 @@ object IntakeSubsystem : SubsystemBase() {
             controller.goal = TrapezoidProfile.State(value, 0.0)
             field = value
         }
+
+    val isBusy
+        get() = controller.atGoal()
 
     fun initialize(hardwareMap: HardwareMap) {
         claw = hardwareMap[Servo::class.java, ControlBoard.INTAKE.deviceName]
@@ -82,8 +86,8 @@ object IntakeSubsystem : SubsystemBase() {
     }
 
     fun operateWrist() {
-        controller.setPID(kP, kI, kD)
-        feedforward = ArmFeedforward(0.0, kCos, 0.0)
+//        controller.setPID(kP, kI, kD)
+//        feedforward = ArmFeedforward(0.0, kCos, 0.0)
 
         val output = controller.calculate(position) +
                 feedforward.calculate(position, velocity)

@@ -4,15 +4,17 @@ import com.arcrobotics.ftclib.command.CommandBase
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem
 
 class IntakeBeltCommand(
-    private val intakeBelt: Boolean,
-    private val intakeSubsystem: IntakeSubsystem
+    private val setpoint: Double,
+    private val subsystem: IntakeSubsystem
 ) : CommandBase() {
-    override fun execute() {
-        if (intakeBelt) {
-            intakeSubsystem.wristDown()
-        }
-        else {
-            intakeSubsystem.wristUp()
-        }
+    override fun initialize() {
+        subsystem.target = setpoint
+        addRequirements(subsystem)
     }
+
+    override fun execute() = subsystem.operateWrist()
+
+    override fun isFinished() = subsystem.isBusy
+
+    override fun end(interrupted: Boolean) = subsystem.wristStop()
 }
