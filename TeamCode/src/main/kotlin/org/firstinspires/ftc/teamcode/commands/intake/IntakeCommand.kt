@@ -9,10 +9,10 @@ class IntakeCommand(
 ) : CommandBase() {
     override fun initialize() {
         if (intake) {
-            subsystem.intake()
+            subsystem.closeClaw()
         }
         else {
-            subsystem.outtake()
+            subsystem.openClaw()
         }
     }
 }
