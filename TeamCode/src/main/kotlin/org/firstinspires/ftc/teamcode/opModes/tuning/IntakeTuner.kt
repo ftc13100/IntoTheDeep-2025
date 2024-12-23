@@ -5,23 +5,14 @@ import com.acmerobotics.dashboard.config.Config
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.arcrobotics.ftclib.command.CommandOpMode
 import com.arcrobotics.ftclib.command.RunCommand
-
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
-import com.qualcomm.robotcore.hardware.Servo
-import org.firstinspires.ftc.teamcode.constants.ControlBoard
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem
 
 @TeleOp
 @Config
 class IntakeTuner : CommandOpMode() {
-    private lateinit var intake: Servo
-    private lateinit var intakeBelt: Servo
-
     override fun initialize() {
         telemetry = MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry)
-
-        intake = hardwareMap[Servo::class.java, ControlBoard.INTAKE.deviceName]
-        intakeBelt = hardwareMap[Servo::class.java, ControlBoard.INTAKE_BELT.deviceName]
 
         IntakeSubsystem.initialize(hardwareMap)
 
@@ -31,6 +22,8 @@ class IntakeTuner : CommandOpMode() {
 
         RunCommand({
             IntakeSubsystem.target = wristTarget
+
+            IntakeSubsystem.operateWrist()
         }).perpetually().schedule()
 
         RunCommand({
