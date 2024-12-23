@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opModes.teleOp
 
+import com.arcrobotics.ftclib.command.Command
 import com.arcrobotics.ftclib.command.CommandOpMode
 import com.arcrobotics.ftclib.command.ConditionalCommand
 import com.arcrobotics.ftclib.command.RunCommand
@@ -8,8 +9,11 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.Servo
 import org.firstinspires.ftc.teamcode.commands.arm.ArmCommand
+import org.firstinspires.ftc.teamcode.commands.arm.OpenArmCommand
 import org.firstinspires.ftc.teamcode.commands.drive.DriveCommand
 import org.firstinspires.ftc.teamcode.commands.elevator.ElevatorCommand
+import org.firstinspires.ftc.teamcode.commands.elevator.SpinDownCommand
+import org.firstinspires.ftc.teamcode.commands.elevator.SpinUpCommand
 import org.firstinspires.ftc.teamcode.commands.intake.IntakeBeltCommand
 import org.firstinspires.ftc.teamcode.commands.intake.IntakeCommand
 import org.firstinspires.ftc.teamcode.constants.ControlBoard
@@ -23,11 +27,11 @@ import org.firstinspires.ftc.teamcode.subsystems.slides.ElevatorSubsystem
 class MainTeleOp : CommandOpMode() {
     private lateinit var intakeBeltSubsystem: IntakeBeltSubsystem
 
-    private lateinit var spinUpCommand: ElevatorCommand
-    private lateinit var spinDownCommand: ElevatorCommand
+    private lateinit var spinUpCommand: Command
+    private lateinit var spinDownCommand: Command
 
-    private lateinit var armUpCommand: ArmCommand
-    private lateinit var armDownCommand: ArmCommand
+    private lateinit var armUpCommand: Command
+    private lateinit var armDownCommand: Command
 
     private lateinit var driveCommand: DriveCommand
     private lateinit var intakeCommand: IntakeCommand
@@ -51,11 +55,15 @@ class MainTeleOp : CommandOpMode() {
             hardwareMap[Servo::class.java, ControlBoard.INTAKE_BELT.deviceName]
         )
 
-        spinUpCommand = ElevatorCommand(30.0, ElevatorSubsystem)
-        spinDownCommand = ElevatorCommand(0.0, ElevatorSubsystem)
+//        spinUpCommand = ElevatorCommand(30.0, ElevatorSubsystem)
+        spinUpCommand = SpinUpCommand(ElevatorSubsystem)
+//        spinDownCommand = ElevatorCommand(0.0, ElevatorSubsystem)
+        spinDownCommand = SpinDownCommand(ElevatorSubsystem)
 
-        armUpCommand = ArmCommand(Math.toRadians(87.5), ArmSubsystem)
-        armDownCommand = ArmCommand(Math.toRadians(0.0), ArmSubsystem)
+//        armUpCommand = ArmCommand(Math.toRadians(87.5), ArmSubsystem)
+        armUpCommand = OpenArmCommand(ArmSubsystem, true)
+//        armDownCommand = ArmCommand(Math.toRadians(0.0), ArmSubsystem)
+        armDownCommand = OpenArmCommand(ArmSubsystem, false)
 
         intakeCommand = IntakeCommand(true, IntakeSubsystem)
         outtakeCommand = IntakeCommand(false, IntakeSubsystem)
@@ -65,17 +73,17 @@ class MainTeleOp : CommandOpMode() {
 
         driveCommand = DriveCommand(DriveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX, 0.0)
 
-        operator.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(
-            spinUpCommand.withTimeout(1500)
+        operator.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenHeld(
+            spinUpCommand
         )
 
-        operator.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenPressed(
-            spinDownCommand.withTimeout(1500)
+        operator.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenHeld(
+            spinDownCommand
         )
 
-        operator.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenPressed(armUpCommand)
+        operator.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenHeld(armUpCommand)
 
-        operator.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenPressed(armDownCommand)
+        operator.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenHeld(armDownCommand)
 
         operator.getGamepadButton(GamepadKeys.Button.Y).whenPressed(
             ConditionalCommand(
