@@ -5,14 +5,15 @@ import com.acmerobotics.roadrunner.ftc.Encoder
 import com.acmerobotics.roadrunner.ftc.OverflowEncoder
 import com.acmerobotics.roadrunner.ftc.RawEncoder
 import com.arcrobotics.ftclib.command.SubsystemBase
-import com.arcrobotics.ftclib.controller.PIDController
 import com.arcrobotics.ftclib.controller.wpilibcontroller.ArmFeedforward
+import com.arcrobotics.ftclib.controller.wpilibcontroller.ProfiledPIDController
 import com.arcrobotics.ftclib.hardware.motors.CRServo
+import com.arcrobotics.ftclib.trajectory.TrapezoidProfile
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.Servo
 import org.firstinspires.ftc.teamcode.constants.ControlBoard
-import org.firstinspires.ftc.teamcode.subsystems.arm.ArmSubsystem
+import org.firstinspires.ftc.teamcode.constants.IntakeConstants
 import kotlin.math.PI
 
 @Config
@@ -22,7 +23,7 @@ object IntakeSubsystem : SubsystemBase() {
     private lateinit var intakeEncoder: Encoder
 
     val position
-        get() = intakeEncoder.getPositionAndVelocity().position / 8192.0 * 2 * PI
+        get() = intakeEncoder.getPositionAndVelocity().position / 8192.0 * 2 * PI - 1.82
 
     val velocity
         get() = intakeEncoder.getPositionAndVelocity().velocity / 8192.0 * 2 * PI
@@ -32,12 +33,20 @@ object IntakeSubsystem : SubsystemBase() {
     @JvmField var kD = 0.0
     @JvmField var kCos = 0.0
 
-    private val controller = PIDController(kP, kI, kD)
+    private val controller = ProfiledPIDController(
+        IntakeConstants.kP.value,
+        IntakeConstants.kI.value,
+        IntakeConstants.kD.value,
+        TrapezoidProfile.Constraints(
+            IntakeConstants.INTAKE_MAX_VELOCITY.value,
+            IntakeConstants.INTAKE_MAX_ACCELERATION.value
+        )
+    )
     private var feedforward = ArmFeedforward(0.0, kCos, 0.0)
 
-    var target = controller.setPoint
+    var target = controller.goal.position
         set(value) {
-            controller.setPoint = value
+            controller.goal = TrapezoidProfile.State(value, 0.0)
             field = value
         }
 
@@ -76,7 +85,8 @@ object IntakeSubsystem : SubsystemBase() {
         controller.setPID(kP, kI, kD)
         feedforward = ArmFeedforward(0.0, kCos, 0.0)
 
-        val output = controller.calculate(position) + feedforward.calculate(position + ArmSubsystem.angle, velocity)
+        val output = controller.calculate(position) +
+                feedforward.calculate(position, velocity)
 
         wrist.set(output)
     }
