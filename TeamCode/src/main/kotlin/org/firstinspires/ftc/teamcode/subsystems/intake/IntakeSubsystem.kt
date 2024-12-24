@@ -5,10 +5,10 @@ import com.acmerobotics.roadrunner.ftc.Encoder
 import com.acmerobotics.roadrunner.ftc.OverflowEncoder
 import com.acmerobotics.roadrunner.ftc.RawEncoder
 import com.arcrobotics.ftclib.command.SubsystemBase
-import com.arcrobotics.ftclib.controller.wpilibcontroller.ArmFeedforward
 import com.arcrobotics.ftclib.controller.wpilibcontroller.ProfiledPIDController
 import com.arcrobotics.ftclib.hardware.motors.CRServo
 import com.arcrobotics.ftclib.trajectory.TrapezoidProfile
+import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.Servo
@@ -23,7 +23,7 @@ object IntakeSubsystem : SubsystemBase() {
     private lateinit var intakeEncoder: Encoder
 
     val position
-        get() = intakeEncoder.getPositionAndVelocity().position / 8192.0 * 2 * PI + 0.93
+        get() = intakeEncoder.getPositionAndVelocity().position / 8192.0 * 2 * PI + Math.toRadians(90.0)
 
     val velocity
         get() = intakeEncoder.getPositionAndVelocity().velocity / 8192.0 * 2 * PI
@@ -43,8 +43,6 @@ object IntakeSubsystem : SubsystemBase() {
         )
     )
 
-    private var feedforward = ArmFeedforward(0.0, kCos, 0.0)
-
     var target = controller.goal.position
         set(value) {
             controller.goal = TrapezoidProfile.State(value, 0.0)
@@ -58,11 +56,11 @@ object IntakeSubsystem : SubsystemBase() {
         claw = hardwareMap[Servo::class.java, ControlBoard.INTAKE.deviceName]
         wrist = CRServo(hardwareMap, ControlBoard.INTAKE_BELT.deviceName)
 
-        intakeEncoder = OverflowEncoder(
-            RawEncoder(
-                hardwareMap[DcMotorEx::class.java, ControlBoard.INTAKE_ENCODER.deviceName]
-            )
-        )
+        val intakeEnc = hardwareMap[DcMotorEx::class.java, ControlBoard.INTAKE_ENCODER.deviceName]
+        intakeEnc.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
+        intakeEnc.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
+
+        intakeEncoder = OverflowEncoder(RawEncoder(intakeEnc))
     }
 
     fun closeClaw() {
@@ -90,7 +88,7 @@ object IntakeSubsystem : SubsystemBase() {
 //        feedforward = ArmFeedforward(0.0, kCos, 0.0)
 
         val output = controller.calculate(position) +
-                feedforward.calculate(position, velocity)
+                kCos * position
 
         wrist.set(output)
     }

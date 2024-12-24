@@ -144,7 +144,7 @@ class MainTeleOp : CommandOpMode() {
         }).perpetually().schedule()
     }
 
-    enum class OPERATOR_MODE {
+    internal enum class OPERATOR_MODE {
         MANUAL,
         SPECIMEN,
         SAMPLE;
@@ -157,7 +157,7 @@ class MainTeleOp : CommandOpMode() {
             }
     }
 
-    enum class DRIVER_MODE {
+    internal enum class DRIVER_MODE {
         SPEED,
         SLOW;
 
