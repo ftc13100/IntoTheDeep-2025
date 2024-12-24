@@ -24,6 +24,7 @@ class ActionCommand(
         action.preview(packet.fieldOverlay())
         finished = !action.run(packet)
 
+        packet.put("Finished", finished)
         FtcDashboard.getInstance().sendTelemetryPacket(packet)
     }
 
