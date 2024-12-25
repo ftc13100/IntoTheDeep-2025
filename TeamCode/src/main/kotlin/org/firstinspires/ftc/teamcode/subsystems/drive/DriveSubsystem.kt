@@ -65,6 +65,8 @@ object DriveSubsystem : SubsystemBase() {
     private lateinit var hardwareMap: HardwareMap
     var pose = Pose2d(0.0, 0.0, 0.0)
 
+    var driveMultiplier = 0.9
+
     @JvmField
     var PARAMS = Params()
 
@@ -528,8 +530,8 @@ object DriveSubsystem : SubsystemBase() {
     fun drive(leftY: Double, leftX: Double, rightX: Double) {
         setDrivePowers(
             PoseVelocity2d(
-                linearVel = Vector2d(leftY, -leftX),
-                angVel = -rightX
+                linearVel = Vector2d(leftY * driveMultiplier, -leftX * driveMultiplier),
+                angVel = -rightX * driveMultiplier
             )
         )
     }
