@@ -56,7 +56,7 @@ object ElevatorSubsystem: SubsystemBase() {
         elevatorRight.inverted = true
         elevatorRight.encoder.setDirection(Motor.Direction.REVERSE)
 
-        elevatorMotors = MotorGroup(elevatorRight, elevatorLeft)
+        elevatorMotors = MotorGroup(elevatorLeft, elevatorRight)
         elevatorMotors.resetEncoder()
     }
 

@@ -15,6 +15,7 @@ import com.qualcomm.robotcore.hardware.Servo
 import org.firstinspires.ftc.teamcode.constants.ControlBoard
 import org.firstinspires.ftc.teamcode.constants.IntakeConstants
 import kotlin.math.PI
+import kotlin.math.cos
 
 @Config
 object IntakeSubsystem : SubsystemBase() {
@@ -28,10 +29,10 @@ object IntakeSubsystem : SubsystemBase() {
     val velocity
         get() = intakeEncoder.getPositionAndVelocity().velocity / 8192.0 * 2 * PI
 
-    @JvmField var kP = 0.0
+    @JvmField var kP = 1.0
     @JvmField var kI = 0.0
-    @JvmField var kD = 0.0
-    @JvmField var kCos = 0.0
+    @JvmField var kD = 0.02
+    @JvmField var kCos = 0.05
 
     private val controller = ProfiledPIDController(
         IntakeConstants.kP.value,
@@ -60,15 +61,17 @@ object IntakeSubsystem : SubsystemBase() {
         intakeEnc.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
         intakeEnc.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
 
+        controller.setTolerance(Math.toRadians(3.0))
+
         intakeEncoder = OverflowEncoder(RawEncoder(intakeEnc))
     }
 
     fun closeClaw() {
-        claw.position = 0.8
+        claw.position = 0.485
     }
 
     fun openClaw() {
-        claw.position = 0.1
+        claw.position = 0.25
     }
 
     fun wristUp() {
@@ -80,15 +83,15 @@ object IntakeSubsystem : SubsystemBase() {
     }
 
     fun wristStop() {
-        wrist.stop()
+        wrist.set(kCos * cos(position))
     }
 
     fun operateWrist() {
-//        controller.setPID(kP, kI, kD)
+        controller.setPID(kP, kI, kD)
 //        feedforward = ArmFeedforward(0.0, kCos, 0.0)
 
         val output = controller.calculate(position) +
-                kCos * position
+                kCos * cos(position)
 
         wrist.set(output)
     }
