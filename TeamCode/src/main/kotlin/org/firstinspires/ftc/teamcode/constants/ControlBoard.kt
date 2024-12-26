@@ -23,6 +23,5 @@ enum class ControlBoard(val deviceName: String) {
     INTAKE("intakeRoller"),
     INTAKE_BELT("intakeBelt"),
     INTAKE_ENCODER("leftFront"),
-
-
+    INTAKE_TOUCH("intakeTouch"),
 }

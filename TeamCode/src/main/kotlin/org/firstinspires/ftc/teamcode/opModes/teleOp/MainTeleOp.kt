@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.commands.elevator.SpinDownCommand
 import org.firstinspires.ftc.teamcode.commands.elevator.SpinUpCommand
 import org.firstinspires.ftc.teamcode.commands.intake.IntakeBeltCommand
 import org.firstinspires.ftc.teamcode.commands.intake.IntakeCommand
+import org.firstinspires.ftc.teamcode.commands.intake.ThrowbackCommand
 import org.firstinspires.ftc.teamcode.subsystems.arm.ArmSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.drive.DriveSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem
@@ -30,10 +31,10 @@ class MainTeleOp : CommandOpMode() {
     private lateinit var armDownCommand: Command
 
     private lateinit var driveCommand: Command
-    private lateinit var intakeCommand: IntakeCommand
-    private lateinit var outtakeCommand: IntakeCommand
-    private lateinit var intakeBeltCommand: IntakeBeltCommand
-    private lateinit var outtakeBeltCommand: IntakeBeltCommand
+    private lateinit var intakeCommand: Command
+    private lateinit var outtakeCommand: Command
+    private lateinit var intakeBeltCommand: Command
+    private lateinit var outtakeBeltCommand: Command
 
     private lateinit var driver: GamepadEx
     private var driverMode = DRIVER_MODE.SPEED
@@ -92,7 +93,8 @@ class MainTeleOp : CommandOpMode() {
         outtakeCommand = IntakeCommand(false, IntakeSubsystem)
 
         intakeBeltCommand = IntakeBeltCommand(Math.toRadians(-60.0), IntakeSubsystem)
-        outtakeBeltCommand = IntakeBeltCommand(Math.toRadians(90.0), IntakeSubsystem)
+//        outtakeBeltCommand = IntakeBeltCommand(Math.toRadians(90.0), IntakeSubsystem)
+        outtakeBeltCommand = ThrowbackCommand(IntakeSubsystem)
 
         driveCommand = DriveCommand(DriveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX, 0.0)
 
@@ -192,6 +194,7 @@ class MainTeleOp : CommandOpMode() {
             telemetry.addData("Slides Velocity", ElevatorSubsystem.velocity)
 
             telemetry.addData("Intake Position", Math.toDegrees(IntakeSubsystem.position))
+            telemetry.addData("Intake at limit?", IntakeSubsystem.isPressed)
 
             telemetry.addData("Operator Mode", operatorMode)
             telemetry.addData("Driver Mode", driverMode)

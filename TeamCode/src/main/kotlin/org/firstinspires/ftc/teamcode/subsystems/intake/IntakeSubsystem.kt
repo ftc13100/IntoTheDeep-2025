@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.Servo
+import com.qualcomm.robotcore.hardware.TouchSensor
 import org.firstinspires.ftc.teamcode.constants.ControlBoard
 import org.firstinspires.ftc.teamcode.constants.IntakeConstants
 import kotlin.math.PI
@@ -21,10 +22,16 @@ import kotlin.math.cos
 object IntakeSubsystem : SubsystemBase() {
     private lateinit var claw: Servo
     private lateinit var wrist: CRServo
-    private lateinit var intakeEncoder: Encoder
 
-    val position
+    private lateinit var intakeEncoder: Encoder
+    private lateinit var intakeTouch: TouchSensor
+
+    val isPressed: Boolean
+        get() = intakeTouch.isPressed
+
+    var position = Math.toRadians(90.0)
         get() = intakeEncoder.getPositionAndVelocity().position / 8192.0 * 2 * PI + Math.toRadians(90.0)
+        private set
 
     val velocity
         get() = intakeEncoder.getPositionAndVelocity().velocity / 8192.0 * 2 * PI
@@ -56,6 +63,7 @@ object IntakeSubsystem : SubsystemBase() {
     fun initialize(hardwareMap: HardwareMap) {
         claw = hardwareMap[Servo::class.java, ControlBoard.INTAKE.deviceName]
         wrist = CRServo(hardwareMap, ControlBoard.INTAKE_BELT.deviceName)
+        intakeTouch = hardwareMap[TouchSensor::class.java, ControlBoard.INTAKE_TOUCH.deviceName]
 
         val intakeEnc = hardwareMap[DcMotorEx::class.java, ControlBoard.INTAKE_ENCODER.deviceName]
         intakeEnc.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
@@ -74,16 +82,17 @@ object IntakeSubsystem : SubsystemBase() {
         claw.position = 0.25
     }
 
-    fun wristUp() {
-        wrist.set(1.0)
-    }
+    fun wristUp() = if (!isPressed) wrist.set(1.0) else wrist.stop()
 
-    fun wristDown() {
-        wrist.set(-1.0)
-    }
 
-    fun wristStop() {
-        wrist.set(kCos * cos(position))
+    fun wristDown() = wrist.set(-1.0)
+
+
+    fun wristStop() = wrist.set(kCos * cos(position))
+
+    fun reset() {
+        wrist.stop()
+        position = Math.toRadians(90.0)
     }
 
     fun operateWrist() {
