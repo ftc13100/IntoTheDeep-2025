@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.commands.elevator.SpinDownCommand
 import org.firstinspires.ftc.teamcode.commands.elevator.SpinUpCommand
 import org.firstinspires.ftc.teamcode.commands.intake.IntakeBeltCommand
 import org.firstinspires.ftc.teamcode.commands.intake.IntakeCommand
+import org.firstinspires.ftc.teamcode.commands.intake.SlowIntakeBeltCommand
 import org.firstinspires.ftc.teamcode.commands.intake.ThrowbackCommand
 import org.firstinspires.ftc.teamcode.subsystems.arm.ArmSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.drive.DriveSubsystem
@@ -38,6 +39,9 @@ class MainTeleOp : CommandOpMode() {
     private lateinit var outtakeCommand: Command
     private lateinit var intakeBeltCommand: Command
     private lateinit var outtakeBeltCommand: Command
+    private lateinit var slowIntakeBeltCommand: Command
+    private lateinit var slowOuttakeBeltCommand: Command
+
 
     private lateinit var driver: GamepadEx
     private var driverMode = DRIVER_MODE.SPEED
@@ -104,6 +108,8 @@ class MainTeleOp : CommandOpMode() {
         intakeBeltCommand = IntakeBeltCommand(Math.toRadians(-60.0), IntakeSubsystem)
 //        outtakeBeltCommand = IntakeBeltCommand(Math.toRadians(90.0), IntakeSubsystem)
         outtakeBeltCommand = ThrowbackCommand(IntakeSubsystem)
+        slowIntakeBeltCommand = SlowIntakeBeltCommand(IntakeSubsystem, true)
+        slowOuttakeBeltCommand = SlowIntakeBeltCommand(IntakeSubsystem, false)
 
         driveCommand = DriveCommand(DriveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX, 0.0)
 
@@ -204,6 +210,16 @@ class MainTeleOp : CommandOpMode() {
         operator.getGamepadButton(GamepadKeys.Button.A).toggleWhenPressed(
             intakeBeltCommand,
             outtakeBeltCommand,
+        )
+
+        driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(
+            slowOuttakeBeltCommand
+//            intakeBeltCommand
+        )
+
+        driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whileHeld(
+            slowIntakeBeltCommand
+//            outtakeBeltCommand
         )
 
         driver.getGamepadButton(GamepadKeys.Button.B).whenPressed(

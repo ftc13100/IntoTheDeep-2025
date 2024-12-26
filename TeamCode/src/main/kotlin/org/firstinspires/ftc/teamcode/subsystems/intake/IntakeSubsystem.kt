@@ -92,8 +92,12 @@ object IntakeSubsystem : SubsystemBase() {
 
     fun wristUp() = if (!isPressed) wrist.set(1.0) else wrist.stop()
 
+    fun wristUpSlow() = if (!isPressed) wrist.set(0.2) else wrist.stop()
 
     fun wristDown() = wrist.set(-1.0)
+
+    fun wristDownSlow() = if (!isPressed) wrist.set(-0.2) else wrist.stop()
+
 
 
     fun wristStop() = wrist.set(kCos * cos(position))
