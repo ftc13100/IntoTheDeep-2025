@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.commands.intake
 import com.arcrobotics.ftclib.command.CommandBase
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem
 
-class ThrowbackCommand(
+class ThrowItBackCommand(
     private val subsystem: IntakeSubsystem
 ) : CommandBase() {
     override fun execute() = subsystem.wristUp()

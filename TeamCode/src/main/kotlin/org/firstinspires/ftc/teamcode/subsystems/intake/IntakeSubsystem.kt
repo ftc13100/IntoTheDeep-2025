@@ -96,7 +96,7 @@ object IntakeSubsystem : SubsystemBase() {
 
     fun wristDown() = wrist.set(-1.0)
 
-    fun wristDownSlow() = if (!isPressed) wrist.set(-0.2) else wrist.stop()
+    fun wristDownSlow() = wrist.set(-0.2)
 
 
 
