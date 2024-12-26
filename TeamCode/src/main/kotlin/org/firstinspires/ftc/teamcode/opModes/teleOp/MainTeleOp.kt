@@ -2,11 +2,14 @@ package org.firstinspires.ftc.teamcode.opModes.teleOp
 
 import com.arcrobotics.ftclib.command.Command
 import com.arcrobotics.ftclib.command.CommandOpMode
+import com.arcrobotics.ftclib.command.ConditionalCommand
 import com.arcrobotics.ftclib.command.InstantCommand
 import com.arcrobotics.ftclib.command.RunCommand
 import com.arcrobotics.ftclib.command.SelectCommand
+import com.arcrobotics.ftclib.command.button.Trigger
 import com.arcrobotics.ftclib.gamepad.GamepadEx
 import com.arcrobotics.ftclib.gamepad.GamepadKeys
+import com.arcrobotics.ftclib.kotlin.extensions.gamepad.and
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.commands.arm.ArmCommand
 import org.firstinspires.ftc.teamcode.commands.arm.OpenArmCommand
@@ -55,8 +58,14 @@ class MainTeleOp : CommandOpMode() {
         spinUpCommand = SelectCommand(
             mapOf(
                 OPERATOR_MODE.MANUAL to SpinUpCommand(ElevatorSubsystem),
-                OPERATOR_MODE.SPECIMEN to ElevatorCommand(12.0, ElevatorSubsystem),
-                OPERATOR_MODE.SAMPLE to ElevatorCommand(30.0, ElevatorSubsystem),
+                OPERATOR_MODE.SPECIMEN to ConditionalCommand(
+                    ElevatorCommand(12.0, ElevatorSubsystem).withTimeout(2500),
+                    ElevatorCommand(20.0, ElevatorSubsystem).withTimeout(2500)
+                ) { ArmSubsystem.angle > Math.toRadians(80.0) },
+                OPERATOR_MODE.SAMPLE to ConditionalCommand(
+                    ElevatorCommand(30.0, ElevatorSubsystem).withTimeout(2500),
+                    ElevatorCommand(20.0, ElevatorSubsystem).withTimeout(2500)
+                ) { ArmSubsystem.angle > Math.toRadians(80.0) },
             ),
             this::operatorMode
         )
@@ -64,8 +73,8 @@ class MainTeleOp : CommandOpMode() {
         spinDownCommand = SelectCommand(
             mapOf(
                 OPERATOR_MODE.MANUAL to SpinDownCommand(ElevatorSubsystem),
-                OPERATOR_MODE.SAMPLE to ElevatorCommand(0.0, ElevatorSubsystem),
-                OPERATOR_MODE.SPECIMEN to ElevatorCommand(0.0, ElevatorSubsystem),
+                OPERATOR_MODE.SAMPLE to ElevatorCommand(Math.toRadians(0.0), ElevatorSubsystem).withTimeout(2500),
+                OPERATOR_MODE.SPECIMEN to ElevatorCommand(Math.toRadians(0.0), ElevatorSubsystem).withTimeout(2500),
             ),
             this::operatorMode
         )
@@ -74,8 +83,8 @@ class MainTeleOp : CommandOpMode() {
         armUpCommand = SelectCommand(
             mapOf(
                 OPERATOR_MODE.MANUAL to OpenArmCommand(ArmSubsystem, true),
-                OPERATOR_MODE.SAMPLE to ArmCommand(90.0, ArmSubsystem),
-                OPERATOR_MODE.SPECIMEN to ArmCommand(90.0, ArmSubsystem),
+                OPERATOR_MODE.SAMPLE to ArmCommand(Math.toRadians(88.0), ArmSubsystem).withTimeout(2500),
+                OPERATOR_MODE.SPECIMEN to ArmCommand(Math.toRadians(88.0), ArmSubsystem).withTimeout(2500),
             ),
             this::operatorMode
         )
@@ -83,8 +92,8 @@ class MainTeleOp : CommandOpMode() {
         armDownCommand = SelectCommand(
             mapOf(
                 OPERATOR_MODE.MANUAL to OpenArmCommand(ArmSubsystem, false),
-                OPERATOR_MODE.SAMPLE to ArmCommand(0.0, ArmSubsystem),
-                OPERATOR_MODE.SPECIMEN to ArmCommand(0.0, ArmSubsystem),
+                OPERATOR_MODE.SAMPLE to ArmCommand(0.0, ArmSubsystem).withTimeout(2500),
+                OPERATOR_MODE.SPECIMEN to ArmCommand(0.0, ArmSubsystem).withTimeout(2500),
             ),
             this::operatorMode
         )
@@ -98,13 +107,24 @@ class MainTeleOp : CommandOpMode() {
 
         driveCommand = DriveCommand(DriveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX, 0.0)
 
-        operator.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenHeld(armUpCommand)
-        operator.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenHeld(armDownCommand)
 
-        operator.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenHeld(spinDownCommand)
-        operator.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenHeld(spinUpCommand)
+        (operator.getGamepadButton(GamepadKeys.Button.DPAD_UP) and Trigger {
+            operatorMode == OPERATOR_MODE.MANUAL
+        }) .whileActiveOnce(spinUpCommand)
 
-//        operator.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenHeld(
+        (operator.getGamepadButton(GamepadKeys.Button.DPAD_UP) and Trigger {
+            operatorMode != OPERATOR_MODE.MANUAL
+        }) .whenActive(spinUpCommand)
+
+        (operator.getGamepadButton(GamepadKeys.Button.DPAD_DOWN) and Trigger {
+            operatorMode == OPERATOR_MODE.MANUAL
+        }).whileActiveOnce(spinDownCommand)
+
+        (operator.getGamepadButton(GamepadKeys.Button.DPAD_DOWN) and Trigger {
+            operatorMode != OPERATOR_MODE.MANUAL
+        }) .whenActive(spinDownCommand)
+
+/*//        operator.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenHeld(
 //            InstantCommand({
 //                if(operatorMode == OPERATOR_MODE.MANUAL)
 //                    schedule(spinUpCommand)
@@ -116,9 +136,9 @@ class MainTeleOp : CommandOpMode() {
 //                if(operatorMode != OPERATOR_MODE.MANUAL)
 //                    schedule(spinUpCommand)
 //            })
-//        )
+//        )*/
 //
-//        operator.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenHeld(
+/*//        operator.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenHeld(
 //            InstantCommand({
 //                if(operatorMode == OPERATOR_MODE.MANUAL)
 //                    schedule(spinDownCommand)
@@ -130,9 +150,25 @@ class MainTeleOp : CommandOpMode() {
 //                if(operatorMode != OPERATOR_MODE.MANUAL)
 //                    schedule(spinDownCommand)
 //            })
-//        )
-//
-//        operator.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenHeld(
+//        )*/
+
+        (operator.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER) and Trigger {
+            operatorMode == OPERATOR_MODE.MANUAL
+        }) .whileActiveOnce(armUpCommand)
+
+        (operator.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER) and Trigger {
+            operatorMode != OPERATOR_MODE.MANUAL
+        }) .whenActive(armUpCommand)
+
+        (operator.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER) and Trigger {
+            operatorMode == OPERATOR_MODE.MANUAL
+        }) .whileActiveOnce(armDownCommand)
+
+        (operator.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER) and Trigger {
+            operatorMode != OPERATOR_MODE.MANUAL
+        }) .whenActive(armDownCommand)
+
+/*//        operator.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenHeld(
 //            InstantCommand({
 //                if(operatorMode == OPERATOR_MODE.MANUAL)
 //                    schedule(armUpCommand)
@@ -144,8 +180,8 @@ class MainTeleOp : CommandOpMode() {
 //                if(operatorMode != OPERATOR_MODE.MANUAL)
 //                    schedule(armUpCommand)
 //            })
-//        )
-//
+//        )*/
+/*//
 //        operator.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenHeld(
 //            InstantCommand({
 //                if(operatorMode == OPERATOR_MODE.MANUAL)
@@ -158,7 +194,7 @@ class MainTeleOp : CommandOpMode() {
 //                if(operatorMode != OPERATOR_MODE.MANUAL)
 //                    schedule(armDownCommand)
 //            })
-//        )
+//        )*/
 
         operator.getGamepadButton(GamepadKeys.Button.Y).toggleWhenPressed(
             intakeCommand,
@@ -176,11 +212,11 @@ class MainTeleOp : CommandOpMode() {
 
         driver.getGamepadButton(GamepadKeys.Button.Y).toggleWhenPressed(
             InstantCommand({
-                DriveSubsystem.driveMultiplier = 0.9
+                DriveSubsystem.driveMultiplier = 0.35
                 driverMode = driverMode.toggle(driverMode)
             }),
             InstantCommand({
-                DriveSubsystem.driveMultiplier = 0.5
+                DriveSubsystem.driveMultiplier = 0.9
                 driverMode = driverMode.toggle(driverMode)
             })
         )
