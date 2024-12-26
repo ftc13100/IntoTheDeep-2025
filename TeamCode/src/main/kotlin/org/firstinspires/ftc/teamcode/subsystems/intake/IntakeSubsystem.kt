@@ -23,15 +23,16 @@ object IntakeSubsystem : SubsystemBase() {
     private lateinit var claw: Servo
     private lateinit var wrist: CRServo
 
+    private lateinit var hardwareMap: HardwareMap
+
     private lateinit var intakeEncoder: Encoder
     private lateinit var intakeTouch: TouchSensor
 
     val isPressed: Boolean
         get() = intakeTouch.isPressed
 
-    var position = Math.toRadians(90.0)
+    val position
         get() = intakeEncoder.getPositionAndVelocity().position / 8192.0 * 2 * PI + Math.toRadians(90.0)
-        private set
 
     val velocity
         get() = intakeEncoder.getPositionAndVelocity().velocity / 8192.0 * 2 * PI
@@ -61,17 +62,24 @@ object IntakeSubsystem : SubsystemBase() {
         get() = controller.atGoal()
 
     fun initialize(hardwareMap: HardwareMap) {
+        this.hardwareMap = hardwareMap
+
         claw = hardwareMap[Servo::class.java, ControlBoard.INTAKE.deviceName]
         wrist = CRServo(hardwareMap, ControlBoard.INTAKE_BELT.deviceName)
         intakeTouch = hardwareMap[TouchSensor::class.java, ControlBoard.INTAKE_TOUCH.deviceName]
 
-        val intakeEnc = hardwareMap[DcMotorEx::class.java, ControlBoard.INTAKE_ENCODER.deviceName]
-        intakeEnc.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
-        intakeEnc.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
-
         controller.setTolerance(Math.toRadians(3.0))
 
-        intakeEncoder = OverflowEncoder(RawEncoder(intakeEnc))
+        intakeEncoder =
+            OverflowEncoder(
+                RawEncoder(
+                    hardwareMap[DcMotorEx::class.java, ControlBoard.INTAKE_ENCODER.deviceName]
+                        .apply {
+                            this.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
+                            this.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
+                        }
+                )
+            )
     }
 
     fun closeClaw() {
@@ -92,7 +100,16 @@ object IntakeSubsystem : SubsystemBase() {
 
     fun reset() {
         wrist.stop()
-        position = Math.toRadians(90.0)
+        intakeEncoder =
+            OverflowEncoder(
+                RawEncoder(
+                   hardwareMap[DcMotorEx::class.java, ControlBoard.INTAKE_ENCODER.deviceName]
+                      .apply {
+                        this.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
+                        this.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
+                     }
+                )
+            )
     }
 
     fun operateWrist() {
