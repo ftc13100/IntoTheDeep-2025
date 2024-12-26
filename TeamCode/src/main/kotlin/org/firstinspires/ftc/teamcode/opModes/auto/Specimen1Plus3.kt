@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.opModes.auto
 
-import com.acmerobotics.roadrunner.Action
 import com.acmerobotics.roadrunner.Pose2d
 import com.acmerobotics.roadrunner.Vector2d
 import com.arcrobotics.ftclib.command.CommandOpMode
@@ -13,7 +12,6 @@ import org.firstinspires.ftc.teamcode.commands.ActionCommand
 import org.firstinspires.ftc.teamcode.commands.arm.ArmCommand
 import org.firstinspires.ftc.teamcode.commands.elevator.ElevatorCommand
 import org.firstinspires.ftc.teamcode.commands.intake.IntakeBeltCommand
-import org.firstinspires.ftc.teamcode.commands.intake.IntakeCommand
 import org.firstinspires.ftc.teamcode.constants.AutoStartPose
 import org.firstinspires.ftc.teamcode.subsystems.arm.ArmSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.drive.DriveSubsystem
@@ -35,15 +33,16 @@ class Specimen1Plus3 : CommandOpMode() {
                     ActionCommand(
                         DriveSubsystem.actionBuilder(AutoStartPose.BLUE_RIGHT::startPose)
                             .strafeToConstantHeading(Vector2d(2.0, 31.5))
-                        .build(),
+                            .build(),
                         DriveSubsystem
                     ),
                     ArmCommand(Math.toRadians(90.0), ArmSubsystem).withTimeout(2000),
                     InstantCommand({ IntakeSubsystem.closeClaw() }),
                 ),
-                ElevatorCommand(12.0, ElevatorSubsystem).withTimeout(1250),
+                ElevatorCommand(12.0, ElevatorSubsystem).withTimeout(850),
                 InstantCommand({ IntakeSubsystem.openClaw() }),
             )
+
 
         val pushSamples =
             SequentialCommandGroup(
@@ -51,47 +50,149 @@ class Specimen1Plus3 : CommandOpMode() {
                     ActionCommand(
                         DriveSubsystem.actionBuilder { Pose2d(2.0, 31.5, Math.toRadians(90.0)) }
                             .setTangent(Math.toRadians(90.0))
-                            .splineToSplineHeading(Pose2d(-36.0, 35.0, 0.0), Math.toRadians(-90.0))
+                            .splineToLinearHeading(
+                                Pose2d(-36.0, 35.0, Math.toRadians(90.0)),
+                                Math.toRadians(-90.0)
+                            )
                             .setTangent(Math.toRadians(-90.0))
-                            .splineToSplineHeading(Pose2d(-44.0, 5.0, 0.0), Math.toRadians(120.0))
-                            .strafeTo(Vector2d(-44.0, 56.0))
+                            //push one
+                            .splineToLinearHeading(
+                                Pose2d(-46.0, 15.0, Math.toRadians(90.0)),
+                                Math.toRadians(120.0)
+                            )
+                            .strafeTo(Vector2d(-46.0, 56.0))
+                            //push two
                             .setTangent(Math.toRadians(-90.0))
-                            .splineToSplineHeading( Pose2d(-56.0, 5.0, 0.0), Math.toRadians(130.0))
-                            .strafeTo(Vector2d(-56.0, 56.0))
+                            .splineToLinearHeading(
+                                Pose2d(-58.0, 15.0, Math.toRadians(90.0)),
+                                Math.toRadians(130.0)
+                            )
+                            .strafeTo(Vector2d(-58.0, 56.0))
+
+                            //pick up
                             .setTangent(Math.toRadians(-90.0))
-                            .splineToSplineHeading(Pose2d(-36.0, 59.0, Math.toRadians(180.0)), 0.0)
-                        .build(),
+                            .splineToLinearHeading(
+                                Pose2d(-34.0, 48.0, Math.toRadians(180.0)),
+                                Math.toRadians(90.0)
+                            )
+                            .setTangent(Math.toRadians(90.0))
+                            .strafeTo(Vector2d(-34.0, 59.0))
+                            .build(),
                         DriveSubsystem
                     ),
-                    ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(1250),
+                    ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(850),
                     ArmCommand(0.0, ArmSubsystem).withTimeout(2000),
-                    IntakeBeltCommand(Math.toRadians(-60.0), IntakeSubsystem),
                 )
             )
 
         val scoreSpecimens =
             SequentialCommandGroup(
-                ElevatorCommand(5.0, ElevatorSubsystem).withTimeout(500),
-                InstantCommand({IntakeSubsystem.closeClaw()}),
+                ParallelCommandGroup(
+                    IntakeBeltCommand(Math.toRadians(-60.0), IntakeSubsystem).withTimeout(500),
+                    ElevatorCommand(8.0, ElevatorSubsystem).withTimeout(500),
+                ),
+                WaitCommand(750),
+                InstantCommand({ IntakeSubsystem.closeClaw() }),
+                WaitCommand(500),
                 ParallelCommandGroup(
                     ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(500),
                     ArmCommand(Math.toRadians(90.0), ArmSubsystem).withTimeout(2000),
-                    IntakeBeltCommand(Math.toRadians(90.0), IntakeSubsystem)
+                    IntakeBeltCommand(Math.toRadians(90.0), IntakeSubsystem).withTimeout(500),
+                    ActionCommand(
+                        DriveSubsystem.actionBuilder { Pose2d(-36.0, 59.0, Math.toRadians(180.0)) }
+                            .setTangent(Math.toRadians(180.0))
+                            .splineToLinearHeading(Pose2d(-2.0, 31.5, Math.toRadians(90.0)), Math.toRadians(-90.0))
+                            .build(),
+                        DriveSubsystem,
+                    )
                 ),
-                ActionCommand(
-                    DriveSubsystem.actionBuilder { Pose2d(-36.0, 59.0, Math.toRadians(180.0)) }
-                        .setTangent(Math.toRadians(180.0))
-                        .splineToLinearHeading(Pose2d(-2.0, 31.5, Math.toRadians(90.0)), Math.toRadians(-90.0))
-                        .build(),
-                    DriveSubsystem,
+                ElevatorCommand(12.0, ElevatorSubsystem).withTimeout(1000),
+                InstantCommand({ IntakeSubsystem.openClaw() }),
+                ParallelCommandGroup(
+                    ArmCommand(0.0, ArmSubsystem).withTimeout(2000),
+                    ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(1000),
+                    ActionCommand(
+                        DriveSubsystem.actionBuilder { Pose2d(-2.0, 31.5, Math.toRadians(90.0)) }
+                            .splineToLinearHeading(Pose2d(-36.0, 59.0, Math.toRadians(180.0)), 0.0)
+                            .build()
+                    ),
+                )
+            )
+        val scoreSpecimens1 =
+            SequentialCommandGroup(
+                ParallelCommandGroup(
+                    IntakeBeltCommand(Math.toRadians(-60.0), IntakeSubsystem).withTimeout(500),
+                    ElevatorCommand(8.0, ElevatorSubsystem).withTimeout(500),
+                ),
+                WaitCommand(750),
+                InstantCommand({ IntakeSubsystem.closeClaw() }),
+                WaitCommand(500),
+                ParallelCommandGroup(
+                    ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(500),
+                    ArmCommand(Math.toRadians(90.0), ArmSubsystem).withTimeout(2000),
+                    IntakeBeltCommand(Math.toRadians(90.0), IntakeSubsystem).withTimeout(500),
+                    ActionCommand(
+                        DriveSubsystem.actionBuilder { Pose2d(-36.0, 59.0, Math.toRadians(180.0)) }
+                            .setTangent(Math.toRadians(180.0))
+                            .splineToLinearHeading(Pose2d(-2.0, 31.5, Math.toRadians(90.0)), Math.toRadians(-90.0))
+                            .build(),
+                        DriveSubsystem,
+                    )
+                ),
+                ElevatorCommand(12.0, ElevatorSubsystem).withTimeout(1000),
+                InstantCommand({ IntakeSubsystem.openClaw() }),
+                ParallelCommandGroup(
+                    ArmCommand(0.0, ArmSubsystem).withTimeout(2000),
+                    ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(1000),
+                    ActionCommand(
+                        DriveSubsystem.actionBuilder { Pose2d(-2.0, 31.5, Math.toRadians(90.0)) }
+                            .splineToLinearHeading(Pose2d(-36.0, 59.0, Math.toRadians(180.0)), 0.0)
+                            .build()
+                    ),
+                )
+            )
+        val scoreSpecimens2 =
+            SequentialCommandGroup(
+                ParallelCommandGroup(
+                    IntakeBeltCommand(Math.toRadians(-60.0), IntakeSubsystem).withTimeout(500),
+                    ElevatorCommand(8.0, ElevatorSubsystem).withTimeout(500),
+                ),
+                WaitCommand(750),
+                InstantCommand({ IntakeSubsystem.closeClaw() }),
+                WaitCommand(500),
+                ParallelCommandGroup(
+                    ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(500),
+                    ArmCommand(Math.toRadians(90.0), ArmSubsystem).withTimeout(2000),
+                    IntakeBeltCommand(Math.toRadians(90.0), IntakeSubsystem).withTimeout(500),
+                    ActionCommand(
+                        DriveSubsystem.actionBuilder { Pose2d(-36.0, 59.0, Math.toRadians(180.0)) }
+                            .setTangent(Math.toRadians(180.0))
+                            .splineToLinearHeading(Pose2d(-4.0, 31.5, Math.toRadians(90.0)), Math.toRadians(-90.0))
+                            .build(),
+                        DriveSubsystem,
+                    )
+                ),
+                ElevatorCommand(12.0, ElevatorSubsystem).withTimeout(1000),
+                InstantCommand({ IntakeSubsystem.openClaw() }),
+                ParallelCommandGroup(
+                    ArmCommand(0.0, ArmSubsystem).withTimeout(2000),
+                    ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(1000),
+                    ActionCommand(
+                        DriveSubsystem.actionBuilder { Pose2d(-6.0, 31.5, Math.toRadians(90.0)) }
+                            .splineToLinearHeading(Pose2d(-36.0, 59.0, Math.toRadians(180.0)), 0.0)
+                            .build()
+                    ),
                 )
             )
 
+
         schedule(
-            scorePreloaded.andThen(
-                pushSamples.andThen(
-                    scoreSpecimens
-                )
+            SequentialCommandGroup(
+                scorePreloaded,
+                pushSamples,
+                scoreSpecimens,
+                scoreSpecimens1,
+                scoreSpecimens2
             )
         )
     }

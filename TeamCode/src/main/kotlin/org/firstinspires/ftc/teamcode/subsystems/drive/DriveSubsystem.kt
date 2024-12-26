@@ -65,6 +65,8 @@ object DriveSubsystem : SubsystemBase() {
     private lateinit var hardwareMap: HardwareMap
     var pose = Pose2d(0.0, 0.0, 0.0)
 
+    var driveMultiplier = 0.9
+
     @JvmField
     var PARAMS = Params()
 
@@ -86,9 +88,9 @@ object DriveSubsystem : SubsystemBase() {
         @JvmField var kA = 0.0001
 
         // path profile parameters (in inches)
-        @JvmField var maxWheelVel = 50.0
+        @JvmField var maxWheelVel = 70.0
         @JvmField var minProfileAccel = -30.0
-        @JvmField var maxProfileAccel = 50.0
+        @JvmField var maxProfileAccel = 70.0
 
         // turn profile parameters (in radians)
         @JvmField var maxAngVel = Math.PI // shared with path
@@ -96,8 +98,8 @@ object DriveSubsystem : SubsystemBase() {
 
         // path controller gains
         @JvmField var axialGain = 7.0
-        @JvmField var lateralGain = 6.0
-        @JvmField var headingGain = 1.0 // shared with turn
+        @JvmField var lateralGain = 8.0
+        @JvmField var headingGain = 8.0 // shared with turn
 
         @JvmField var axialVelGain = 0.0
         @JvmField var lateralVelGain = 0.0
@@ -528,8 +530,8 @@ object DriveSubsystem : SubsystemBase() {
     fun drive(leftY: Double, leftX: Double, rightX: Double) {
         setDrivePowers(
             PoseVelocity2d(
-                linearVel = Vector2d(leftY, -leftX),
-                angVel = -rightX
+                linearVel = Vector2d(leftY * driveMultiplier, -leftX * driveMultiplier),
+                angVel = -rightX * driveMultiplier
             )
         )
     }

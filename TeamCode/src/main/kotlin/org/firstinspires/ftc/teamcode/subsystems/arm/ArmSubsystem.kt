@@ -51,7 +51,7 @@ object ArmSubsystem : SubsystemBase() {
 
         armLeft.inverted = true
 
-        turnMotors = MotorGroup(armRight, armLeft)
+        turnMotors = MotorGroup(armLeft, armRight)
 
         turnMotors.resetEncoder()
         turnMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
