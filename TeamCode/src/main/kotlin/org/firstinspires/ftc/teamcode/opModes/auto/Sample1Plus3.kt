@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.opModes.auto
 
-import com.acmerobotics.roadrunner.Action
 import com.acmerobotics.roadrunner.Pose2d
 import com.acmerobotics.roadrunner.Vector2d
 import com.arcrobotics.ftclib.command.CommandOpMode
@@ -8,21 +7,17 @@ import com.arcrobotics.ftclib.command.InstantCommand
 import com.arcrobotics.ftclib.command.ParallelCommandGroup
 import com.arcrobotics.ftclib.command.SequentialCommandGroup
 import com.arcrobotics.ftclib.command.WaitCommand
-import com.qualcomm.hardware.ams.AMSColorSensor.Wait
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import org.firstinspires.ftc.teamcode.commands.ActionCommand
 import org.firstinspires.ftc.teamcode.commands.arm.ArmCommand
 import org.firstinspires.ftc.teamcode.commands.elevator.ElevatorCommand
 import org.firstinspires.ftc.teamcode.commands.intake.IntakeBeltCommand
-import org.firstinspires.ftc.teamcode.commands.intake.IntakeCommand
 import org.firstinspires.ftc.teamcode.commands.intake.ThrowItBackCommand
 import org.firstinspires.ftc.teamcode.constants.AutoStartPose
 import org.firstinspires.ftc.teamcode.subsystems.arm.ArmSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.drive.DriveSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.slides.ElevatorSubsystem
-import java.time.Instant
-import java.util.Vector
 
 @Autonomous(name = "Sample 1 + 3")
 class Sample1Plus3 : CommandOpMode() {
@@ -46,9 +41,19 @@ class Sample1Plus3 : CommandOpMode() {
                     InstantCommand({ IntakeSubsystem.closeClaw() }),
                 ),
                 ElevatorCommand(31.0, ElevatorSubsystem).withTimeout(2000),
-                IntakeBeltCommand(Math.toRadians(70.0), IntakeSubsystem).withTimeout(500),
+                ActionCommand(
+                    DriveSubsystem.actionBuilder{Pose2d(55.0, 55.0, Math.toRadians(225.0))}
+                        .strafeTo(Vector2d(57.0, 57.0))
+                        .build()
+                ),
+                ThrowItBackCommand(IntakeSubsystem),
                 InstantCommand({ IntakeSubsystem.openClaw() }),
                 WaitCommand(500),
+                ActionCommand(
+                    DriveSubsystem.actionBuilder{Pose2d(57.0, 57.0, Math.toRadians(225.0))}
+                        .strafeTo(Vector2d(55.0, 55.0))
+                        .build()
+                ),
                 )
 
 
@@ -62,7 +67,7 @@ class Sample1Plus3 : CommandOpMode() {
                 ParallelCommandGroup(
                     ActionCommand(
                         DriveSubsystem.actionBuilder{Pose2d(56.0, 56.0, Math.toRadians(225.0))}
-                            .turn(Math.toRadians(35.0))
+                            .turn(Math.toRadians(33.0))
                             .strafeTo(Vector2d(54.0, 53.0))
                             .build()
                     ),
@@ -84,11 +89,21 @@ class Sample1Plus3 : CommandOpMode() {
                 ),
                 ArmCommand(Math.toRadians(91.0), ArmSubsystem).withTimeout(2500),
                 ElevatorCommand(31.0, ElevatorSubsystem).withTimeout(1000),
+                ActionCommand(
+                    DriveSubsystem.actionBuilder{Pose2d(54.0, 53.0, Math.toRadians(260.0))}
+                        .strafeTo(Vector2d(57.0, 57.0))
+                        .build()
+                ),
                 WaitCommand(100),
-                InstantCommand({IntakeSubsystem.openClaw()})
+                InstantCommand({IntakeSubsystem.openClaw()}),
+                ActionCommand(
+                    DriveSubsystem.actionBuilder{Pose2d(57.0, 57.0, Math.toRadians(225.0))}
+                        .strafeTo(Vector2d(55.0, 55.0))
+                        .build()
+                ),
             )
 
-        val scoreSample2 =
+        /* val scoreSample2 =
             SequentialCommandGroup(
                 ParallelCommandGroup(
                     IntakeBeltCommand(0.0, IntakeSubsystem).withTimeout(500),
@@ -164,12 +179,12 @@ class Sample1Plus3 : CommandOpMode() {
                 ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(1000),
                 ArmCommand(0.0, ArmSubsystem)
                 )
-
+*/
         schedule(
             SequentialCommandGroup(
                 scorePreloaded,
                 scoreSample1,
-                scoreSample2,
+//                scoreSample2,
 //                scoreSample3
             )
         )
