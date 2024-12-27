@@ -18,14 +18,14 @@ object Sample1Plus3Testing {
                 .build()
 
         myBot.runAction(
-            myBot.drive.actionBuilder(Pose2d(10.0, 62.0, -90.0.toRadians()))
+            myBot.drive.actionBuilder(Pose2d(38.0, 62.0, -90.0.toRadians()))
                 .setTangent(-45.0)
                 .splineToLinearHeading(Pose2d(56.0, 56.0, Math.toRadians(225.0)), Math.toRadians(45.0))
                 .turn(Math.toRadians(30.0))
-                .turn(Math.toRadians(-30.0))
-                .turn(Math.toRadians(55.0))
-                .turn(Math.toRadians(-55.0))
-                .turn(Math.toRadians(75.0))
+//                .turn(Math.toRadians(-30.0))
+//                .turn(Math.toRadians(55.0))
+//                .turn(Math.toRadians(-55.0))
+//                .turn(Math.toRadians(75.0))
                 .build()
 
         )

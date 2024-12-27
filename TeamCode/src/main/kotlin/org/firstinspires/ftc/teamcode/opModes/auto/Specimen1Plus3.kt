@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.commands.ActionCommand
 import org.firstinspires.ftc.teamcode.commands.arm.ArmCommand
 import org.firstinspires.ftc.teamcode.commands.elevator.ElevatorCommand
 import org.firstinspires.ftc.teamcode.commands.intake.IntakeBeltCommand
+import org.firstinspires.ftc.teamcode.commands.intake.ThrowItBackCommand
 import org.firstinspires.ftc.teamcode.constants.AutoStartPose
 import org.firstinspires.ftc.teamcode.subsystems.arm.ArmSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.drive.DriveSubsystem
@@ -32,14 +33,14 @@ class Specimen1Plus3 : CommandOpMode() {
                 ParallelCommandGroup(
                     ActionCommand(
                         DriveSubsystem.actionBuilder(AutoStartPose.BLUE_RIGHT::startPose)
-                            .strafeToConstantHeading(Vector2d(2.0, 31.5))
+                            .strafeToConstantHeading(Vector2d(2.0, 32.0))
                             .build(),
                         DriveSubsystem
                     ),
                     ArmCommand(Math.toRadians(90.0), ArmSubsystem).withTimeout(2000),
                     InstantCommand({ IntakeSubsystem.closeClaw() }),
                 ),
-                ElevatorCommand(12.0, ElevatorSubsystem).withTimeout(850),
+                ElevatorCommand(11.0, ElevatorSubsystem).withTimeout(600),
                 InstantCommand({ IntakeSubsystem.openClaw() }),
             )
 
@@ -48,7 +49,7 @@ class Specimen1Plus3 : CommandOpMode() {
             SequentialCommandGroup(
                 ParallelCommandGroup(
                     ActionCommand(
-                        DriveSubsystem.actionBuilder { Pose2d(2.0, 31.5, Math.toRadians(90.0)) }
+                        DriveSubsystem.actionBuilder { Pose2d(2.0, 32.0, Math.toRadians(90.0)) }
                             .setTangent(Math.toRadians(90.0))
                             .splineToLinearHeading(
                                 Pose2d(-36.0, 35.0, Math.toRadians(90.0)),
@@ -68,7 +69,6 @@ class Specimen1Plus3 : CommandOpMode() {
                                 Math.toRadians(130.0)
                             )
                             .strafeTo(Vector2d(-58.0, 56.0))
-
                             //pick up
                             .setTangent(Math.toRadians(-90.0))
                             .splineToLinearHeading(
@@ -80,7 +80,7 @@ class Specimen1Plus3 : CommandOpMode() {
                             .build(),
                         DriveSubsystem
                     ),
-                    ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(850),
+                    ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(800),
                     ArmCommand(0.0, ArmSubsystem).withTimeout(2000),
                 )
             )
@@ -91,29 +91,29 @@ class Specimen1Plus3 : CommandOpMode() {
                     IntakeBeltCommand(Math.toRadians(-60.0), IntakeSubsystem).withTimeout(500),
                     ElevatorCommand(8.0, ElevatorSubsystem).withTimeout(500),
                 ),
-                WaitCommand(750),
+                WaitCommand(100),
                 InstantCommand({ IntakeSubsystem.closeClaw() }),
                 WaitCommand(500),
                 ParallelCommandGroup(
                     ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(500),
                     ArmCommand(Math.toRadians(90.0), ArmSubsystem).withTimeout(2000),
-                    IntakeBeltCommand(Math.toRadians(90.0), IntakeSubsystem).withTimeout(500),
+                    ThrowItBackCommand(IntakeSubsystem).withTimeout(500),
                     ActionCommand(
-                        DriveSubsystem.actionBuilder { Pose2d(-36.0, 59.0, Math.toRadians(180.0)) }
+                        DriveSubsystem.actionBuilder { Pose2d(-34.0, 59.0, Math.toRadians(180.0)) }
                             .setTangent(Math.toRadians(180.0))
-                            .splineToLinearHeading(Pose2d(-2.0, 31.5, Math.toRadians(90.0)), Math.toRadians(-90.0))
+                            .splineToLinearHeading(Pose2d(-2.0, 32.0, Math.toRadians(90.0)), Math.toRadians(-90.0))
                             .build(),
                         DriveSubsystem,
                     )
                 ),
-                ElevatorCommand(12.0, ElevatorSubsystem).withTimeout(1000),
+                ElevatorCommand(11.0, ElevatorSubsystem).withTimeout(700),
                 InstantCommand({ IntakeSubsystem.openClaw() }),
                 ParallelCommandGroup(
                     ArmCommand(0.0, ArmSubsystem).withTimeout(2000),
                     ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(1000),
                     ActionCommand(
-                        DriveSubsystem.actionBuilder { Pose2d(-2.0, 31.5, Math.toRadians(90.0)) }
-                            .splineToLinearHeading(Pose2d(-36.0, 59.0, Math.toRadians(180.0)), 0.0)
+                        DriveSubsystem.actionBuilder { Pose2d(-2.0, 32.0, Math.toRadians(90.0)) }
+                            .splineToLinearHeading(Pose2d(-34.0, 59.0, Math.toRadians(180.0)), 0.0)
                             .build()
                     ),
                 )
@@ -124,29 +124,29 @@ class Specimen1Plus3 : CommandOpMode() {
                     IntakeBeltCommand(Math.toRadians(-60.0), IntakeSubsystem).withTimeout(500),
                     ElevatorCommand(8.0, ElevatorSubsystem).withTimeout(500),
                 ),
-                WaitCommand(750),
+                WaitCommand(100),
                 InstantCommand({ IntakeSubsystem.closeClaw() }),
                 WaitCommand(500),
                 ParallelCommandGroup(
                     ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(500),
                     ArmCommand(Math.toRadians(90.0), ArmSubsystem).withTimeout(2000),
-                    IntakeBeltCommand(Math.toRadians(90.0), IntakeSubsystem).withTimeout(500),
+                    ThrowItBackCommand(IntakeSubsystem).withTimeout(500),
                     ActionCommand(
-                        DriveSubsystem.actionBuilder { Pose2d(-36.0, 59.0, Math.toRadians(180.0)) }
+                        DriveSubsystem.actionBuilder { Pose2d(-34.0, 59.0, Math.toRadians(180.0)) }
                             .setTangent(Math.toRadians(180.0))
-                            .splineToLinearHeading(Pose2d(-2.0, 31.5, Math.toRadians(90.0)), Math.toRadians(-90.0))
+                            .splineToLinearHeading(Pose2d(-4.0, 32.0, Math.toRadians(90.0)), Math.toRadians(-90.0))
                             .build(),
                         DriveSubsystem,
                     )
                 ),
-                ElevatorCommand(12.0, ElevatorSubsystem).withTimeout(1000),
+                ElevatorCommand(11.0, ElevatorSubsystem).withTimeout(700),
                 InstantCommand({ IntakeSubsystem.openClaw() }),
                 ParallelCommandGroup(
                     ArmCommand(0.0, ArmSubsystem).withTimeout(2000),
                     ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(1000),
                     ActionCommand(
-                        DriveSubsystem.actionBuilder { Pose2d(-2.0, 31.5, Math.toRadians(90.0)) }
-                            .splineToLinearHeading(Pose2d(-36.0, 59.0, Math.toRadians(180.0)), 0.0)
+                        DriveSubsystem.actionBuilder { Pose2d(-4.0, 32.0, Math.toRadians(90.0)) }
+                            .splineToLinearHeading(Pose2d(-34.0, 59.0, Math.toRadians(180.0)), 0.0)
                             .build()
                     ),
                 )
@@ -157,29 +157,29 @@ class Specimen1Plus3 : CommandOpMode() {
                     IntakeBeltCommand(Math.toRadians(-60.0), IntakeSubsystem).withTimeout(500),
                     ElevatorCommand(8.0, ElevatorSubsystem).withTimeout(500),
                 ),
-                WaitCommand(750),
+                WaitCommand(100),
                 InstantCommand({ IntakeSubsystem.closeClaw() }),
                 WaitCommand(500),
                 ParallelCommandGroup(
                     ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(500),
                     ArmCommand(Math.toRadians(90.0), ArmSubsystem).withTimeout(2000),
-                    IntakeBeltCommand(Math.toRadians(90.0), IntakeSubsystem).withTimeout(500),
+                    ThrowItBackCommand(IntakeSubsystem).withTimeout(700),
                     ActionCommand(
-                        DriveSubsystem.actionBuilder { Pose2d(-36.0, 59.0, Math.toRadians(180.0)) }
+                        DriveSubsystem.actionBuilder { Pose2d(-34.0, 59.0, Math.toRadians(180.0)) }
                             .setTangent(Math.toRadians(180.0))
-                            .splineToLinearHeading(Pose2d(-4.0, 31.5, Math.toRadians(90.0)), Math.toRadians(-90.0))
+                            .splineToLinearHeading(Pose2d(-6.0, 32.0, Math.toRadians(90.0)), Math.toRadians(-90.0))
                             .build(),
                         DriveSubsystem,
                     )
                 ),
-                ElevatorCommand(12.0, ElevatorSubsystem).withTimeout(1000),
+                ElevatorCommand(11.0, ElevatorSubsystem).withTimeout(700),
                 InstantCommand({ IntakeSubsystem.openClaw() }),
                 ParallelCommandGroup(
                     ArmCommand(0.0, ArmSubsystem).withTimeout(2000),
                     ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(1000),
                     ActionCommand(
-                        DriveSubsystem.actionBuilder { Pose2d(-6.0, 31.5, Math.toRadians(90.0)) }
-                            .splineToLinearHeading(Pose2d(-36.0, 59.0, Math.toRadians(180.0)), 0.0)
+                        DriveSubsystem.actionBuilder { Pose2d(-6.0, 32.0, Math.toRadians(90.0)) }
+                            .splineToLinearHeading(Pose2d(-34.0, 59.0, Math.toRadians(180.0)), 0.0)
                             .build()
                     ),
                 )

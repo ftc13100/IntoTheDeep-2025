@@ -14,7 +14,7 @@ object Specimen1Plus3Testing {
 
         val myBot =
             DefaultBotBuilder(meepMeep) // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints(50.0, 50.0, Math.toRadians(180.0), Math.toRadians(180.0), 4669.698132939092 * 0.002953423066)
+                .setConstraints(70.0, 70.0, Math.toRadians(180.0), Math.toRadians(180.0), 4669.698132939092 * 0.00297208937)
                 .build()
 
         myBot.runAction(

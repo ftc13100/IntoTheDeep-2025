@@ -93,8 +93,8 @@ class MainTeleOp : CommandOpMode() {
         armUpCommand = SelectCommand(
             mapOf(
                 OPERATOR_MODE.MANUAL to OpenArmCommand(ArmSubsystem, true),
-                OPERATOR_MODE.SAMPLE to ArmCommand(Math.toRadians(88.0), ArmSubsystem).withTimeout(2500),
-                OPERATOR_MODE.SPECIMEN to ArmCommand(Math.toRadians(88.0), ArmSubsystem).withTimeout(2500),
+                OPERATOR_MODE.SAMPLE to ArmCommand(Math.toRadians(90.0), ArmSubsystem).withTimeout(2500),
+                OPERATOR_MODE.SPECIMEN to ArmCommand(Math.toRadians(90.0), ArmSubsystem).withTimeout(2500),
             ),
             this::operatorMode
         )
@@ -111,7 +111,7 @@ class MainTeleOp : CommandOpMode() {
         intakeCommand = IntakeCommand(true, IntakeSubsystem)
         outtakeCommand = IntakeCommand(false, IntakeSubsystem)
 
-        intakeBeltCommand = IntakeBeltCommand(Math.toRadians(-60.0), IntakeSubsystem)
+        intakeBeltCommand = IntakeBeltCommand(Math.toRadians(-45.0), IntakeSubsystem)
 //        outtakeBeltCommand = IntakeBeltCommand(Math.toRadians(90.0), IntakeSubsystem)
         outtakeBeltCommand = ThrowItBackCommand(IntakeSubsystem)
         slowIntakeBeltCommand = SlowIntakeBeltCommand(IntakeSubsystem, true)
@@ -200,7 +200,7 @@ class MainTeleOp : CommandOpMode() {
                 ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(1000),
                 ArmCommand(0.0, ArmSubsystem).withTimeout(2000),
                 ParallelCommandGroup(
-                    IntakeBeltCommand(-60.0, IntakeSubsystem).withTimeout(500),
+                    IntakeBeltCommand(-45.0, IntakeSubsystem).withTimeout(500),
                     ElevatorCommand(17.0, ElevatorSubsystem)
                 ),
 

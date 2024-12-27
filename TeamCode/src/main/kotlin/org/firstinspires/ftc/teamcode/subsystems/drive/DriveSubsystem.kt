@@ -78,28 +78,28 @@ object DriveSubsystem : SubsystemBase() {
         var usbFacingDirection = UsbFacingDirection.LEFT
 
         // drive model parameters
-        @JvmField var inPerTick = 0.002953423066
-        @JvmField var lateralInPerTick = inPerTick
-        @JvmField var trackWidthTicks = 4669.698132939092
+        @JvmField var inPerTick = 0.00297208937
+        @JvmField var lateralInPerTick = 0.0018615669110367
+        @JvmField var trackWidthTicks = 4670.40351221378
 
         // feedforward parameters (in tick units)
-        @JvmField var kS = 1.308709766262468
-        @JvmField var kV = 3.701322333374629E-4
+        @JvmField var kS = 1.566240346045443
+        @JvmField var kV = 0.0004
         @JvmField var kA = 0.0001
 
         // path profile parameters (in inches)
-        @JvmField var maxWheelVel = 70.0
+        @JvmField var maxWheelVel = 50.0
         @JvmField var minProfileAccel = -30.0
-        @JvmField var maxProfileAccel = 70.0
+        @JvmField var maxProfileAccel = 50.0
 
         // turn profile parameters (in radians)
         @JvmField var maxAngVel = Math.PI // shared with path
         @JvmField var maxAngAccel = Math.PI
 
         // path controller gains
-        @JvmField var axialGain = 7.0
+        @JvmField var axialGain = 8.0
         @JvmField var lateralGain = 8.0
-        @JvmField var headingGain = 8.0 // shared with turn
+        @JvmField var headingGain = 9.0 // shared with turn
 
         @JvmField var axialVelGain = 0.0
         @JvmField var lateralVelGain = 0.0
