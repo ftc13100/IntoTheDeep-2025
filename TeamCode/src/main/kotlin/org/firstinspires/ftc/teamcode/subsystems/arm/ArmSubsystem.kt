@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.constants.ArmConstants
 import org.firstinspires.ftc.teamcode.constants.ControlBoard
 import kotlin.math.PI
+import kotlin.math.cos
 
 @Config
 object ArmSubsystem : SubsystemBase() {
@@ -71,7 +72,7 @@ object ArmSubsystem : SubsystemBase() {
     }
 
     fun operateArm() {
-        val output = controller.calculate(angle) + feedforward.calculate(angle, velocity)
+        val output = controller.calculate(angle) + ArmConstants.kCos.value * cos(angle)
 
         if (enabled)
             turnMotors.set(output)
@@ -80,7 +81,6 @@ object ArmSubsystem : SubsystemBase() {
 //    @JvmField var kP = 0.0
 //    @JvmField var kI = 0.0
 //    @JvmField var kD = 0.0
-//
 //    @JvmField var kCos = 0.0
 //    @JvmField var kS = 0.0
 //    @JvmField var kV = 0.0

@@ -19,8 +19,8 @@ import org.firstinspires.ftc.teamcode.subsystems.drive.DriveSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.slides.ElevatorSubsystem
 
-@Autonomous(name = "Sample 1 + 3")
-class Sample1Plus3 : CommandOpMode() {
+@Autonomous(name = "Sample 1 + 2")
+class Sample1Plus2 : CommandOpMode() {
     override fun initialize() {
         DriveSubsystem.initialize(hardwareMap)
         ArmSubsystem.initialize(hardwareMap)
@@ -42,10 +42,10 @@ class Sample1Plus3 : CommandOpMode() {
                 ),
                 ElevatorCommand(31.0, ElevatorSubsystem).withTimeout(2000),
                 ActionCommand(
-                    DriveSubsystem.actionBuilder{Pose2d(55.0, 55.0, Math.toRadians(225.0))}
-                        .strafeTo(Vector2d(59.0, 59.0))
-                        .build()
-                ),
+                        DriveSubsystem.actionBuilder{Pose2d(55.0, 55.0, Math.toRadians(225.0))}
+                            .strafeTo(Vector2d(59.0, 59.0))
+                            .build()
+                    ),
                 ThrowItBackCommand(IntakeSubsystem),
                 InstantCommand({ IntakeSubsystem.openClaw() }),
                 WaitCommand(500),
@@ -54,7 +54,7 @@ class Sample1Plus3 : CommandOpMode() {
                         .strafeTo(Vector2d(55.0, 55.0))
                         .build()
                 ),
-            )
+                )
 
 
         val scoreSample1 =
@@ -90,9 +90,9 @@ class Sample1Plus3 : CommandOpMode() {
                 ArmCommand(Math.toRadians(91.0), ArmSubsystem).withTimeout(2500),
                 ElevatorCommand(31.0, ElevatorSubsystem).withTimeout(2000),
                 ActionCommand(
-                    DriveSubsystem.actionBuilder{Pose2d(55.0, 55.0, Math.toRadians(225.0))}
-                        .strafeTo(Vector2d(59.0, 59.0))
-                        .build()
+                        DriveSubsystem.actionBuilder{Pose2d(55.0, 55.0, Math.toRadians(225.0))}
+                            .strafeTo(Vector2d(59.0, 59.0))
+                            .build()
                 ),
                 WaitCommand(500),
                 InstantCommand({IntakeSubsystem.openClaw()}),
@@ -145,13 +145,13 @@ class Sample1Plus3 : CommandOpMode() {
                 ),
                 WaitCommand(500),
                 InstantCommand({IntakeSubsystem.openClaw()}),
-            )
+                )
 
 
 
 
 
-        val scoreSample3 =
+        /*val scoreSample3 =
             SequentialCommandGroup(
                 ParallelCommandGroup(
                     IntakeBeltCommand(0.0, IntakeSubsystem).withTimeout(500),
@@ -188,7 +188,7 @@ class Sample1Plus3 : CommandOpMode() {
                 ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(1000),
                 ArmCommand(0.0, ArmSubsystem)
                 )
-
+*/
         schedule(
             SequentialCommandGroup(
                 scorePreloaded,
