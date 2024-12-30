@@ -28,6 +28,7 @@ object IntakeSubsystem : SubsystemBase() {
     private lateinit var intakeEncoder: Encoder
     private lateinit var intakeTouch: TouchSensor
 
+
     val isPressed: Boolean
         get() = intakeTouch.isPressed
 
@@ -40,7 +41,7 @@ object IntakeSubsystem : SubsystemBase() {
     @JvmField var kP = 1.0
     @JvmField var kI = 0.0
     @JvmField var kD = 0.02
-    @JvmField var kCos = 0.05
+    @JvmField var kCos = 0.055
 
     private val controller = ProfiledPIDController(
         IntakeConstants.kP.value,
@@ -83,11 +84,11 @@ object IntakeSubsystem : SubsystemBase() {
     }
 
     fun closeClaw() {
-        claw.position = 0.485
+        claw.position = 0.9
     }
 
     fun openClaw() {
-        claw.position = 0.25
+        claw.position = 0.65
     }
 
     fun wristUp() = if (!isPressed) wrist.set(1.0) else wrist.stop()

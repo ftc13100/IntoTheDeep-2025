@@ -19,8 +19,8 @@ import org.firstinspires.ftc.teamcode.subsystems.drive.DriveSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.slides.ElevatorSubsystem
 
-@Autonomous(name = "Specimen 1 + 3")
-class Specimen1Plus3 : CommandOpMode() {
+@Autonomous(name = "Specimen 1 + 2")
+class Specimen1Plus2 : CommandOpMode() {
     override fun initialize() {
         DriveSubsystem.initialize(hardwareMap)
         ArmSubsystem.initialize(hardwareMap)
@@ -29,15 +29,16 @@ class Specimen1Plus3 : CommandOpMode() {
 
         val scorePreloaded =
             SequentialCommandGroup(
-                InstantCommand({ DriveSubsystem.pose = AutoStartPose.BLUE_RIGHT.startPose }),
+                InstantCommand({ 
+                    DriveSubsystem.pose = AutoStartPose.BLUE_RIGHT.startPose }),
                 ParallelCommandGroup(
                     ActionCommand(
                         DriveSubsystem.actionBuilder(AutoStartPose.BLUE_RIGHT::startPose)
-                            .strafeToConstantHeading(Vector2d(2.0, 32.0))
+                            .strafeToConstantHeading(Vector2d(2.0, 33.5))
                             .build(),
                         DriveSubsystem
                     ),
-                    ArmCommand(Math.toRadians(90.0), ArmSubsystem).withTimeout(2000),
+                    ArmCommand(Math.toRadians(91.0), ArmSubsystem).withTimeout(2000),
                     InstantCommand({ IntakeSubsystem.closeClaw() }),
                 ),
                 ElevatorCommand(11.0, ElevatorSubsystem).withTimeout(600),
@@ -49,7 +50,7 @@ class Specimen1Plus3 : CommandOpMode() {
             SequentialCommandGroup(
                 ParallelCommandGroup(
                     ActionCommand(
-                        DriveSubsystem.actionBuilder { Pose2d(2.0, 32.0, Math.toRadians(90.0)) }
+                        DriveSubsystem.actionBuilder { Pose2d(2.0, 33.5, Math.toRadians(90.0)) }
                             .setTangent(Math.toRadians(90.0))
                             .splineToLinearHeading(
                                 Pose2d(-36.0, 35.0, Math.toRadians(90.0)),
@@ -91,17 +92,17 @@ class Specimen1Plus3 : CommandOpMode() {
                     IntakeBeltCommand(Math.toRadians(-60.0), IntakeSubsystem).withTimeout(500),
                     ElevatorCommand(8.0, ElevatorSubsystem).withTimeout(500),
                 ),
-                WaitCommand(100),
+                WaitCommand(400),
                 InstantCommand({ IntakeSubsystem.closeClaw() }),
                 WaitCommand(500),
                 ParallelCommandGroup(
                     ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(500),
-                    ArmCommand(Math.toRadians(90.0), ArmSubsystem).withTimeout(2000),
+                    ArmCommand(Math.toRadians(91.0), ArmSubsystem).withTimeout(2000),
                     ThrowItBackCommand(IntakeSubsystem).withTimeout(500),
                     ActionCommand(
                         DriveSubsystem.actionBuilder { Pose2d(-34.0, 59.0, Math.toRadians(180.0)) }
                             .setTangent(Math.toRadians(180.0))
-                            .splineToLinearHeading(Pose2d(-2.0, 32.0, Math.toRadians(90.0)), Math.toRadians(-90.0))
+                            .splineToLinearHeading(Pose2d(-2.0, 33.5, Math.toRadians(90.0)), Math.toRadians(-90.0))
                             .build(),
                         DriveSubsystem,
                     )
@@ -112,7 +113,7 @@ class Specimen1Plus3 : CommandOpMode() {
                     ArmCommand(0.0, ArmSubsystem).withTimeout(2000),
                     ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(1000),
                     ActionCommand(
-                        DriveSubsystem.actionBuilder { Pose2d(-2.0, 32.0, Math.toRadians(90.0)) }
+                        DriveSubsystem.actionBuilder { Pose2d(-2.0, 33.5, Math.toRadians(90.0)) }
                             .splineToLinearHeading(Pose2d(-34.0, 59.0, Math.toRadians(180.0)), 0.0)
                             .build()
                     ),
@@ -124,17 +125,17 @@ class Specimen1Plus3 : CommandOpMode() {
                     IntakeBeltCommand(Math.toRadians(-60.0), IntakeSubsystem).withTimeout(500),
                     ElevatorCommand(8.0, ElevatorSubsystem).withTimeout(500),
                 ),
-                WaitCommand(100),
+                WaitCommand(400),
                 InstantCommand({ IntakeSubsystem.closeClaw() }),
                 WaitCommand(500),
                 ParallelCommandGroup(
                     ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(500),
-                    ArmCommand(Math.toRadians(90.0), ArmSubsystem).withTimeout(2000),
+                    ArmCommand(Math.toRadians(91.0), ArmSubsystem).withTimeout(2000),
                     ThrowItBackCommand(IntakeSubsystem).withTimeout(500),
                     ActionCommand(
                         DriveSubsystem.actionBuilder { Pose2d(-34.0, 59.0, Math.toRadians(180.0)) }
                             .setTangent(Math.toRadians(180.0))
-                            .splineToLinearHeading(Pose2d(-4.0, 32.0, Math.toRadians(90.0)), Math.toRadians(-90.0))
+                            .splineToLinearHeading(Pose2d(-4.0, 33.5, Math.toRadians(90.0)), Math.toRadians(-90.0))
                             .build(),
                         DriveSubsystem,
                     )
@@ -145,45 +146,13 @@ class Specimen1Plus3 : CommandOpMode() {
                     ArmCommand(0.0, ArmSubsystem).withTimeout(2000),
                     ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(1000),
                     ActionCommand(
-                        DriveSubsystem.actionBuilder { Pose2d(-4.0, 32.0, Math.toRadians(90.0)) }
-                            .splineToLinearHeading(Pose2d(-34.0, 59.0, Math.toRadians(180.0)), 0.0)
+                        DriveSubsystem.actionBuilder { Pose2d(-4.0, 33.5, Math.toRadians(90.0)) }
+                            .strafeTo(Vector2d(-38.0, 59.0))
                             .build()
                     ),
                 )
             )
-        val scoreSpecimens2 =
-            SequentialCommandGroup(
-                ParallelCommandGroup(
-                    IntakeBeltCommand(Math.toRadians(-60.0), IntakeSubsystem).withTimeout(500),
-                    ElevatorCommand(8.0, ElevatorSubsystem).withTimeout(500),
-                ),
-                WaitCommand(100),
-                InstantCommand({ IntakeSubsystem.closeClaw() }),
-                WaitCommand(500),
-                ParallelCommandGroup(
-                    ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(500),
-                    ArmCommand(Math.toRadians(90.0), ArmSubsystem).withTimeout(2000),
-                    ThrowItBackCommand(IntakeSubsystem).withTimeout(700),
-                    ActionCommand(
-                        DriveSubsystem.actionBuilder { Pose2d(-34.0, 59.0, Math.toRadians(180.0)) }
-                            .setTangent(Math.toRadians(180.0))
-                            .splineToLinearHeading(Pose2d(-6.0, 32.0, Math.toRadians(90.0)), Math.toRadians(-90.0))
-                            .build(),
-                        DriveSubsystem,
-                    )
-                ),
-                ElevatorCommand(11.0, ElevatorSubsystem).withTimeout(700),
-                InstantCommand({ IntakeSubsystem.openClaw() }),
-                ParallelCommandGroup(
-                    ArmCommand(0.0, ArmSubsystem).withTimeout(2000),
-                    ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(1000),
-                    ActionCommand(
-                        DriveSubsystem.actionBuilder { Pose2d(-6.0, 32.0, Math.toRadians(90.0)) }
-                            .splineToLinearHeading(Pose2d(-34.0, 59.0, Math.toRadians(180.0)), 0.0)
-                            .build()
-                    ),
-                )
-            )
+
 
 
         schedule(
@@ -192,7 +161,6 @@ class Specimen1Plus3 : CommandOpMode() {
                 pushSamples,
                 scoreSpecimens,
                 scoreSpecimens1,
-                scoreSpecimens2
             )
         )
     }

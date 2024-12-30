@@ -13,6 +13,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx
 import com.arcrobotics.ftclib.gamepad.GamepadKeys
 import com.arcrobotics.ftclib.kotlin.extensions.gamepad.and
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.teamcode.commands.arm.ArmCommand
 import org.firstinspires.ftc.teamcode.commands.arm.OpenArmCommand
 import org.firstinspires.ftc.teamcode.commands.drive.DriveCommand
@@ -47,7 +48,7 @@ class MainTeleOp : CommandOpMode() {
     private lateinit var operatorLeft: Trigger
     private lateinit var operatorRight: Trigger
 
-
+    private lateinit var timer: ElapsedTime
 
     private lateinit var driver: GamepadEx
     private var driverMode = DRIVER_MODE.SPEED
@@ -63,6 +64,8 @@ class MainTeleOp : CommandOpMode() {
         ArmSubsystem.initialize(hardwareMap)
         DriveSubsystem.initialize(hardwareMap)
         IntakeSubsystem.initialize(hardwareMap)
+
+        timer = ElapsedTime()
 
 //        spinUpCommand = ElevatorCommand(30.0, ElevatorSubsystem)
         spinUpCommand = SelectCommand(
@@ -93,8 +96,8 @@ class MainTeleOp : CommandOpMode() {
         armUpCommand = SelectCommand(
             mapOf(
                 OPERATOR_MODE.MANUAL to OpenArmCommand(ArmSubsystem, true),
-                OPERATOR_MODE.SAMPLE to ArmCommand(Math.toRadians(90.0), ArmSubsystem).withTimeout(2500),
-                OPERATOR_MODE.SPECIMEN to ArmCommand(Math.toRadians(90.0), ArmSubsystem).withTimeout(2500),
+                OPERATOR_MODE.SAMPLE to OpenArmCommand(ArmSubsystem, true),
+                OPERATOR_MODE.SPECIMEN to ArmCommand(Math.toRadians(92.0), ArmSubsystem).withTimeout(2800),
             ),
             this::operatorMode
         )
@@ -102,7 +105,7 @@ class MainTeleOp : CommandOpMode() {
         armDownCommand = SelectCommand(
             mapOf(
                 OPERATOR_MODE.MANUAL to OpenArmCommand(ArmSubsystem, false),
-                OPERATOR_MODE.SAMPLE to ArmCommand(0.0, ArmSubsystem).withTimeout(2500),
+                OPERATOR_MODE.SAMPLE to OpenArmCommand(ArmSubsystem, false),
                 OPERATOR_MODE.SPECIMEN to ArmCommand(0.0, ArmSubsystem).withTimeout(2500),
             ),
             this::operatorMode
@@ -113,7 +116,7 @@ class MainTeleOp : CommandOpMode() {
 
         intakeBeltCommand = IntakeBeltCommand(Math.toRadians(-45.0), IntakeSubsystem)
 //        outtakeBeltCommand = IntakeBeltCommand(Math.toRadians(90.0), IntakeSubsystem)
-        outtakeBeltCommand = ThrowItBackCommand(IntakeSubsystem)
+        outtakeBeltCommand = ThrowItBackCommand(IntakeSubsystem).withTimeout(1000)
         slowIntakeBeltCommand = SlowIntakeBeltCommand(IntakeSubsystem, true)
         slowOuttakeBeltCommand = SlowIntakeBeltCommand(IntakeSubsystem, false)
 
@@ -138,7 +141,8 @@ class MainTeleOp : CommandOpMode() {
 
 
         (operator.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER) and Trigger {
-            operatorMode == OPERATOR_MODE.MANUAL
+            operatorMode == OPERATOR_MODE.MANUAL ||
+                    operatorMode == OPERATOR_MODE.SAMPLE
         }) .whileActiveOnce(armUpCommand)
 
         (operator.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER) and Trigger {
@@ -146,7 +150,8 @@ class MainTeleOp : CommandOpMode() {
         }) .whenActive(armUpCommand)
 
         (operator.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER) and Trigger {
-            operatorMode == OPERATOR_MODE.MANUAL
+            operatorMode == OPERATOR_MODE.MANUAL ||
+                    operatorMode == OPERATOR_MODE.SAMPLE
         }) .whileActiveOnce(armDownCommand)
 
         (operator.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER) and Trigger {
@@ -186,7 +191,7 @@ class MainTeleOp : CommandOpMode() {
         }) .whenActive(
             SequentialCommandGroup(
                 ParallelCommandGroup(
-                    ThrowItBackCommand(IntakeSubsystem),
+                    ThrowItBackCommand(IntakeSubsystem).withTimeout(1000),
                     ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(1000)
                 ),
                 ArmCommand(Math.toRadians(89.0), ArmSubsystem).withTimeout(2000)
@@ -203,7 +208,6 @@ class MainTeleOp : CommandOpMode() {
                     IntakeBeltCommand(-45.0, IntakeSubsystem).withTimeout(500),
                     ElevatorCommand(17.0, ElevatorSubsystem)
                 ),
-
             )
         )
 
@@ -224,8 +228,19 @@ class MainTeleOp : CommandOpMode() {
         )
 
         DriveSubsystem.defaultCommand = driveCommand
+    }
 
-        RunCommand({
+    override fun runOpMode() {
+        initialize()
+
+        waitForStart()
+
+        // run the scheduler
+        while (!isStopRequested && opModeIsActive()) {
+            timer.reset()
+
+            run()
+
             telemetry.addData("Arm Position", ArmSubsystem.angle)
 
             telemetry.addData("Slides Position", ElevatorSubsystem.position)
@@ -237,8 +252,12 @@ class MainTeleOp : CommandOpMode() {
             telemetry.addData("Operator Mode", operatorMode)
             telemetry.addData("Driver Mode", driverMode)
 
+            telemetry.addData("Time Elapsed", timer.milliseconds())
+
             telemetry.update()
-        }).perpetually().schedule()
+        }
+
+        reset()
     }
 
     internal enum class OPERATOR_MODE {
