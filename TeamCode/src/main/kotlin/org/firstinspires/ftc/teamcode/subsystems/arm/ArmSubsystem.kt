@@ -19,10 +19,10 @@ object ArmSubsystem : SubsystemBase() {
     private lateinit var turnMotors: MotorGroup
 
     val velocity: Double
-        get() = turnMotors.velocities[0] / GoBILDA.RPM_30.cpr * PI
+        get() = turnMotors.velocities[0] / GoBILDA.RPM_60.cpr * PI
 
     val angle: Double
-        get() = turnMotors.positions[0] / GoBILDA.RPM_30.cpr * PI
+        get() = turnMotors.positions[0] / GoBILDA.RPM_60.cpr * PI
 
     private var feedforward = ArmFeedforward(0.0, ArmConstants.kCos.value, 0.0);
 

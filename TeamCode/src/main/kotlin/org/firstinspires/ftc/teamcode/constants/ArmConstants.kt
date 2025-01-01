@@ -6,6 +6,6 @@ enum class ArmConstants(val value: Double) {
     kD(0.0),
     kCos(0.07),
 
-    MAX_VELOCITY(1.6), // rad/s
-    MAX_ACCELERATION(22.5) // rad/s^2
+    MAX_VELOCITY(3.0), // rad/s
+    MAX_ACCELERATION(36.0) // rad/s^2
 }
