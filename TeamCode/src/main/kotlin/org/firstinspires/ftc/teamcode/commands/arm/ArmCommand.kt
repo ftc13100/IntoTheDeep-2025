@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.commands.arm
 
-import com.arcrobotics.ftclib.command.CommandBase
+import com.arcrobotics.ftclib.command.TrapezoidProfileCommand
+import com.arcrobotics.ftclib.trajectory.TrapezoidProfile
+import org.firstinspires.ftc.teamcode.constants.ArmConstants
 import org.firstinspires.ftc.teamcode.subsystems.arm.ArmSubsystem
 
 /**
@@ -8,17 +10,23 @@ import org.firstinspires.ftc.teamcode.subsystems.arm.ArmSubsystem
  * @see ArmSubsystem
  */
 class ArmCommand(
-    private val setpoint: Double,
+    setpoint: Double,
     private val subsystem: ArmSubsystem
-) : CommandBase() {
-    override fun initialize() {
-        subsystem.setpoint = setpoint
-        addRequirements(subsystem)
-    }
-
-    override fun execute() = subsystem.operateArm()
-
-    override fun isFinished(): Boolean = subsystem.isBusy
-
-    override fun end(interrupted: Boolean) = subsystem.stop()
-}
+) : TrapezoidProfileCommand(
+    TrapezoidProfile(
+        TrapezoidProfile.Constraints(
+            ArmConstants.MAX_VELOCITY.value,
+            ArmConstants.MAX_ACCELERATION.value
+        ),
+        TrapezoidProfile.State(
+            setpoint,
+            0.0
+        ),
+        TrapezoidProfile.State(
+            subsystem.angle,
+            subsystem.velocity
+        )
+    ),
+    subsystem::operateArm,
+    subsystem
+)

@@ -3,35 +3,71 @@ package org.firstinspires.ftc.teamcode.opModes.tuning.arm
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.config.Config
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
-import com.arcrobotics.ftclib.command.CommandOpMode
-import com.arcrobotics.ftclib.command.RunCommand
-import com.arcrobotics.ftclib.hardware.motors.Motor
+import com.arcrobotics.ftclib.trajectory.TrapezoidProfile
+import com.arcrobotics.ftclib.trajectory.TrapezoidProfile.Constraints
+import com.arcrobotics.ftclib.trajectory.TrapezoidProfile.State
+import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import com.qualcomm.robotcore.util.ElapsedTime
+import org.firstinspires.ftc.teamcode.constants.ArmConstants
 import org.firstinspires.ftc.teamcode.subsystems.arm.ArmSubsystem
 
 @TeleOp
 @Config
-class ArmPIDTuner : CommandOpMode() {
-    private lateinit var armLeft: Motor
-    private lateinit var armRight: Motor
+class ArmPIDTuner : OpMode() {
+    private val timer = ElapsedTime()
 
-    override fun initialize() {
+    private lateinit var profile: TrapezoidProfile
+
+    override fun init() {
         telemetry = MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry)
 
         ArmSubsystem.initialize(hardwareMap)
 
-        RunCommand({
-            ArmSubsystem.setpoint = Math.toRadians(target)
-            ArmSubsystem.operateArm()
-        }).perpetually().schedule()
+        profile = TrapezoidProfile(
+            Constraints(
+                ArmConstants.MAX_VELOCITY.value,
+                ArmConstants.MAX_ACCELERATION.value
+            ),
+            State(
+                Math.toRadians(target), 0.0
+            ),
+            State(
+                ArmSubsystem.angle,
+                ArmSubsystem.velocity
+            )
+        )
+    }
 
-        RunCommand({
-            telemetry.addData("Arm Angle", Math.toDegrees(ArmSubsystem.angle))
-            telemetry.addData("Setpoint", Math.toDegrees(ArmSubsystem.setpoint))
-            telemetry.update()
-        }).perpetually().schedule()
+    override fun start() {
+        timer.reset()
+    }
 
-        register(ArmSubsystem)
+    override fun loop() {
+        val time = timer.seconds()
+        val state = profile.calculate(time)
+
+        ArmSubsystem.operateArm(state)
+
+        telemetry.addData("Target Position", Math.toDegrees(state.position))
+        telemetry.addData("Target Velocity", Math.toDegrees(state.velocity))
+        telemetry.addData("Measured Position", Math.toDegrees(ArmSubsystem.angle))
+        telemetry.addData("Measured Velocity", Math.toDegrees(ArmSubsystem.velocity))
+
+        telemetry.update()
+
+        timer.reset()
+
+        profile = TrapezoidProfile(
+            Constraints(
+                ArmConstants.MAX_VELOCITY.value,
+                ArmConstants.MAX_ACCELERATION.value
+            ),
+            State(
+                Math.toRadians(target), 0.0
+            ),
+            state
+        )
     }
 
     companion object {
