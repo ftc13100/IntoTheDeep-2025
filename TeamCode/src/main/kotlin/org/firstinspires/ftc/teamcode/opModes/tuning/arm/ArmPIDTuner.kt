@@ -47,6 +47,7 @@ class ArmPIDTuner : OpMode() {
         val time = timer.seconds()
         val state = profile.calculate(time)
 
+        timer.reset()
         ArmSubsystem.operateArm(state)
 
         telemetry.addData("Target Position", Math.toDegrees(state.position))
@@ -55,8 +56,6 @@ class ArmPIDTuner : OpMode() {
         telemetry.addData("Measured Velocity", Math.toDegrees(ArmSubsystem.velocity))
 
         telemetry.update()
-
-        timer.reset()
 
         profile = TrapezoidProfile(
             Constraints(

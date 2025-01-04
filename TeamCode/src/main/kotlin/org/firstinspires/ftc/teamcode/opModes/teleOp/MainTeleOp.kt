@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode.opModes.teleOp
 
+import com.acmerobotics.dashboard.FtcDashboard
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.arcrobotics.ftclib.command.Command
 import com.arcrobotics.ftclib.command.CommandOpMode
 import com.arcrobotics.ftclib.command.ConditionalCommand
 import com.arcrobotics.ftclib.command.InstantCommand
 import com.arcrobotics.ftclib.command.ParallelCommandGroup
-import com.arcrobotics.ftclib.command.RunCommand
 import com.arcrobotics.ftclib.command.SelectCommand
 import com.arcrobotics.ftclib.command.SequentialCommandGroup
 import com.arcrobotics.ftclib.command.button.Trigger
@@ -57,6 +58,8 @@ class MainTeleOp : CommandOpMode() {
     private var operatorMode = OPERATOR_MODE.MANUAL
 
     override fun initialize() {
+        telemetry = MultipleTelemetry(FtcDashboard.getInstance().telemetry, telemetry)
+
         driver = GamepadEx(gamepad1)
         operator = GamepadEx(gamepad2)
 
@@ -97,7 +100,7 @@ class MainTeleOp : CommandOpMode() {
             mapOf(
                 OPERATOR_MODE.MANUAL to OpenArmCommand(ArmSubsystem, true),
                 OPERATOR_MODE.SAMPLE to OpenArmCommand(ArmSubsystem, true),
-                OPERATOR_MODE.SPECIMEN to ArmCommand(Math.toRadians(92.0), ArmSubsystem).withTimeout(2800),
+                OPERATOR_MODE.SPECIMEN to ArmCommand(Math.toRadians(90.0), ArmSubsystem).withTimeout(2800),
             ),
             this::operatorMode
         )
@@ -124,19 +127,19 @@ class MainTeleOp : CommandOpMode() {
 
 
         (operator.getGamepadButton(GamepadKeys.Button.DPAD_UP) and Trigger {
-            operatorMode == OPERATOR_MODE.MANUAL
+            operatorMode == OPERATOR_MODE.MANUAL || operatorMode == OPERATOR_MODE.SAMPLE
         }) .whileActiveOnce(spinUpCommand)
 
         (operator.getGamepadButton(GamepadKeys.Button.DPAD_UP) and Trigger {
-            operatorMode != OPERATOR_MODE.MANUAL
+            operatorMode == OPERATOR_MODE.SPECIMEN
         }) .whenActive(spinUpCommand)
 
         (operator.getGamepadButton(GamepadKeys.Button.DPAD_DOWN) and Trigger {
-            operatorMode == OPERATOR_MODE.MANUAL
+            operatorMode == OPERATOR_MODE.MANUAL || operatorMode == OPERATOR_MODE.SAMPLE
         }).whileActiveOnce(spinDownCommand)
 
         (operator.getGamepadButton(GamepadKeys.Button.DPAD_DOWN) and Trigger {
-            operatorMode != OPERATOR_MODE.MANUAL
+            operatorMode == OPERATOR_MODE.SPECIMEN
         }) .whenActive(spinDownCommand)
 
 

@@ -13,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.teamcode.constants.ArmConstants
 import org.firstinspires.ftc.teamcode.constants.ControlBoard
 import kotlin.math.PI
+import kotlin.math.cos
 
 @Config
 object ArmSubsystem : SubsystemBase() {
@@ -24,7 +25,11 @@ object ArmSubsystem : SubsystemBase() {
     val angle: Double
         get() = turnMotors.positions[0] / GoBILDA.RPM_60.cpr * PI
 
-    private var feedforward = ArmFeedforward(0.0002, ArmConstants.kCos.value, 1 / ArmConstants.MAX_VELOCITY.value);
+    private var feedforward = ArmFeedforward(
+        ArmConstants.kS.value,
+        ArmConstants.kCos.value,
+        ArmConstants.kV.value
+    )
 
     private val controller = PIDController(
         ArmConstants.kP.value,
@@ -37,7 +42,7 @@ object ArmSubsystem : SubsystemBase() {
 
     var telemetry: Telemetry? = null
 
-    private var enabled = true
+    var enabled = true
 
     fun initialize(hardwareMap: HardwareMap, telemetry: Telemetry? = null) {
         val armLeft = Motor(hardwareMap, ControlBoard.ARM_LEFT.deviceName)
@@ -55,22 +60,25 @@ object ArmSubsystem : SubsystemBase() {
 
 
     fun clockwise() {
-        turnMotors.set(1.0)
+        turnMotors.set(0.7)
     }
 
     fun anticlockwise() {
-        turnMotors.set(-1.0)
+        turnMotors.set(-0.7)
     }
 
     fun stop() {
-        turnMotors.set(0.0)
+        turnMotors.set(
+            ArmConstants.kCos.value * cos(angle)
+        )
     }
 
     fun operateArm(state: State) {
         controller.setPID(kP, kI, kD)
         feedforward = ArmFeedforward(kS, kCos, kV)
 
-        val output = controller.calculate(angle, state.position) + feedforward.calculate(state.position, state.velocity)
+        val output = controller.calculate(angle, state.position) +
+                feedforward.calculate(state.position, state.velocity)
 
         telemetry?.addData("Target Position", state.position)
         telemetry?.addData("Target Velocity", state.velocity)
@@ -83,10 +91,10 @@ object ArmSubsystem : SubsystemBase() {
             turnMotors.set(output)
     }
 
-    @JvmField var kP = 0.0
+    @JvmField var kP = 5.0
     @JvmField var kI = 0.0
-    @JvmField var kD = 0.0
-    @JvmField var kCos = 0.05
-    @JvmField var kS = 0.0002
-    @JvmField var kV = 0.54
+    @JvmField var kD = 0.1
+    @JvmField var kCos = 0.07
+    @JvmField var kS = 0.002
+    @JvmField var kV = 0.32
 }
