@@ -20,10 +20,10 @@ object ArmSubsystem : SubsystemBase() {
     private lateinit var turnMotors: MotorGroup
 
     val velocity: Double
-        get() = turnMotors.velocities[0] / GoBILDA.RPM_60.cpr * PI
+        get() = turnMotors.velocities[0] / GoBILDA.RPM_30.cpr * 2 * PI
 
     val angle: Double
-        get() = turnMotors.positions[0] / GoBILDA.RPM_60.cpr * PI
+        get() = turnMotors.positions[0] / GoBILDA.RPM_30.cpr * 2 * PI
 
     private var feedforward = ArmFeedforward(
         ArmConstants.kS.value,
@@ -60,11 +60,11 @@ object ArmSubsystem : SubsystemBase() {
 
 
     fun clockwise() {
-        turnMotors.set(0.7)
+        turnMotors.set(1.0)
     }
 
     fun anticlockwise() {
-        turnMotors.set(-0.7)
+        turnMotors.set(-1.0)
     }
 
     fun stop() {
@@ -74,8 +74,8 @@ object ArmSubsystem : SubsystemBase() {
     }
 
     fun operateArm(state: State) {
-        controller.setPID(kP, kI, kD)
-        feedforward = ArmFeedforward(kS, kCos, kV)
+//        controller.setPID(kP, kI, kD)
+//        feedforward = ArmFeedforward(kS, kCos, kV)
 
         val output = controller.calculate(angle, state.position) +
                 feedforward.calculate(state.position, state.velocity)

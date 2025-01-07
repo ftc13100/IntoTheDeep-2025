@@ -127,38 +127,36 @@ class MainTeleOp : CommandOpMode() {
 
 
         (operator.getGamepadButton(GamepadKeys.Button.DPAD_UP) and Trigger {
-            operatorMode == OPERATOR_MODE.MANUAL || operatorMode == OPERATOR_MODE.SAMPLE
+            operatorMode == OPERATOR_MODE.MANUAL
         }) .whileActiveOnce(spinUpCommand)
 
         (operator.getGamepadButton(GamepadKeys.Button.DPAD_UP) and Trigger {
-            operatorMode == OPERATOR_MODE.SPECIMEN
+            operatorMode == OPERATOR_MODE.SPECIMEN || operatorMode == OPERATOR_MODE.SAMPLE
         }) .whenActive(spinUpCommand)
 
         (operator.getGamepadButton(GamepadKeys.Button.DPAD_DOWN) and Trigger {
-            operatorMode == OPERATOR_MODE.MANUAL || operatorMode == OPERATOR_MODE.SAMPLE
+            operatorMode == OPERATOR_MODE.MANUAL
         }).whileActiveOnce(spinDownCommand)
 
         (operator.getGamepadButton(GamepadKeys.Button.DPAD_DOWN) and Trigger {
-            operatorMode == OPERATOR_MODE.SPECIMEN
+            operatorMode == OPERATOR_MODE.SPECIMEN || operatorMode == OPERATOR_MODE.SAMPLE
         }) .whenActive(spinDownCommand)
 
 
         (operator.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER) and Trigger {
-            operatorMode == OPERATOR_MODE.MANUAL ||
-                    operatorMode == OPERATOR_MODE.SAMPLE
+            operatorMode == OPERATOR_MODE.MANUAL || operatorMode == OPERATOR_MODE.SAMPLE
         }) .whileActiveOnce(armUpCommand)
 
         (operator.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER) and Trigger {
-            operatorMode != OPERATOR_MODE.MANUAL
+            operatorMode == OPERATOR_MODE.SPECIMEN
         }) .whenActive(armUpCommand)
 
         (operator.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER) and Trigger {
-            operatorMode == OPERATOR_MODE.MANUAL ||
-                    operatorMode == OPERATOR_MODE.SAMPLE
+            operatorMode == OPERATOR_MODE.MANUAL || operatorMode == OPERATOR_MODE.SAMPLE
         }) .whileActiveOnce(armDownCommand)
 
         (operator.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER) and Trigger {
-            operatorMode != OPERATOR_MODE.MANUAL
+            operatorMode == OPERATOR_MODE.SPECIMEN
         }) .whenActive(armDownCommand)
 
 

@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.subsystems.drive.DriveSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.intake.IntakeSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.slides.ElevatorSubsystem
 
-@Autonomous(name = "Specimen 1 + 2")
+@Autonomous(name = "Specimen 1 + 2", preselectTeleOp = "MainTeleOp")
 class Specimen1Plus2 : CommandOpMode() {
     override fun initialize() {
         DriveSubsystem.initialize(hardwareMap)

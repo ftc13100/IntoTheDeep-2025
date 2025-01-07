@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems.intake
 
+import androidx.annotation.FloatRange
 import com.acmerobotics.dashboard.config.Config
 import com.acmerobotics.roadrunner.ftc.Encoder
 import com.acmerobotics.roadrunner.ftc.OverflowEncoder
@@ -127,5 +128,5 @@ object IntakeSubsystem : SubsystemBase() {
         wrist.set(output)
     }
 
-    fun setClaw(position: Double) { claw.position = position }
+    fun setClaw(@FloatRange(0.0, 1.0) position: Double) { claw.position = position }
 }
