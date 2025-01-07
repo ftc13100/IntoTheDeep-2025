@@ -35,9 +35,9 @@ class ThreeDeadWheelLocalizer(hardwareMap: HardwareMap, val inPerTick: Double) :
     // TODO: reverse encoder directions if needed
     //   par0.setDirection(DcMotorSimple.Direction.REVERSE);
 
-    private var lastLeftPos = 0
-    private var lastRightPos = 0
-    private var lastStrafePos = 0
+    private var lastLeftPos = 0.0
+    private var lastRightPos = 0.0
+    private var lastStrafePos = 0.0
     private var initialized = false
 
     init {

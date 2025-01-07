@@ -13,7 +13,7 @@ class ManualFeedbackTuner : LinearOpMode() {
             DriveSubsystem::class.java -> {
                 DriveSubsystem.initialize(hardwareMap)
 
-                val drive = DriveSubsystem
+                val drive = DriveSubsystem.drive
 
                 if (drive.localizer is ThreeDeadWheelLocalizer) {
                     if (ThreeDeadWheelLocalizer.PARAMS.strafeXTicks == 0.0 && ThreeDeadWheelLocalizer.PARAMS.leftYTicks == 0.0 && ThreeDeadWheelLocalizer.Companion.PARAMS.rightYTicks == 1.0) {

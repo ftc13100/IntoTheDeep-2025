@@ -18,7 +18,7 @@ class LocalizationTest : LinearOpMode() {
             DriveSubsystem::class.java -> {
                 DriveSubsystem.initialize(hardwareMap)
 
-                val drive = DriveSubsystem
+                val drive = DriveSubsystem.drive
 
                 waitForStart()
 
