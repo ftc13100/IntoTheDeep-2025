@@ -5,12 +5,13 @@ import com.acmerobotics.roadrunner.ftc.runBlocking
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import org.firstinspires.ftc.teamcode.roadrunner.ThreeDeadWheelLocalizer
 import org.firstinspires.ftc.teamcode.subsystems.drive.DriveSubsystem
+import org.firstinspires.ftc.teamcode.subsystems.drive.PinpointDrive
 
 class ManualFeedbackTuner : LinearOpMode() {
     @Throws(InterruptedException::class)
     override fun runOpMode() {
         when (TuningOpModes.DRIVE_CLASS) {
-            DriveSubsystem::class.java -> {
+            PinpointDrive::class.java -> {
                 DriveSubsystem.initialize(hardwareMap)
 
                 val drive = DriveSubsystem.drive

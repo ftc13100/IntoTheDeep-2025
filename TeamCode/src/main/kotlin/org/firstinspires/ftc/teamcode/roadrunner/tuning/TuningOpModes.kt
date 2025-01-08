@@ -52,7 +52,52 @@ object TuningOpModes {
         if (DISABLED) return
 
          val dvf = when (DRIVE_CLASS) {
-            MecanumDrive::class.java -> object : DriveViewFactory {
+             PinpointDrive::class.java -> object : DriveViewFactory {
+                 override fun make(h: HardwareMap): DriveView {
+                     DriveSubsystem.initialize(h)
+
+                     val pd = DriveSubsystem.drive as PinpointDrive
+
+                     val leftEncs: List<Encoder> = ArrayList()
+                     val rightEncs: List<Encoder> = ArrayList()
+                     val parEncs: MutableList<Encoder> = ArrayList()
+                     val perpEncs: MutableList<Encoder> = ArrayList()
+
+                     parEncs.add(PinpointEncoder(pd.pinpoint, false, pd.leftRear))
+                     perpEncs.add(PinpointEncoder(pd.pinpoint, true, pd.leftRear))
+
+                     return DriveView(
+                         DriveType.MECANUM,
+                         MecanumDrive.PARAMS.inPerTick,
+                         MecanumDrive.PARAMS.maxWheelVel,
+                         MecanumDrive.PARAMS.minProfileAccel,
+                         MecanumDrive.PARAMS.maxProfileAccel,
+                         h.getAll(LynxModule::class.java),
+                         listOf(
+                             pd.leftFront,
+                             pd.leftRear
+                         ),
+                         listOf(
+                             pd.rightFront,
+                             pd.rightRear
+                         ),
+                         leftEncs,
+                         rightEncs,
+                         parEncs,
+                         perpEncs,
+                         pd.lazyImu,
+                         pd.voltageSensor
+                     ) {
+                         MotorFeedforward(
+                             MecanumDrive.PARAMS.kS,
+                             MecanumDrive.PARAMS.kV / MecanumDrive.PARAMS.inPerTick,
+                             MecanumDrive.PARAMS.kA / MecanumDrive.PARAMS.inPerTick
+                         )
+                     }
+                 }
+             }
+
+             MecanumDrive::class.java -> object : DriveViewFactory {
                 override fun make(h: HardwareMap): DriveView {
                     DriveSubsystem.initialize(h)
 
@@ -115,50 +160,6 @@ object TuningOpModes {
                 }
             }
 
-            PinpointDrive::class.java -> object : DriveViewFactory {
-                override fun make(h: HardwareMap): DriveView {
-                    DriveSubsystem.initialize(h)
-
-                    val pd = DriveSubsystem.drive as PinpointDrive
-
-                    val leftEncs: List<Encoder> = ArrayList()
-                    val rightEncs: List<Encoder> = ArrayList()
-                    val parEncs: MutableList<Encoder> = ArrayList()
-                    val perpEncs: MutableList<Encoder> = ArrayList()
-
-                    parEncs.add(PinpointEncoder(pd.pinpoint, false, pd.leftRear))
-                    perpEncs.add(PinpointEncoder(pd.pinpoint, true, pd.leftRear))
-
-                    return DriveView(
-                        DriveType.MECANUM,
-                        MecanumDrive.PARAMS.inPerTick,
-                        MecanumDrive.PARAMS.maxWheelVel,
-                        MecanumDrive.PARAMS.minProfileAccel,
-                        MecanumDrive.PARAMS.maxProfileAccel,
-                        h.getAll(LynxModule::class.java),
-                        listOf(
-                            pd.leftFront,
-                            pd.leftRear
-                        ),
-                        listOf(
-                            pd.rightFront,
-                            pd.rightRear
-                        ),
-                        leftEncs,
-                        rightEncs,
-                        parEncs,
-                        perpEncs,
-                        pd.lazyImu,
-                        pd.voltageSensor
-                    ) {
-                        MotorFeedforward(
-                            MecanumDrive.PARAMS.kS,
-                            MecanumDrive.PARAMS.kV / MecanumDrive.PARAMS.inPerTick,
-                            MecanumDrive.PARAMS.kA / MecanumDrive.PARAMS.inPerTick
-                        )
-                    }
-                }
-            }
             else -> {
                 throw RuntimeException()
             }

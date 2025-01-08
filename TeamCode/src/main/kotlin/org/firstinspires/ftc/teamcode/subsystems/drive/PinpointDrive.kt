@@ -39,7 +39,7 @@ class PinpointDrive(
             lazyImu = LazyImu(
                 hardwareMap,
                 PARAMS.pinpointDeviceName,
-                RevHubOrientationOnRobot(RevHubOrientationOnRobot.zyxOrientation(0.0, 0.0, 0.0))
+                RevHubOrientationOnRobot(RevHubOrientationOnRobot.zyxOrientation(0.0, 0.0, 90.0))
             )
         }
 
