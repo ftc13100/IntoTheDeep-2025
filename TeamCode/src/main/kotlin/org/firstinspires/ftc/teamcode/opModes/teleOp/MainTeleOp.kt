@@ -193,9 +193,10 @@ class MainTeleOp : CommandOpMode() {
             SequentialCommandGroup(
                 ParallelCommandGroup(
                     ThrowItBackCommand(IntakeSubsystem).withTimeout(1000),
-                    ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(1000)
+                    ElevatorCommand(8.4, ElevatorSubsystem).withTimeout(1500)
                 ),
-                ArmCommand(Math.toRadians(89.0), ArmSubsystem).withTimeout(2000)
+                ArmCommand(Math.toRadians(91.0), ArmSubsystem).withTimeout(2000),
+                InstantCommand({ ElevatorSubsystem.stop() })
             )
         )
 
@@ -242,7 +243,7 @@ class MainTeleOp : CommandOpMode() {
 
             run()
 
-            telemetry.addData("Arm Position", ArmSubsystem.angle)
+            telemetry.addData("Arm Position",  Math.toDegrees(ArmSubsystem.angle))
 
             telemetry.addData("Slides Position", ElevatorSubsystem.position)
             telemetry.addData("Slides Velocity", ElevatorSubsystem.velocity)
