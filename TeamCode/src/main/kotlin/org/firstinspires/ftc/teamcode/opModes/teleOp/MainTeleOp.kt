@@ -243,7 +243,7 @@ class MainTeleOp : CommandOpMode() {
 
             run()
 
-            telemetry.addData("Arm Position",  Math.toDegrees(ArmSubsystem.angle))
+            telemetry.addData("Arm Position", ArmSubsystem.angle)
 
             telemetry.addData("Slides Position", ElevatorSubsystem.position)
             telemetry.addData("Slides Velocity", ElevatorSubsystem.velocity)
