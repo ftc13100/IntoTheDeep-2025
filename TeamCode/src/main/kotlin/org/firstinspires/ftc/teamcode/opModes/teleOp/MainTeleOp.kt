@@ -9,6 +9,7 @@ import com.arcrobotics.ftclib.command.InstantCommand
 import com.arcrobotics.ftclib.command.ParallelCommandGroup
 import com.arcrobotics.ftclib.command.SelectCommand
 import com.arcrobotics.ftclib.command.SequentialCommandGroup
+import com.arcrobotics.ftclib.command.WaitUntilCommand
 import com.arcrobotics.ftclib.command.button.Trigger
 import com.arcrobotics.ftclib.gamepad.GamepadEx
 import com.arcrobotics.ftclib.gamepad.GamepadKeys
@@ -16,7 +17,9 @@ import com.arcrobotics.ftclib.kotlin.extensions.gamepad.and
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.teamcode.commands.arm.ArmCommand
+import org.firstinspires.ftc.teamcode.commands.arm.DefaultArmCommand
 import org.firstinspires.ftc.teamcode.commands.arm.OpenArmCommand
+import org.firstinspires.ftc.teamcode.commands.arm.SetArmTargetCommand
 import org.firstinspires.ftc.teamcode.commands.drive.DriveCommand
 import org.firstinspires.ftc.teamcode.commands.elevator.ElevatorCommand
 import org.firstinspires.ftc.teamcode.commands.elevator.SpinDownCommand
@@ -37,6 +40,8 @@ class MainTeleOp : CommandOpMode() {
 
     private lateinit var armUpCommand: Command
     private lateinit var armDownCommand: Command
+
+    private lateinit var armDefaultCommand: Command
 
     private lateinit var driveCommand: Command
     private lateinit var intakeCommand: Command
@@ -99,8 +104,8 @@ class MainTeleOp : CommandOpMode() {
         armUpCommand = SelectCommand(
             mapOf(
                 OPERATOR_MODE.MANUAL to OpenArmCommand(ArmSubsystem, true),
-                OPERATOR_MODE.SAMPLE to OpenArmCommand(ArmSubsystem, true),
-                OPERATOR_MODE.SPECIMEN to ArmCommand(Math.toRadians(90.0), ArmSubsystem).withTimeout(2800),
+                OPERATOR_MODE.SAMPLE to SetArmTargetCommand(Math.toRadians(90.0)),
+                OPERATOR_MODE.SPECIMEN to SetArmTargetCommand(Math.toRadians(90.0)),
             ),
             this::operatorMode
         )
@@ -108,11 +113,13 @@ class MainTeleOp : CommandOpMode() {
         armDownCommand = SelectCommand(
             mapOf(
                 OPERATOR_MODE.MANUAL to OpenArmCommand(ArmSubsystem, false),
-                OPERATOR_MODE.SAMPLE to OpenArmCommand(ArmSubsystem, false),
-                OPERATOR_MODE.SPECIMEN to ArmCommand(0.0, ArmSubsystem).withTimeout(2500),
+                OPERATOR_MODE.SAMPLE to SetArmTargetCommand(Math.toRadians(0.0)),
+                OPERATOR_MODE.SPECIMEN to SetArmTargetCommand(Math.toRadians(0.0)),
             ),
             this::operatorMode
         )
+
+        armDefaultCommand = DefaultArmCommand(ArmSubsystem)
 
         intakeCommand = IntakeCommand(true, IntakeSubsystem)
         outtakeCommand = IntakeCommand(false, IntakeSubsystem)
@@ -195,7 +202,8 @@ class MainTeleOp : CommandOpMode() {
                     ThrowItBackCommand(IntakeSubsystem).withTimeout(1000),
                     ElevatorCommand(8.4, ElevatorSubsystem).withTimeout(1500)
                 ),
-                ArmCommand(Math.toRadians(91.0), ArmSubsystem).withTimeout(2000),
+                SetArmTargetCommand(Math.toRadians(91.0)),
+                WaitUntilCommand { !ArmSubsystem.isBusy },
                 InstantCommand({ ElevatorSubsystem.stop() })
             )
         )
@@ -229,6 +237,7 @@ class MainTeleOp : CommandOpMode() {
             })
         )
 
+        ArmSubsystem.defaultCommand = armDefaultCommand
         DriveSubsystem.defaultCommand = driveCommand
     }
 
@@ -286,4 +295,3 @@ class MainTeleOp : CommandOpMode() {
             }
     }
 }
-

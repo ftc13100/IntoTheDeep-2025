@@ -4,10 +4,11 @@ import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.config.Config
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.arcrobotics.ftclib.command.CommandOpMode
+import com.arcrobotics.ftclib.command.RunCommand
 import com.arcrobotics.ftclib.gamepad.GamepadEx
-import com.arcrobotics.ftclib.gamepad.GamepadKeys
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.commands.arm.ArmCommand
+import org.firstinspires.ftc.teamcode.commands.arm.DefaultArmCommand
 import org.firstinspires.ftc.teamcode.subsystems.arm.ArmSubsystem
 
 @TeleOp
@@ -16,6 +17,8 @@ class ArmTeleOp : CommandOpMode() {
     private lateinit var upCommand: ArmCommand
     private lateinit var downCommand: ArmCommand
 
+    private lateinit var armCommand: DefaultArmCommand
+
     private lateinit var gamepad: GamepadEx
 
     override fun initialize() {
@@ -23,18 +26,16 @@ class ArmTeleOp : CommandOpMode() {
 
         ArmSubsystem.initialize(hardwareMap, telemetry)
 
-        upCommand = ArmCommand(
-            Math.toRadians(90.0),
-            ArmSubsystem
-        )
+        armCommand = DefaultArmCommand(ArmSubsystem)
 
-        downCommand = ArmCommand(
-            Math.toRadians(0.0),
-            ArmSubsystem
-        )
+        RunCommand({
+            ArmSubsystem.target = Math.toRadians(target)
+        }).perpetually().schedule()
 
-        gamepad = GamepadEx(gamepad2)
+        ArmSubsystem.defaultCommand = armCommand
+    }
 
-        gamepad.getGamepadButton(GamepadKeys.Button.X).toggleWhenPressed(upCommand, downCommand)
+    companion object {
+        @JvmField var target = 0.0
     }
 }

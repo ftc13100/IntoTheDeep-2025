@@ -8,7 +8,9 @@ class OpenArmCommand(
     private val turn: Boolean,
 ) : CommandBase() {
     override fun initialize() {
-            addRequirements(subsystem)
+        ArmSubsystem.enabled = false
+
+        addRequirements(subsystem)
     }
 
     override fun execute() {

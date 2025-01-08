@@ -19,6 +19,9 @@ import kotlin.math.cos
 object ArmSubsystem : SubsystemBase() {
     private lateinit var turnMotors: MotorGroup
 
+    private const val ARM_MIN = 0.0
+    private const val ARM_MAX = 1.5708
+
     val velocity: Double
         get() = turnMotors.velocities[0] / GoBILDA.RPM_30.cpr * 2 * PI
 
@@ -36,6 +39,8 @@ object ArmSubsystem : SubsystemBase() {
         ArmConstants.kI.value,
         ArmConstants.kD.value,
     )
+
+    var target = 0.0
 
     val isBusy
         get() = controller.atSetPoint()
