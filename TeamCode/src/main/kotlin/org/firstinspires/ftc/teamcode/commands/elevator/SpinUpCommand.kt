@@ -1,14 +1,13 @@
 package org.firstinspires.ftc.teamcode.commands.elevator
 
 import com.arcrobotics.ftclib.command.CommandBase
-import org.firstinspires.ftc.teamcode.subsystems.slides.OpenSlidesSubsystem
+import org.firstinspires.ftc.teamcode.subsystems.slides.ElevatorSubsystem
 
 class SpinUpCommand(
-    private val subsystem: OpenSlidesSubsystem
+    private val subsystem: ElevatorSubsystem
 ) : CommandBase() {
-
     override fun execute() {
-        subsystem.up()
+        subsystem.spinUp()
     }
 
     override fun end(interrupted: Boolean) {

@@ -11,13 +11,14 @@ class DriveCommand(
     private val rightX: () -> Double,
     private val zoneVal: Double,
 ) : CommandBase() {
+
     init {
         addRequirements(subsystem)
     }
 
     override fun execute() {
         subsystem.drive(
-            leftY = zonedDrive(-leftY.invoke(), zoneVal).pow(3),
+            leftY = zonedDrive(leftY.invoke(), zoneVal).pow(3),
             leftX = zonedDrive(leftX.invoke(), zoneVal).pow(3),
             rightX = zonedDrive(rightX.invoke(), zoneVal).pow(3),
         )

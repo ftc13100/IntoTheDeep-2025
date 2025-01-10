@@ -5,43 +5,55 @@ import com.acmerobotics.dashboard.config.Config
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.arcrobotics.ftclib.command.CommandOpMode
 import com.arcrobotics.ftclib.command.RunCommand
-import com.arcrobotics.ftclib.hardware.motors.Motor
+import com.arcrobotics.ftclib.gamepad.GamepadEx
+import com.arcrobotics.ftclib.gamepad.GamepadKeys
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
-import org.firstinspires.ftc.teamcode.constants.ControlBoard
-import org.firstinspires.ftc.teamcode.subsystems.slides.SlidesSubsytem
+import org.firstinspires.ftc.teamcode.commands.arm.OpenArmCommand
+import org.firstinspires.ftc.teamcode.subsystems.arm.ArmSubsystem
+import org.firstinspires.ftc.teamcode.subsystems.slides.ElevatorSubsystem
 
 @TeleOp
 @Config
 class SlidesPIDTuner : CommandOpMode() {
-    private lateinit var armLeft: Motor
-    private lateinit var armRight: Motor
+    private lateinit var armUpCommand: OpenArmCommand
+    private lateinit var armDownCommand: OpenArmCommand
 
-    private lateinit var slidesSubsystem: SlidesSubsytem
+    private lateinit var operator: GamepadEx
 
     override fun initialize() {
+        operator = GamepadEx(gamepad2)
+
         telemetry = MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry)
 
-        armLeft = Motor(hardwareMap, ControlBoard.SLIDES_LEFT.deviceName, Motor.GoBILDA.RPM_1150)
-        armRight = Motor(hardwareMap, ControlBoard.SLIDES_RIGHT.deviceName, Motor.GoBILDA.RPM_1150)
+        ArmSubsystem.initialize(hardwareMap)
+        ElevatorSubsystem.initialize(hardwareMap)
 
-        slidesSubsystem = SlidesSubsytem(armRight, armLeft)
+        armUpCommand = OpenArmCommand(ArmSubsystem, true)
+        armDownCommand = OpenArmCommand(ArmSubsystem, false)
+
+        operator.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(armUpCommand)
+        operator.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whileHeld(armDownCommand)
 
         RunCommand({
-            slidesSubsystem.setpoint = target
+            ElevatorSubsystem.setpoint = target
+            ElevatorSubsystem.operateElevator()
         }).perpetually().schedule()
 
         RunCommand({
-            telemetry.addData("Slides Position: ", slidesSubsystem.slidePos)
-            telemetry.addData("Setpoint: ", target)
+            telemetry.addData("Slides Position", ElevatorSubsystem.position)
+            telemetry.addData("Setpoint", target)
+
+            telemetry.addData("Arm Angle", ArmSubsystem.angle)
+            telemetry.addData("Slides Velocity", ElevatorSubsystem.velocity)
+
             telemetry.update()
         }).perpetually().schedule()
 
-        register(slidesSubsystem)
+        register(ElevatorSubsystem)
     }
 
     companion object {
         @JvmField
-        // NOTE THAT THIS VALUE SHOULD BE DEGREES
         var target = 0.0
     }
 }

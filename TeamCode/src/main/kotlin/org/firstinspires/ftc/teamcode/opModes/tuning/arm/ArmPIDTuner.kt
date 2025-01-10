@@ -3,40 +3,70 @@ package org.firstinspires.ftc.teamcode.opModes.tuning.arm
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.config.Config
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
-import com.arcrobotics.ftclib.command.CommandOpMode
-import com.arcrobotics.ftclib.command.RunCommand
-import com.arcrobotics.ftclib.hardware.motors.Motor
+import com.arcrobotics.ftclib.trajectory.TrapezoidProfile
+import com.arcrobotics.ftclib.trajectory.TrapezoidProfile.Constraints
+import com.arcrobotics.ftclib.trajectory.TrapezoidProfile.State
+import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
-import org.firstinspires.ftc.teamcode.constants.ControlBoard
+import com.qualcomm.robotcore.util.ElapsedTime
+import org.firstinspires.ftc.teamcode.constants.ArmConstants
 import org.firstinspires.ftc.teamcode.subsystems.arm.ArmSubsystem
 
 @TeleOp
 @Config
-class ArmPIDTuner : CommandOpMode() {
-    private lateinit var armLeft: Motor
-    private lateinit var armRight: Motor
+class ArmPIDTuner : OpMode() {
+    private val timer = ElapsedTime()
 
-    private lateinit var armSubsystem: ArmSubsystem
+    private lateinit var profile: TrapezoidProfile
 
-    override fun initialize() {
+    override fun init() {
         telemetry = MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry)
 
-        armLeft = Motor(hardwareMap, ControlBoard.ARM_LEFT.deviceName, Motor.GoBILDA.RPM_312)
-        armRight = Motor(hardwareMap, ControlBoard.ARM_RIGHT.deviceName, Motor.GoBILDA.RPM_312)
+        ArmSubsystem.initialize(hardwareMap)
 
-        armSubsystem = ArmSubsystem(armRight, armLeft, telemetry)
+        profile = TrapezoidProfile(
+            Constraints(
+                ArmConstants.MAX_VELOCITY.value,
+                ArmConstants.MAX_ACCELERATION.value
+            ),
+            State(
+                Math.toRadians(target), 0.0
+            ),
+            State(
+                ArmSubsystem.angle,
+                ArmSubsystem.velocity
+            )
+        )
+    }
 
-        RunCommand({
-            armSubsystem.setpoint = Math.toRadians(target)
-        }).perpetually().schedule()
+    override fun start() {
+        timer.reset()
+    }
 
-        RunCommand({
-            telemetry.addData("Arm Angle: ", Math.toDegrees(armSubsystem.armAngle))
-            telemetry.addData("Setpoint: ", Math.toDegrees(armSubsystem.setpoint))
-            telemetry.update()
-        }).perpetually().schedule()
+    override fun loop() {
+        val time = timer.seconds()
+        val state = profile.calculate(time)
 
-        register(armSubsystem)
+        timer.reset()
+        ArmSubsystem.operateArm(state)
+
+        telemetry.addData("Target Position", Math.toDegrees(state.position))
+        telemetry.addData("Target Velocity", Math.toDegrees(state.velocity))
+        telemetry.addData("Measured Position", Math.toDegrees(ArmSubsystem.angle))
+        telemetry.addData("Measured Velocity", Math.toDegrees(ArmSubsystem.velocity))
+
+        telemetry.update()
+
+        profile = TrapezoidProfile(
+            Constraints(
+                ArmConstants.MAX_VELOCITY.value,
+                ArmConstants.MAX_ACCELERATION.value
+            ),
+            State(
+                Math.toRadians(target), 0.0
+            ),
+            state
+        )
     }
 
     companion object {
