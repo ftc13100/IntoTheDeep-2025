@@ -8,6 +8,7 @@ import com.acmerobotics.roadrunner.Vector2d
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import org.firstinspires.ftc.teamcode.roadrunner.Drawing
 import org.firstinspires.ftc.teamcode.subsystems.drive.DriveSubsystem
+import org.firstinspires.ftc.teamcode.subsystems.drive.PinpointDrive
 
 class LocalizationTest : LinearOpMode() {
     @Throws(InterruptedException::class)
@@ -15,10 +16,10 @@ class LocalizationTest : LinearOpMode() {
         telemetry = MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry)
 
         when (TuningOpModes.DRIVE_CLASS) {
-            DriveSubsystem::class.java -> {
+            PinpointDrive::class.java -> {
                 DriveSubsystem.initialize(hardwareMap)
 
-                val drive = DriveSubsystem
+                val drive = DriveSubsystem.drive
 
                 waitForStart()
 
