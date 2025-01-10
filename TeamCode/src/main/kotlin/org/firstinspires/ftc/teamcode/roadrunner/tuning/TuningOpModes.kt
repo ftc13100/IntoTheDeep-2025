@@ -31,7 +31,7 @@ import org.firstinspires.ftc.teamcode.subsystems.drive.PinpointDrive
 
 object TuningOpModes {
     // TODO: change this to TankDrive.class if you're using tank
-    val DRIVE_CLASS = DriveSubsystem.drive::class.java
+    val DRIVE_CLASS = PinpointDrive::class.java
 
     val GROUP = "quickstart"
     val DISABLED = false

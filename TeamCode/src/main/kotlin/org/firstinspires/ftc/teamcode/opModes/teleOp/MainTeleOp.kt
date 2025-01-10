@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.opModes.teleOp
 
-import com.acmerobotics.dashboard.FtcDashboard
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.arcrobotics.ftclib.command.Command
 import com.arcrobotics.ftclib.command.CommandOpMode
 import com.arcrobotics.ftclib.command.ConditionalCommand
@@ -58,7 +56,7 @@ class MainTeleOp : CommandOpMode() {
     private var operatorMode = OPERATOR_MODE.MANUAL
 
     override fun initialize() {
-        telemetry = MultipleTelemetry(FtcDashboard.getInstance().telemetry, telemetry)
+//        telemetry = MultipleTelemetry(FtcDashboard.getInstance().telemetry, telemetry)
 
         driver = GamepadEx(gamepad1)
         operator = GamepadEx(gamepad2)

@@ -38,7 +38,9 @@ import com.acmerobotics.roadrunner.now
 import com.acmerobotics.roadrunner.range
 import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot.LogoFacingDirection
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot.UsbFacingDirection
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot.zyxOrientation
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.DcMotorSimple
@@ -68,7 +70,7 @@ open class MecanumDrive(
 
     val voltageSensor: VoltageSensor
 
-    var lazyImu: LazyImu
+    val lazyImu: LazyImu
 
     val localizer: Localizer
 
@@ -103,11 +105,16 @@ open class MecanumDrive(
 
         // TODO: make sure your config has an IMU with this name (can be BNO or BHI)
         //   see https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html
-        lazyImu = LazyImu(
-            hardwareMap, "imu", RevHubOrientationOnRobot(
-                PARAMS.logoFacingDirection, PARAMS.usbFacingDirection
-            )
+        lazyImu = if (PinpointDrive.PARAMS.usePinpointIMUForTuning) LazyImu(
+            hardwareMap,
+            PinpointDrive.PARAMS.pinpointDeviceName,
+            RevHubOrientationOnRobot(zyxOrientation(0.0, 0.0, 0.0))
+        ) else LazyImu (
+            hardwareMap,
+        "imu",
+            RevHubOrientationOnRobot(PARAMS.logoFacingDirection, PARAMS.usbFacingDirection)
         )
+
 
         voltageSensor = hardwareMap.voltageSensor.iterator().next()
 
@@ -119,36 +126,38 @@ open class MecanumDrive(
         // IMU orientation
         // TODO: fill in these values based on
         //   see https://ftc-docs.firstinspires.org/en/latest/programming_resources/imu/imu.html?highlight=imu#physical-hub-mounting
-        var logoFacingDirection = RevHubOrientationOnRobot.LogoFacingDirection.DOWN
-        var usbFacingDirection = UsbFacingDirection.LEFT
+        var logoFacingDirection: LogoFacingDirection = LogoFacingDirection.DOWN
+        var usbFacingDirection: UsbFacingDirection = UsbFacingDirection.LEFT
 
         // drive model parameters
-        @JvmField var inPerTick = 0.00297208937
-        @JvmField var lateralInPerTick = 0.0018615669110367
-        @JvmField var trackWidthTicks = 4670.40351221378
+        @JvmField var inPerTick: Double =
+            1.0 // If you're using OTOS/Pinpoint leave this at 1 (all values will be in inches, 1 tick = 1 inch)
+        @JvmField var lateralInPerTick: Double =
+            0.5486769524694481 // Tune this with LateralRampLogger (even if you use OTOS/Pinpoint)
+        @JvmField var trackWidthTicks: Double = 15.3825
 
         // feedforward parameters (in tick units)
-        @JvmField var kS = 1.566240346045443
-        @JvmField var kV = 0.0004
-        @JvmField var kA = 0.0001
+        @JvmField var kS: Double = 1.701630816081269
+        @JvmField var kV: Double = 0.1394432430244536
+        @JvmField var kA: Double = 0.0001
 
         // path profile parameters (in inches)
-        @JvmField var maxWheelVel = 50.0
-        @JvmField var minProfileAccel = -30.0
-        @JvmField var maxProfileAccel = 50.0
+        @JvmField var maxWheelVel: Double = 50.0
+        @JvmField var minProfileAccel: Double = -30.0
+        @JvmField var maxProfileAccel: Double = 50.0
 
         // turn profile parameters (in radians)
-        @JvmField var maxAngVel = Math.PI // shared with path
-        @JvmField var maxAngAccel = Math.PI
+        @JvmField var maxAngVel: Double = Math.PI // shared with path
+        @JvmField var maxAngAccel: Double = Math.PI
 
         // path controller gains
-        @JvmField var axialGain = 8.0
-        @JvmField var lateralGain = 8.0
-        @JvmField var headingGain = 9.0 // shared with turn
+        @JvmField var axialGain: Double = 5.0
+        @JvmField var lateralGain: Double = 5.0
+        @JvmField var headingGain: Double = 5.0 // shared with turn
 
-        @JvmField var axialVelGain = 0.0
-        @JvmField var lateralVelGain = 0.0
-        @JvmField var headingVelGain = 0.0 // shared with turn
+        @JvmField var axialVelGain: Double = 0.0
+        @JvmField var lateralVelGain: Double = 0.0
+        @JvmField var headingVelGain: Double = 0.0 // shared with turn
     }
 
     val kinematics: MecanumKinematics = MecanumKinematics(
@@ -230,26 +239,26 @@ open class MecanumDrive(
                 WheelIncrements(
                     DualNum<Time>(
                         doubleArrayOf(
-                            (leftFrontPosVel.position - lastLeftFrontPos).toDouble(),
-                            leftFrontPosVel.velocity.toDouble(),
+                            (leftFrontPosVel.position - lastLeftFrontPos),
+                            leftFrontPosVel.velocity,
                         )
                     ).times(PARAMS.inPerTick),
                     DualNum<Time>(
                         doubleArrayOf(
-                            (leftBackPosVel.position - lastLeftBackPos).toDouble(),
-                            leftBackPosVel.velocity.toDouble(),
+                            (leftBackPosVel.position - lastLeftBackPos),
+                            leftBackPosVel.velocity,
                         )
                     ).times(PARAMS.inPerTick),
                     DualNum<Time>(
                         doubleArrayOf(
-                            (rightBackPosVel.position - lastRightBackPos).toDouble(),
-                            rightBackPosVel.velocity.toDouble(),
+                            (rightBackPosVel.position - lastRightBackPos),
+                            rightBackPosVel.velocity,
                         )
                     ).times(PARAMS.inPerTick),
                     DualNum<Time>(
                         doubleArrayOf(
-                            (rightFrontPosVel.position - lastRightFrontPos).toDouble(),
-                            rightFrontPosVel.velocity.toDouble(),
+                            (rightFrontPosVel.position - lastRightFrontPos),
+                            rightFrontPosVel.velocity,
                         )
                     ).times(PARAMS.inPerTick)
                 )

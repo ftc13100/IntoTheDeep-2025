@@ -7,8 +7,6 @@ import com.acmerobotics.roadrunner.PoseVelocity2d
 import com.acmerobotics.roadrunner.ftc.FlightRecorder.write
 import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriver
 import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriverRR
-import com.acmerobotics.roadrunner.ftc.LazyImu
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
@@ -28,20 +26,13 @@ class PinpointDrive(
     hardwareMap: HardwareMap,
     pose: Pose2d = Pose2d(0.0, 0.0, 0.0)
 ) : MecanumDrive(hardwareMap, pose) {
-    val pinpoint: GoBildaPinpointDriverRR
+    val pinpoint: GoBildaPinpointDriverRR =
+        hardwareMap[GoBildaPinpointDriverRR::class.java, PARAMS.pinpointDeviceName]
+
     private var lastPinpointPose = pose
 
     init {
         write("PINPOINT_PARAMS", PARAMS)
-        pinpoint = hardwareMap.get(GoBildaPinpointDriverRR::class.java, PARAMS.pinpointDeviceName)
-
-        if (PARAMS.usePinpointIMUForTuning) {
-            lazyImu = LazyImu(
-                hardwareMap,
-                PARAMS.pinpointDeviceName,
-                RevHubOrientationOnRobot(RevHubOrientationOnRobot.zyxOrientation(0.0, 0.0, 90.0))
-            )
-        }
 
         // RR localizer note: don't love this conversion (change driver?)
         pinpoint.setOffsets(
@@ -79,7 +70,7 @@ class PinpointDrive(
         /*
         Set this to the name that your Pinpoint is configured as in your hardware config.
          */
-        var pinpointDeviceName = "pinpoint"
+        @JvmField var pinpointDeviceName = "pinpoint"
 
         /*
         Set the odometry pod positions relative to the point that the odometry computer tracks around.
@@ -91,8 +82,8 @@ class PinpointDrive(
          */
         //These are tuned for 3110-0002-0001 Product Insight #1
         // RR localizer note: These units are inches, presets are converted from mm (which is why they are inexact)
-        var xOffset = -3.3071
-        var yOffset = -6.6142
+        @JvmField var xOffset = 7.75
+        @JvmField var yOffset = -2.0
 
         /*
         Set the kind of pods used by your robot. If you're using goBILDA odometry pods, select either
@@ -104,15 +95,15 @@ class PinpointDrive(
         To get this value from inPerTick, first convert the value to millimeters (multiply by 25.4)
         and then take its inverse (one over the value)
          */
-        var encoderResolution = GoBildaPinpointDriverRR.goBILDA_SWINGARM_POD.toDouble()
+        @JvmField var encoderResolution = GoBildaPinpointDriverRR.goBILDA_SWINGARM_POD.toDouble()
 
         /*
         Set the direction that each of the two odometry pods count. The X (forward) pod should
         increase when you move the robot forward. And the Y (strafe) pod should increase when
         you move the robot to the left.
          */
-        var xDirection = GoBildaPinpointDriver.EncoderDirection.FORWARD
-        var yDirection = GoBildaPinpointDriver.EncoderDirection.FORWARD
+        @JvmField var xDirection = GoBildaPinpointDriver.EncoderDirection.FORWARD
+        @JvmField var yDirection = GoBildaPinpointDriver.EncoderDirection.REVERSED
 
         /*
         Use the pinpoint IMU for tuning
@@ -121,7 +112,7 @@ class PinpointDrive(
          replace "imu" with "pinpoint" or whatever your pinpoint is called in config.
          Note: Pinpoint IMU is always used for base localization
          */
-        var usePinpointIMUForTuning = true
+        @JvmField var usePinpointIMUForTuning = true
     }
 
     override fun updatePoseEstimate(): PoseVelocity2d {
@@ -154,10 +145,10 @@ class PinpointDrive(
 
     // for debug logging
     class FTCPoseMessage(pose: Pose2D) {
-        var timestamp: Long = System.nanoTime()
-        var x: Double = pose.getX(DistanceUnit.INCH)
-        var y: Double = pose.getY(DistanceUnit.INCH)
-        var heading: Double = pose.getHeading(AngleUnit.RADIANS)
+        @JvmField var timestamp: Long = System.nanoTime()
+        @JvmField var x: Double = pose.getX(DistanceUnit.INCH)
+        @JvmField var y: Double = pose.getY(DistanceUnit.INCH)
+        @JvmField var heading: Double = pose.getHeading(AngleUnit.RADIANS)
     }
 
     companion object {

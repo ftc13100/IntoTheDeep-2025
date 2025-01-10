@@ -21,7 +21,8 @@ class SplineTest : LinearOpMode() {
 
                 runBlocking(
                     drive.actionBuilder { beginPose }
-                        .splineTo(Vector2d(10.0, 10.0), Math.PI)
+                        .splineTo(Vector2d(10.0, 10.0), Math.PI / 2)
+                        .splineTo(Vector2d(0.0, 20.0), Math.PI)
                         .build()
                 )
             }

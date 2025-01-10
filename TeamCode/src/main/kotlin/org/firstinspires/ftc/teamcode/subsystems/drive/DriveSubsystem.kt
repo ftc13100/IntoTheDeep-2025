@@ -13,7 +13,7 @@ object DriveSubsystem : SubsystemBase() {
     private lateinit var hardwareMap: HardwareMap
     lateinit var drive: MecanumDrive
 
-    var pose: Pose2d = drive.pose
+    var pose: Pose2d = Pose2d(0.0, 0.0, 0.0)
         set(value) {
             drive.pose = value
             field = value
@@ -22,11 +22,11 @@ object DriveSubsystem : SubsystemBase() {
     var driveMultiplier = 0.9
 
     fun initialize(hardwareMap: HardwareMap, reset: Boolean = true) {
+        this.hardwareMap = hardwareMap
+        drive = PinpointDrive(hardwareMap, pose)
+
         if (reset)
             drive.pose = Pose2d(0.0, 0.0, 0.0)
-
-        this.hardwareMap = hardwareMap
-        drive = PinpointDrive(hardwareMap)
 
         write("MECANUM_drive.PARAMS", MecanumDrive.PARAMS)
     }
