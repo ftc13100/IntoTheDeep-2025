@@ -9,8 +9,7 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup
 import com.arcrobotics.ftclib.command.WaitCommand
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import org.firstinspires.ftc.teamcode.commands.ActionCommand
-import org.firstinspires.ftc.teamcode.commands.arm.DefaultArmCommand
-import org.firstinspires.ftc.teamcode.commands.arm.SetArmTargetCommand
+import org.firstinspires.ftc.teamcode.commands.arm.ArmCommand
 import org.firstinspires.ftc.teamcode.commands.elevator.ElevatorCommand
 import org.firstinspires.ftc.teamcode.commands.intake.IntakeBeltCommand
 import org.firstinspires.ftc.teamcode.commands.intake.ThrowItBackCommand
@@ -39,7 +38,7 @@ class Sample1Plus3 : CommandOpMode() {
                             .splineToLinearHeading(Pose2d(55.5, 55.5, Math.toRadians(225.0)), Math.toRadians(45.0))                            .build(),
                         DriveSubsystem
                     ),
-                    SetArmTargetCommand(Math.toRadians(91.0)),
+                    ArmCommand(Math.toRadians(92.0), ArmSubsystem).withTimeout(2500),
                     InstantCommand({ IntakeSubsystem.closeClaw() }),
                 ),
                 ElevatorCommand(31.0, ElevatorSubsystem).withTimeout(2000),
@@ -54,14 +53,14 @@ class Sample1Plus3 : CommandOpMode() {
                     IntakeBeltCommand(0.0, IntakeSubsystem).withTimeout(500),
                     ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(1000),
                 ),
-                SetArmTargetCommand(Math.toRadians(0.0)),
+                ArmCommand(Math.toRadians(0.0), ArmSubsystem).withTimeout(2500),
                 ParallelCommandGroup(
                     ActionCommand(
                         DriveSubsystem.actionBuilder{Pose2d(55.5, 55.5, Math.toRadians(225.0))}
-                            .strafeToLinearHeading(Vector2d(53.5, 53.0), Math.toRadians(261.0))
+                            .strafeToLinearHeading(Vector2d(52.5, 53.0), Math.toRadians(250.0))
                             .build()
                     ),
-                    ElevatorCommand(24.0, ElevatorSubsystem).withTimeout(1000),
+                    ElevatorCommand(23.0, ElevatorSubsystem).withTimeout(1000),
                 ),
                 IntakeBeltCommand(Math.toRadians(-65.0), IntakeSubsystem).withTimeout(700),
                 WaitCommand(400),
@@ -71,12 +70,12 @@ class Sample1Plus3 : CommandOpMode() {
                     ThrowItBackCommand(IntakeSubsystem).withTimeout(700),
                     ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(1000),
                     ActionCommand(
-                        DriveSubsystem.actionBuilder{Pose2d(53.5, 53.0, Math.toRadians(261.0))}
+                        DriveSubsystem.actionBuilder{Pose2d(52.5, 53.0, Math.toRadians(250.0))}
                             .strafeToLinearHeading(Vector2d(55.5, 55.5), Math.toRadians(225.0))
                             .build()
                     ),
                 ),
-                SetArmTargetCommand(Math.toRadians(91.0)),
+                ArmCommand(Math.toRadians(92.0), ArmSubsystem).withTimeout(2500),
                 ElevatorCommand(31.0, ElevatorSubsystem).withTimeout(1000),
                 InstantCommand({IntakeSubsystem.openClaw()}),
                 WaitCommand(500),
@@ -88,7 +87,7 @@ class Sample1Plus3 : CommandOpMode() {
                     IntakeBeltCommand(0.0, IntakeSubsystem).withTimeout(500),
                     ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(1000),
                 ),
-                SetArmTargetCommand(Math.toRadians(0.0)),
+                ArmCommand(Math.toRadians(0.0), ArmSubsystem).withTimeout(2500),
                 ParallelCommandGroup(
                     ActionCommand(
                         DriveSubsystem.actionBuilder{Pose2d(55.5, 55.5, Math.toRadians(225.0))}
@@ -111,7 +110,7 @@ class Sample1Plus3 : CommandOpMode() {
                             .build()
                     ),
                 ),
-                SetArmTargetCommand(Math.toRadians(91.0)),
+                ArmCommand(Math.toRadians(92.0), ArmSubsystem).withTimeout(2500),
                 ElevatorCommand(31.0, ElevatorSubsystem).withTimeout(1000),
                 InstantCommand({IntakeSubsystem.openClaw()}),
                 WaitCommand(500),
@@ -123,7 +122,7 @@ class Sample1Plus3 : CommandOpMode() {
                     IntakeBeltCommand(0.0, IntakeSubsystem).withTimeout(500),
                     ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(1000),
                 ),
-                SetArmTargetCommand(Math.toRadians(0.0)),
+                ArmCommand(Math.toRadians(0.0), ArmSubsystem).withTimeout(2500),
                 ParallelCommandGroup(
                     ActionCommand(
                         DriveSubsystem.actionBuilder{Pose2d(55.5, 55.5, Math.toRadians(225.0))}
@@ -146,7 +145,7 @@ class Sample1Plus3 : CommandOpMode() {
                             .build()
                     ),
                 ),
-                SetArmTargetCommand(Math.toRadians(91.0)),
+                ArmCommand(Math.toRadians(92.0), ArmSubsystem).withTimeout(2500),
                 ElevatorCommand(31.0, ElevatorSubsystem).withTimeout(1000),
                 InstantCommand({IntakeSubsystem.openClaw()}),
                 WaitCommand(500),
@@ -169,12 +168,10 @@ class Sample1Plus3 : CommandOpMode() {
             SequentialCommandGroup(
                 scorePreloaded,
                 scoreSample1,
-                scoreSample2,
-                scoreSample3
+//                scoreSample2,
+//                scoreSample3
             )
         )
-        ArmSubsystem.defaultCommand = DefaultArmCommand(ArmSubsystem)
-
     }
 
 }

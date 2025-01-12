@@ -41,37 +41,29 @@ class Sample1Plus2 : CommandOpMode() {
                     InstantCommand({ IntakeSubsystem.closeClaw() }),
                 ),
                 ElevatorCommand(31.0, ElevatorSubsystem).withTimeout(2000),
-                ActionCommand(
-                        DriveSubsystem.actionBuilder{Pose2d(55.0, 55.0, Math.toRadians(225.0))}
-                            .strafeTo(Vector2d(59.0, 59.0))
-                            .build()
-                    ),
                 ThrowItBackCommand(IntakeSubsystem),
                 InstantCommand({ IntakeSubsystem.openClaw() }),
                 WaitCommand(500),
-                ActionCommand(
-                    DriveSubsystem.actionBuilder{Pose2d(59.0, 59.0, Math.toRadians(225.0))}
-                        .strafeTo(Vector2d(55.0, 55.0))
-                        .build()
-                ),
                 )
 
 
         val scoreSample1 =
             SequentialCommandGroup(
                 ParallelCommandGroup(
-                    IntakeBeltCommand(0.0, IntakeSubsystem).withTimeout(500),
-                    ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(1000),
-                ),
-                ArmCommand(0.0, ArmSubsystem).withTimeout(2000),
-                ParallelCommandGroup(
                     ActionCommand(
                         DriveSubsystem.actionBuilder{Pose2d(55.0, 55.0, Math.toRadians(225.0))}
-                            .turn(Math.toRadians(35.0))
+                            .turn(Math.toRadians(36.0))
                             .strafeTo(Vector2d(53.0, 52.0))
                             .build()
                     ),
-                    ElevatorCommand(24.0, ElevatorSubsystem).withTimeout(1000),
+                    IntakeBeltCommand(0.0, IntakeSubsystem).withTimeout(500),
+                    ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(1000),
+
+                ),
+                ArmCommand(0.0, ArmSubsystem).withTimeout(2000),
+                ParallelCommandGroup(
+                    ElevatorCommand(19.0, ElevatorSubsystem).withTimeout(1000),
+                    ThrowItBackCommand(IntakeSubsystem),
                 ),
                 IntakeBeltCommand(Math.toRadians(-65.0), IntakeSubsystem).withTimeout(700),
                 WaitCommand(250),
@@ -82,34 +74,20 @@ class Sample1Plus2 : CommandOpMode() {
                     ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(1000),
                     ActionCommand(
                         DriveSubsystem.actionBuilder{Pose2d(53.0, 52.0, Math.toRadians(260.0))}
-                            .turn(Math.toRadians(-35.0))
+                            .turn(Math.toRadians(-36.0))
                             .strafeTo(Vector2d(55.0, 55.0))
                             .build()
                     ),
                 ),
                 ArmCommand(Math.toRadians(91.0), ArmSubsystem).withTimeout(2500),
                 ElevatorCommand(31.0, ElevatorSubsystem).withTimeout(2000),
-                ActionCommand(
-                        DriveSubsystem.actionBuilder{Pose2d(55.0, 55.0, Math.toRadians(225.0))}
-                            .strafeTo(Vector2d(59.0, 59.0))
-                            .build()
-                ),
                 WaitCommand(500),
                 InstantCommand({IntakeSubsystem.openClaw()}),
-                ActionCommand(
-                    DriveSubsystem.actionBuilder{Pose2d(59.0, 59.0, Math.toRadians(225.0))}
-                        .strafeTo(Vector2d(55.0, 55.0))
-                        .build()
-                ),
+
             )
 
         val scoreSample2 =
             SequentialCommandGroup(
-                ParallelCommandGroup(
-                    IntakeBeltCommand(0.0, IntakeSubsystem).withTimeout(500),
-                    ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(1000),
-                ),
-                ArmCommand(0.0, ArmSubsystem).withTimeout(2000),
                 ParallelCommandGroup(
                     ActionCommand(
                         DriveSubsystem.actionBuilder{Pose2d(55.0, 55.0, Math.toRadians(225.0))}
@@ -117,9 +95,13 @@ class Sample1Plus2 : CommandOpMode() {
                             .strafeTo(Vector2d(56.0, 53.0))
                             .build()
                     ),
-                    ElevatorCommand(24.0, ElevatorSubsystem).withTimeout(1000),
-                    ThrowItBackCommand(IntakeSubsystem),
-                ),
+                    IntakeBeltCommand(0.0, IntakeSubsystem).withTimeout(500),
+                    ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(1000),
+
+                    ),
+                ArmCommand(0.0, ArmSubsystem).withTimeout(2000),
+                ElevatorCommand(22.0, ElevatorSubsystem).withTimeout(1000),
+                ThrowItBackCommand(IntakeSubsystem),
                 IntakeBeltCommand(Math.toRadians(-65.0), IntakeSubsystem).withTimeout(700),
                 WaitCommand(100),
                 InstantCommand({IntakeSubsystem.closeClaw()}),
@@ -130,7 +112,7 @@ class Sample1Plus2 : CommandOpMode() {
                     ActionCommand(
                         DriveSubsystem.actionBuilder{Pose2d(56.0, 53.0, Math.toRadians(276.0))}
                             .turn(Math.toRadians(-51.0))
-                            .strafeTo(Vector2d(57.0, 57.0))
+                            .strafeTo(Vector2d(55.0, 55.0))
                             .build()
                     ),
                 ),
@@ -138,14 +120,24 @@ class Sample1Plus2 : CommandOpMode() {
                 ArmCommand(Math.toRadians(91.0), ArmSubsystem).withTimeout(2000),
                 ElevatorCommand(31.0, ElevatorSubsystem).withTimeout(2000),
                 WaitCommand(100),
-                ActionCommand(
-                    DriveSubsystem.actionBuilder{Pose2d(55.0, 55.0, Math.toRadians(225.0))}
-                        .strafeTo(Vector2d(59.0, 59.0))
-                        .build()
-                ),
                 WaitCommand(500),
                 InstantCommand({IntakeSubsystem.openClaw()}),
+                WaitCommand(100),
+                ParallelCommandGroup(
+                    ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(1000),
+                    IntakeBeltCommand(0.0, IntakeSubsystem).withTimeout(400),
+                ),
+                ParallelCommandGroup(
+                    IntakeBeltCommand(65.0, IntakeSubsystem).withTimeout(400),
+                    ActionCommand(
+                        DriveSubsystem.actionBuilder{Pose2d(55.5, 55.5, Math.toRadians(225.0))}
+                            .setTangent(Math.toRadians(-90.0))
+                            .splineToLinearHeading(Pose2d(25.0, 10.0, 0.0), Math.toRadians(120.0))
+                            .build()
+                    )
                 )
+            )
+
 
 
 
