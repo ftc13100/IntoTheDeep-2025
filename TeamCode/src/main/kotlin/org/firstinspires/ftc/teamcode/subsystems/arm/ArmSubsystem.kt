@@ -13,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.teamcode.constants.ArmConstants
 import org.firstinspires.ftc.teamcode.constants.ControlBoard
 import kotlin.math.PI
+import kotlin.math.abs
 import kotlin.math.cos
 
 @Config
@@ -42,8 +43,8 @@ object ArmSubsystem : SubsystemBase() {
 
     var target = 0.0
 
-    val isBusy
-        get() = controller.atSetPoint()
+    val atTarget
+        get() = abs(target - angle) < 0.05
 
     var telemetry: Telemetry? = null
 

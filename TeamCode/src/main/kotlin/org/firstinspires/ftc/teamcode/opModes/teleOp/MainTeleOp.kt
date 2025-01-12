@@ -201,7 +201,7 @@ class MainTeleOp : CommandOpMode() {
                     ElevatorCommand(8.4, ElevatorSubsystem).withTimeout(1500)
                 ),
                 SetArmTargetCommand(Math.toRadians(91.0)),
-                WaitUntilCommand { !ArmSubsystem.isBusy },
+                WaitUntilCommand(ArmSubsystem::atTarget),
                 InstantCommand({ ElevatorSubsystem.stop() })
             )
         )
