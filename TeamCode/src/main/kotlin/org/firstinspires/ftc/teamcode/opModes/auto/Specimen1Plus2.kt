@@ -37,13 +37,13 @@ class Specimen1Plus2 : CommandOpMode() {
                 ParallelCommandGroup(
                     ActionCommand(
                         DriveSubsystem.actionBuilder(AutoStartPose.BLUE_RIGHT::startPose)
-                            .strafeToConstantHeading(Vector2d(2.0, 37.0))
+                            .strafeToConstantHeading(Vector2d(2.0, 36.5))
                             .build(),
                         DriveSubsystem
                     ),
                     SequentialCommandGroup(
                         WaitCommand(500),
-                        SetArmTargetCommand(Math.toRadians(93.0)),
+                        SetArmTargetCommand(Math.toRadians(94.0)),
                         WaitUntilCommand(ArmSubsystem::atTarget),
                         ElevatorCommand(8.5, ElevatorSubsystem).withTimeout(1000)
                     ),
@@ -58,7 +58,7 @@ class Specimen1Plus2 : CommandOpMode() {
             SequentialCommandGroup(
                 ParallelCommandGroup(
                     ActionCommand(
-                        DriveSubsystem.actionBuilder { Pose2d(2.0, 37.0, Math.toRadians(90.0)) }
+                        DriveSubsystem.actionBuilder { Pose2d(2.0, 36.5, Math.toRadians(90.0)) }
                             .setTangent(Math.toRadians(90.0))
                             .splineToLinearHeading(
                                 Pose2d(-36.0, 35.0, Math.toRadians(90.0)),
@@ -115,9 +115,9 @@ class Specimen1Plus2 : CommandOpMode() {
                     ThrowItBackCommand(IntakeSubsystem),
                     SequentialCommandGroup(
                         WaitCommand(500),
-                        SetArmTargetCommand(Math.toRadians(93.0)),
+                        SetArmTargetCommand(Math.toRadians(94.0)),
                         WaitUntilCommand(ArmSubsystem::atTarget),
-                        ElevatorCommand(8.0, ElevatorSubsystem).withTimeout(1000)
+                        ElevatorCommand(7.5, ElevatorSubsystem).withTimeout(1000)
                     ),
                 ),
                 ElevatorCommand(12.0, ElevatorSubsystem).withTimeout(700),
@@ -127,7 +127,7 @@ class Specimen1Plus2 : CommandOpMode() {
                     ElevatorCommand(0.0, ElevatorSubsystem).withTimeout(1000),
                     ActionCommand(
                         DriveSubsystem.actionBuilder { Pose2d(-2.0, 33.0, Math.toRadians(90.0)) }
-                            .splineToLinearHeading(Pose2d(-34.0, 59.0, Math.toRadians(180.0)), 0.0)
+                            .splineToLinearHeading(Pose2d(-32.0, 59.0, Math.toRadians(180.0)), 0.0)
                             .build()
                     ),
                 )
@@ -136,14 +136,14 @@ class Specimen1Plus2 : CommandOpMode() {
             SequentialCommandGroup(
                 ParallelCommandGroup(
                     IntakeBeltCommand(Math.toRadians(-60.0), IntakeSubsystem).withTimeout(500),
-                    ElevatorCommand(8.0, ElevatorSubsystem).withTimeout(500),
+                    ElevatorCommand(10.0, ElevatorSubsystem).withTimeout(500),
                 ),
                 WaitCommand(400),
                 InstantCommand({ IntakeSubsystem.closeClaw() }),
                 WaitCommand(500),
                 ParallelDeadlineGroup(
                     ActionCommand(
-                        DriveSubsystem.actionBuilder { Pose2d(-34.0, 59.0, Math.toRadians(180.0)) }
+                        DriveSubsystem.actionBuilder { Pose2d(-32.0, 59.0, Math.toRadians(180.0)) }
                             .setTangent(Math.toRadians(180.0))
                             .splineToLinearHeading(Pose2d(-6.0, 33.0, Math.toRadians(90.0)), Math.toRadians(-90.0))
                             .build(),
@@ -153,9 +153,9 @@ class Specimen1Plus2 : CommandOpMode() {
                     ThrowItBackCommand(IntakeSubsystem),
                     SequentialCommandGroup(
                         WaitCommand(500),
-                        SetArmTargetCommand(Math.toRadians(93.0)),
+                        SetArmTargetCommand(Math.toRadians(94.0)),
                         WaitUntilCommand(ArmSubsystem::atTarget),
-                        ElevatorCommand(8.0, ElevatorSubsystem).withTimeout(1000)
+                        ElevatorCommand(7.5, ElevatorSubsystem).withTimeout(1000)
                     ),
                 ),
                 ElevatorCommand(12.0, ElevatorSubsystem).withTimeout(700),
