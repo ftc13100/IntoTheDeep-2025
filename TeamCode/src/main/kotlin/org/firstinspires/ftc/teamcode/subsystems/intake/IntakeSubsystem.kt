@@ -85,11 +85,11 @@ object IntakeSubsystem : SubsystemBase() {
     }
 
     fun closeClaw() {
-        claw.position = 0.9
+        claw.position = 0.6
     }
 
     fun openClaw() {
-        claw.position = 0.65
+        claw.position = 0.2
     }
 
     fun wristUp() = if (!isPressed) wrist.set(1.0) else wrist.stop()

@@ -38,7 +38,7 @@ class Sample1Plus3 : CommandOpMode() {
                             .splineToLinearHeading(Pose2d(55.5, 55.5, Math.toRadians(225.0)), Math.toRadians(45.0))                            .build(),
                         DriveSubsystem
                     ),
-                    ArmCommand(Math.toRadians(91.0), ArmSubsystem).withTimeout(4000),
+                    ArmCommand(Math.toRadians(93.0), ArmSubsystem).withTimeout(4000),
                     InstantCommand({ IntakeSubsystem.closeClaw() }),
                 ),
                 ElevatorCommand(31.0, ElevatorSubsystem).withTimeout(2000),
@@ -75,7 +75,7 @@ class Sample1Plus3 : CommandOpMode() {
                             .build()
                     ),
                 ),
-                ArmCommand(Math.toRadians(91.0), ArmSubsystem).withTimeout(4000),
+                ArmCommand(Math.toRadians(93.0), ArmSubsystem).withTimeout(4000),
                 ElevatorCommand(31.0, ElevatorSubsystem).withTimeout(1000),
                 InstantCommand({IntakeSubsystem.openClaw()}),
                 WaitCommand(500),
@@ -110,7 +110,7 @@ class Sample1Plus3 : CommandOpMode() {
                             .build()
                     ),
                 ),
-                ArmCommand(Math.toRadians(91.0), ArmSubsystem).withTimeout(2000),
+                ArmCommand(Math.toRadians(93.0), ArmSubsystem).withTimeout(2000),
                 ElevatorCommand(31.0, ElevatorSubsystem).withTimeout(1000),
                 InstantCommand({IntakeSubsystem.openClaw()}),
                 WaitCommand(500),
@@ -145,7 +145,7 @@ class Sample1Plus3 : CommandOpMode() {
                             .build()
                     ),
                 ),
-                ArmCommand(Math.toRadians(91.0), ArmSubsystem).withTimeout(2000),
+                ArmCommand(Math.toRadians(93.0), ArmSubsystem).withTimeout(2000),
                 ElevatorCommand(31.0, ElevatorSubsystem).withTimeout(1000),
                 InstantCommand({IntakeSubsystem.openClaw()}),
                 WaitCommand(500),
