@@ -48,7 +48,7 @@ class Sample1Plus2 : CommandOpMode() {
                     ),
                 ThrowItBackCommand(IntakeSubsystem),
                 InstantCommand({ IntakeSubsystem.openClaw() }),
-                WaitCommand(500),
+                WaitCommand(400),
                 ActionCommand(
                     DriveSubsystem.actionBuilder{Pose2d(59.0, 59.0, Math.toRadians(225.0))}
                         .strafeTo(Vector2d(55.0, 55.0))
@@ -74,7 +74,7 @@ class Sample1Plus2 : CommandOpMode() {
                     ThrowItBackCommand(IntakeSubsystem),
                     ElevatorCommand(24.5, ElevatorSubsystem).withTimeout(1000),
                 ),
-                IntakeBeltCommand(Math.toRadians(-65.0), IntakeSubsystem).withTimeout(700),
+                IntakeBeltCommand(Math.toRadians(-70.0), IntakeSubsystem).withTimeout(700),
                 WaitCommand(250),
                 InstantCommand({IntakeSubsystem.closeClaw()}),
                 WaitCommand(250),
@@ -95,7 +95,9 @@ class Sample1Plus2 : CommandOpMode() {
                             .strafeTo(Vector2d(59.0, 59.0))
                             .build()
                 ),
-                WaitCommand(500),
+                WaitCommand(250),
+                ThrowItBackCommand(IntakeSubsystem),
+                WaitCommand(250),
                 InstantCommand({IntakeSubsystem.openClaw()}),
                 ActionCommand(
                     DriveSubsystem.actionBuilder{Pose2d(59.0, 59.0, Math.toRadians(225.0))}
@@ -118,7 +120,7 @@ class Sample1Plus2 : CommandOpMode() {
                             .strafeTo(Vector2d(56.0, 53.0))
                             .build()
                     ),
-                    WaitCommand(500),
+                    WaitCommand(200),
                     ElevatorCommand(24.5, ElevatorSubsystem).withTimeout(1000),
                     ThrowItBackCommand(IntakeSubsystem),
                 ),
@@ -136,10 +138,9 @@ class Sample1Plus2 : CommandOpMode() {
                             .build()
                     ),
                 ),
-                WaitCommand(500),
+                WaitCommand(250),
                 ArmCommand(Math.toRadians(93.0), ArmSubsystem).withTimeout(2000),
                 ElevatorCommand(31.5, ElevatorSubsystem).withTimeout(2000),
-                WaitCommand(500),
                 ThrowItBackCommand(IntakeSubsystem),
                 WaitCommand(100),
                 ActionCommand(
@@ -147,7 +148,7 @@ class Sample1Plus2 : CommandOpMode() {
                         .strafeTo(Vector2d(59.0, 59.0))
                         .build()
                 ),
-                WaitCommand(500),
+                WaitCommand(100),
                 InstantCommand({IntakeSubsystem.openClaw()}),
                 WaitCommand(500),
                 ActionCommand(
